@@ -1,0 +1,47 @@
+{
+  "date": "2026-07-17",
+  "season": "Y10S4",
+  "seasonOrder": 40,
+  "seasonLabel": "Tenfold Pursuit",
+  "basis": "só Y10S4, ranqueada",
+  "kpis": { "matches": 273, "wins": 136, "losses": 136, "winRate": 49.8, "kd": 0.86, "peakRP": 3191, "latestRP": 2834 },
+  "operatorsDef": [
+    {"name": "Tubarão", "wr": 54, "kd": 1.12, "tag": "âncora · 129 rds"},
+    {"name": "Castle", "wr": 59, "kd": 0.87, "tag": ""},
+    {"name": "Skopós", "wr": 59, "kd": 0.91, "tag": ""},
+    {"name": "Echo", "wr": 57, "kd": 0.62, "tag": ""},
+    {"name": "Aruni", "wr": 53, "kd": 1.04, "tag": ""}
+  ],
+  "operatorsAtk": [
+    {"name": "Iana", "wr": 58, "kd": 1.11, "tag": ""},
+    {"name": "Ying", "wr": 56, "kd": 1.10, "tag": "138 rds", "star": true},
+    {"name": "Lion", "wr": 55, "kd": 0.94, "tag": ""},
+    {"name": "Brava", "wr": 54, "kd": 1.20, "tag": ""},
+    {"name": "Thatcher", "wr": 51, "kd": 1.10, "tag": "104 rds"}
+  ],
+  "operatorsCut": [
+    {"name": "Deimos", "wr": 42, "kd": 0.85, "tag": "243 rds — + jogado"},
+    {"name": "Doc", "wr": 48, "kd": 0.61, "tag": "195 rds"},
+    {"name": "Nomad", "wr": 42, "kd": 0.33, "tag": ""},
+    {"name": "Kaid", "wr": 44, "kd": 0.55, "tag": ""},
+    {"name": "Valkyrie", "wr": 47, "kd": 0.82, "tag": ""}
+  ],
+  "maps": [
+    {"name": "Bank", "matches": 20, "seasonWR": 75.0, "kd": 0.90, "atkWR": 56.1, "defWR": 66.2},
+    {"name": "Skyscraper", "matches": 4, "seasonWR": 75.0, "kd": 1.70, "atkWR": 75.0, "defWR": 44.4},
+    {"name": "Lair", "matches": 6, "seasonWR": 66.7, "kd": 0.76, "atkWR": 47.6, "defWR": 56.5},
+    {"name": "Theme Park", "matches": 5, "seasonWR": 60.0, "kd": 1.19, "atkWR": 43.8, "defWR": 61.5},
+    {"name": "Chalet", "matches": 26, "seasonWR": 57.7, "kd": 0.82, "atkWR": 61.0, "defWR": 40.3},
+    {"name": "Villa", "matches": 18, "seasonWR": 55.6, "kd": 0.79, "atkWR": 56.4, "defWR": 50.9},
+    {"name": "Border", "matches": 20, "seasonWR": 55.0, "kd": 0.81, "atkWR": 59.4, "defWR": 47.2},
+    {"name": "Oregon", "matches": 27, "seasonWR": 51.9, "kd": 0.93, "atkWR": 52.2, "defWR": 56.3},
+    {"name": "Kanal", "matches": 21, "seasonWR": 47.6, "kd": 0.91, "atkWR": 32.8, "defWR": 61.3},
+    {"name": "Clubhouse", "matches": 34, "seasonWR": 47.1, "kd": 0.78, "atkWR": 42.4, "defWR": 55.3},
+    {"name": "Coastline", "matches": 17, "seasonWR": 47.1, "kd": 0.79, "atkWR": 52.4, "defWR": 48.3},
+    {"name": "Outback", "matches": 11, "seasonWR": 45.5, "kd": 1.18, "atkWR": 37.8, "defWR": 63.6},
+    {"name": "Fortress", "matches": 21, "seasonWR": 42.9, "kd": 0.94, "atkWR": 46.2, "defWR": 44.6},
+    {"name": "Nighthaven Labs", "matches": 12, "seasonWR": 33.3, "kd": 0.89, "atkWR": 51.2, "defWR": 41.5},
+    {"name": "Kafe Dostoyevsky", "matches": 19, "seasonWR": 31.6, "kd": 0.68, "atkWR": 44.9, "defWR": 36.2},
+    {"name": "Consulate", "matches": 12, "seasonWR": 25.0, "kd": 0.78, "atkWR": 21.1, "defWR": 54.8}
+  ]
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<title>SIEGE·LAB</title>
+<style>
+  :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased;min-height:100vh;padding:32px 18px 60px}
+  .wrap{max-width:640px;margin:0 auto}
+  .top{display:flex;align-items:center;gap:13px;margin-bottom:6px}
+  .logo{width:46px;height:46px;border-radius:11px;background:var(--gold);color:#111;display:grid;place-items:center;font-weight:900;font-size:26px;box-shadow:0 0 22px rgba(244,194,13,.32)}
+  h1{font-size:22px;letter-spacing:.5px} h1 em{font-style:normal;color:var(--gold)}
+  .sub{color:var(--muted);font-size:13px;margin:4px 0 26px}
+  .pcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;background:var(--panel);
+         padding:16px 18px;margin-bottom:13px;transition:border-color .15s,transform .1s}
+  .pcard:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .pc-top{display:flex;align-items:center;gap:10px}
+  .pc-name{font-size:18px;font-weight:800}
+  .pc-rank{margin-left:auto;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px}
+  .pc-meta{color:var(--muted);font-size:12.5px;margin-top:6px;font-variant-numeric:tabular-nums}
+  .pc-go{color:var(--gold);font-size:12.5px;font-weight:700;margin-top:11px}
+  .foot{color:#5c626d;font-size:11px;text-align:center;margin-top:28px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top"><div class="logo">6</div><h1>SIEGE<em>·</em>LAB</h1></div>
+    <div class="sub">Análise de ranqueada · R6 Siege · dados de r6.tracker.network</div>
+    <a class="pcard" href="laprufer.html">
+      <div class="pc-top"><span class="pc-name">laprufer</span>
+        <span class="pc-rank" style="background:#37cfc022;color:#37cfc0">Platina III</span></div>
+      <div class="pc-meta">Y11S2 · 47.2% vitórias · KD 0.93 · 252 partidas</div>
+      <div class="pc-go">Abrir análise →</div></a><a class="pcard" href="superallfa.html">
+      <div class="pc-top"><span class="pc-name">SuperAllfa</span>
+        <span class="pc-rank" style="background:#f4c20d22;color:#f4c20d">Ouro II</span></div>
+      <div class="pc-meta">Y11S1 · 46.5% vitórias · KD 0.87 · 172 partidas</div>
+      <div class="pc-go">Abrir análise →</div></a><a class="pcard" href="brunoprufer.html">
+      <div class="pc-top"><span class="pc-name">BrunoPrufer</span>
+        <span class="pc-rank" style="background:#2ecc7122;color:#2ecc71">Esmeralda III</span></div>
+      <div class="pc-meta">Y11S2 · 45.8% vitórias · KD 1.16 · 166 partidas</div>
+      <div class="pc-go">Abrir análise →</div></a>
+    <div class="foot">Cada card abre o app completo do jogador — season, mapas, operadores e evolução.</div>
+  </div>
+</body>
+</html>
