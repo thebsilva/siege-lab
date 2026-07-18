@@ -49,6 +49,28 @@
 
   /* INÍCIO */
   .kgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .kgrid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px}
+  .glance{display:flex;align-items:stretch;gap:12px;border:1px solid var(--line);border-radius:16px;
+       background:linear-gradient(105deg,#181b23,#0d0f13);padding:12px 14px;margin-bottom:12px}
+  .glance .emb{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:82px}
+  .glance .emb .remb{filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+  .glance .emb .rn{font-size:10.5px;font-weight:800;text-align:center;line-height:1.05;letter-spacing:.2px}
+  .glance .emb .pk{font-size:9px;color:var(--muted);text-align:center;line-height:1}
+  .glance .gstats{flex:1;display:flex;align-items:center;min-width:0}
+  .glance .gst{flex:1;text-align:center;padding:0 4px;min-width:0}
+  .glance .gst+.gst{border-left:1px solid var(--line)}
+  .glance .gst .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  .glance .gst .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:3px}
+  .glance .gst .dd{height:13px;line-height:13px;margin-top:2px}
+  .glance .gst .dd .d{font-size:10.5px;margin-left:0}
+  @media(max-width:400px){
+    .glance{gap:7px;padding:11px 9px}
+    .glance .emb{width:60px}
+    .glance .emb .rn{font-size:10px}
+    .glance .gst{padding:0 2px}
+    .glance .gst .v{font-size:18px}
+    .glance .gst .l{font-size:9px;letter-spacing:.4px}
+  }
   .ktile{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px 16px}
   .ktile .v{font-size:23px;font-weight:800;font-variant-numeric:tabular-nums}
   .ktile .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
@@ -239,14 +261,30 @@ function baselineOf(snap){            // medição imediatamente anterior no tem
 }
 
 function rankInfo(rp){
-  if(rp==null) return {name:"—",color:"#8b919c"};
-  if(rp>=4500) return {name:"Campeão",color:"#e0447a"};
+  if(rp==null) return {name:"—",color:"#8b919c",div:0};
+  if(rp>=4500) return {name:"Campeão",color:"#e0447a",div:0,champ:true};
   const T=[{n:"Cobre",s:1000,c:"#b06a4b"},{n:"Bronze",s:1500,c:"#b5762f"},{n:"Prata",s:2000,c:"#9fb0bf"},
            {n:"Ouro",s:2500,c:"#f4c20d"},{n:"Platina",s:3000,c:"#37cfc0"},{n:"Esmeralda",s:3500,c:"#2ecc71"},
            {n:"Diamante",s:4000,c:"#6aa9ff"}];
   let t=T[0]; T.forEach(x=>{ if(rp>=x.s) t=x; });
   const div=Math.max(1,Math.min(5,5-Math.floor((rp-t.s)/100)));
-  return {name:`${t.n} ${ROM[div]}`,tier:t.n,color:t.c};
+  return {name:`${t.n} ${ROM[div]}`,tier:t.n,color:t.c,div};
+}
+function rankEmblem(color, div, champ, size){
+  size = size||52;
+  const R=["","I","II","III","IV","V"];
+  const label = champ ? "★" : (R[div]||"");
+  const out="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5";
+  const inn="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3";
+  const hl="5.81,13.5 24,3 42.19,13.5 24,24";
+  return `<svg class="remb" width="${size}" height="${size}" viewBox="0 0 48 48" aria-hidden="true">
+    <polygon points="${out}" fill="${color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>
+    <polygon points="${hl}" fill="rgba(255,255,255,.15)"/>
+    <polygon points="${inn}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>
+    <text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke"
+      font-size="${champ?18:16}" font-weight="800" text-anchor="middle" dominant-baseline="central"
+      font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">${label}</text>
+  </svg>`;
 }
 
 function delta(c,p,dec=0){
@@ -262,7 +300,10 @@ const tierOf = wr => wr>=55?"play":(wr<40?"ban":"neu");
 function renderInicio(){
   const cur=active, base=baselineOf(cur);
   const k=cur.kpis, pk=(base||{}).kpis||{};
-  const rk=rankInfo(k.peakRP), prk=base?rankInfo((base.kpis||{}).peakRP):null;
+  const curRP = (k.latestRP!=null?k.latestRP:k.peakRP);
+  const rk=rankInfo(curRP), peak=rankInfo(k.peakRP);
+  const pbRP = base ? (base.kpis.latestRP!=null?base.kpis.latestRP:base.kpis.peakRP) : null;
+  const wl = (k.wins!=null&&k.losses!=null) ? `${k.wins}-${k.losses}` : "—";
   const banner = base
     ? `🔄 Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = variação entre as duas.`
     : `📍 Season mais antiga carregada — sem comparação. Carregue outra season pra ver as variações.`;
@@ -290,11 +331,21 @@ function renderInicio(){
   const dM=cur.operatorsDef[0], aM=cur.operatorsAtk[0], cM=cur.operatorsCut[0];
 
   document.getElementById("scr-inicio").innerHTML = `
-    <div class="kgrid">
+    <div class="glance">
+      <div class="emb">
+        ${rankEmblem(rk.color, rk.div, rk.champ, 56)}
+        <div class="rn" style="color:${rk.color}">${rk.name}</div>
+        <div class="pk">pico ${peak.name}</div>
+      </div>
+      <div class="gstats">
+        <div class="gst"><div class="l">RP</div><div class="v">${curRP.toLocaleString('pt-BR')}</div><div class="dd">${delta(curRP,pbRP,0)}</div></div>
+        <div class="gst"><div class="l">K/D</div><div class="v">${k.kd.toFixed(2)}</div><div class="dd">${delta(k.kd,pk.kd,2)}</div></div>
+        <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
+      </div>
+    </div>
+    <div class="kgrid2">
       <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
       <div class="ktile"><div class="v">${k.winRate.toFixed(1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
-      <div class="ktile"><div class="v">${k.kd.toFixed(2)}${delta(k.kd,pk.kd,2)}</div><div class="l">K/D</div></div>
-      <div class="ktile"><div class="v" style="font-size:15px">${k.peakRP.toLocaleString('pt-BR')}${delta(k.peakRP,pk.peakRP,0)}</div><div class="l">Pico RP</div><span class="rkb" style="background:${rk.color}22;color:${rk.color}">${rk.name}</span></div>
     </div>
     <div class="banner">${banner}</div>
     ${changed}
