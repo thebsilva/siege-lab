@@ -48,9 +48,15 @@ def build_player(pdir):
     if not snaps:
         print(f"  (pulado {profile.get('slug')}: sem snapshots)")
         return None
+    pb_path = os.path.join(HERE, "playbook.json")
+    playbook = {"operators": {}, "maps": {}, "default": {"def": [], "atk": []}}
+    if os.path.exists(pb_path):
+        with open(pb_path, encoding="utf-8") as fh:
+            playbook = json.load(fh)
     html = (TEMPLATE
             .replace("__DATA__", json.dumps(snaps, ensure_ascii=False))
-            .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False)))
+            .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False))
+            .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False)))
     os.makedirs(OUT_DIR, exist_ok=True)
     out = os.path.join(OUT_DIR, profile.get("slug", "player") + ".html")
     with open(out, "w", encoding="utf-8") as fh:
@@ -271,6 +277,24 @@ TEMPLATE = r"""<!DOCTYPE html>
   .side.def .sh{color:var(--def)} .side.atk .sh{color:var(--atk)}
   .side .sh .ic{width:7px;height:7px;border-radius:2px}
   .side.def .ic{background:var(--def)} .side.atk .ic{background:var(--atk)}
+  .picks{border-top:1px solid var(--line)}
+  .pside{padding:11px 14px}
+  .pside+.pside{border-top:1px solid var(--line)}
+  .pside .sh{font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .pside.def .sh{color:var(--def)} .pside.atk .sh{color:var(--atk)}
+  .pside .sh .ic{width:7px;height:7px;border-radius:2px}
+  .pside.def .ic{background:var(--def)} .pside.atk .ic{background:var(--atk)}
+  .prow{padding:7px 0;border-top:1px solid #1f232b}
+  .prow:first-of-type{border-top:none}
+  .pline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pn{font-size:13.5px;font-weight:700}
+  .pwr{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#1d2129;border:1px solid #2b303a;cursor:help}
+  .pwr.good{color:var(--play);border-color:rgba(52,211,153,.4)}
+  .pwr.mid{color:var(--neu);border-color:rgba(250,204,21,.4)}
+  .pwr.low{color:var(--ban);border-color:rgba(240,81,63,.4)}
+  .pw{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+  .tip{padding:9px 14px;font-size:12px;color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
+  .mine{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);background:#101218;line-height:1.5}
   .pl{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px}
   .pl .rk{color:var(--muted);font-size:10.5px;width:13px}
   .pl .nm{flex:1;margin-left:2px;font-weight:600}
@@ -373,6 +397,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <script>
 const SNAPSHOTS = __DATA__;
 const PLAYER = __PLAYER__;
+const PLAYBOOK = __PLAYBOOK__;
 
 /* ---------- base ---------- */
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -509,15 +534,47 @@ function strongSide(m){
   if(dd<=-8) return `<span class="sbadge def">FORTE NA DEFESA</span>`;
   return `<span class="sbadge bal">EQUILIBRADO</span>`;
 }
+function personalWR(m, opName){
+  for(const a of [m.def, m.atk]){ if(a){ const h=a.find(o=>o.name===opName); if(h) return {wr:h.wr,src:"mapa"}; } }
+  const all=[].concat(active.operatorsDef||[],active.operatorsAtk||[],active.operatorsCut||[]);
+  const h=all.find(o=>o.name===opName);
+  return h?{wr:h.wr,src:"season"}:null;
+}
+function pickRows(m, side){
+  const conf=(PLAYBOOK.maps||{})[m.name]||PLAYBOOK.default||{};
+  const list=conf[side]||(PLAYBOOK.default||{})[side]||[];
+  return list.map(n=>{
+    const why=((PLAYBOOK.operators||{})[n]||{}).why||"";
+    const p=personalWR(m,n);
+    const badge=p?`<span class="pwr ${wrClass(p.wr)}" title="seu aproveitamento ${p.src==='mapa'?'neste mapa':'nesta season'}">você ${p.wr}%</span>`:"";
+    return `<div class="prow"><div class="pline"><span class="pn">${esc(n)}</span>${badge}</div><div class="pw">${esc(why)}</div></div>`;
+  }).join("");
+}
+function mapTip(m){
+  const a=m.atkWR||0, d=m.defWR||0, diff=a-d;
+  if(diff<=-8) return `Seu ataque aqui é o furo (${a.toFixed(0)}%). Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`;
+  if(diff>=8) return `Quem cede aqui é a sua defesa (${d.toFixed(0)}%). Não segure passivo: atrase com roam e jogue o retake.`;
+  return `Lados equilibrados (atk ${a.toFixed(0)}% / def ${d.toFixed(0)}%). O round se decide na primeira troca — entre junto.`;
+}
+function mineLine(m){
+  if(!m.def && !m.atk) return "";
+  const f=l=>(l||[]).map(o=>`${esc(o.name)} ${o.wr}%`).join(" · ");
+  const parts=[];
+  if(m.def) parts.push(`<b style="color:var(--def)">def</b> ${f(m.def)}`);
+  if(m.atk) parts.push(`<b style="color:var(--atk)">atk</b> ${f(m.atk)}`);
+  return `<div class="mine">Seus melhores aqui — ${parts.join(" &nbsp;·&nbsp; ")}</div>`;
+}
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};
   const cards = cur.maps.filter(m=>m.matches>=1).map(m=>{
     const t=tierOf(m.seasonWR), v={play:"PRIORIZE",neu:"NEUTRO",ban:"BANIR"}[t];
     const pm=pb[m.name]||{};
-    const hasOps = m.def && m.atk;
-    const opsHtml = hasOps ? `<div class="sides">
-        <div class="side def"><div class="sh"><span class="ic"></span>Defesa</div>${sideRows(m.def,pm.def)}</div>
-        <div class="side atk"><div class="sh"><span class="ic"></span>Ataque</div>${sideRows(m.atk,pm.atk)}</div></div>` : "";
+    const opsHtml = `<div class="picks">
+        <div class="pside def"><div class="sh"><span class="ic"></span>Pegue na defesa</div>${pickRows(m,"def")}</div>
+        <div class="pside atk"><div class="sh"><span class="ic"></span>Pegue no ataque</div>${pickRows(m,"atk")}</div>
+      </div>
+      <div class="tip">${esc(mapTip(m))}</div>
+      ${mineLine(m)}`;
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
     return `<div class="map">
       <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>
@@ -529,7 +586,7 @@ function renderMapas(){
       ${m.avoid?`<div class="avoid"><b>Evite:</b> ${esc(m.avoid)}</div>`:""}
     </div>`;
   }).join("");
-  const opsNote = cur.maps.some(m=>m.def)?"":`<div class="banner" style="margin-bottom:12px">ℹ Top 3 de operador por mapa ainda não coletado pra ${esc(cur.season)} — mostrando o split ataque/defesa (já dá o diagnóstico do lado fraco).</div>`;
+  const opsNote = `<div class="banner" style="margin-bottom:12px">🎯 Cada mapa mostra <b>quem pegar</b> e <b>por quê</b>, mais uma dica de estratégia tirada do seu próprio ataque×defesa. O selo <b>você X%</b> é o seu aproveitamento com aquele operador.</div>`;
   document.getElementById("scr-mapas").innerHTML = `
     <h2 class="sec">Jogar vs banir<span class="hint">tier por win% da season</span></h2>
     <div class="tier">
