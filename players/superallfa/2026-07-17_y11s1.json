@@ -4,70 +4,691 @@
   "seasonOrder": 41,
   "seasonLabel": "Silent Hunt",
   "basis": "só Y11S1, ranqueada",
-  "kpis": { "matches": 172, "wins": 80, "losses": 89, "winRate": 46.5, "kd": 0.87, "peakRP": 2809, "latestRP": 2615 },
+  "kpis": {
+    "matches": 172,
+    "wins": 80,
+    "losses": 89,
+    "winRate": 46.5,
+    "kd": 0.87,
+    "peakRP": 2809,
+    "latestRP": 2615
+  },
   "operatorsDef": [
-    {"name": "Aruni", "wr": 64, "kd": 1.94, "tag": "", "star": true},
-    {"name": "Tubarão", "wr": 53, "kd": 1.01, "tag": "âncora · 241 rds"},
-    {"name": "Azami", "wr": 52, "kd": 0.80, "tag": ""},
-    {"name": "Sentry", "wr": 51, "kd": 0.64, "tag": ""},
-    {"name": "Skopós", "wr": 47, "kd": 0.77, "tag": ""}
+    {
+      "name": "Aruni",
+      "wr": 64,
+      "kd": 1.94,
+      "tag": "",
+      "star": true,
+      "rounds": 67
+    },
+    {
+      "name": "Tubarão",
+      "wr": 53,
+      "kd": 1.01,
+      "tag": "âncora · 241 rds",
+      "rounds": 241
+    },
+    {
+      "name": "Azami",
+      "wr": 52,
+      "kd": 0.8,
+      "tag": "",
+      "rounds": 29
+    },
+    {
+      "name": "Sentry",
+      "wr": 51,
+      "kd": 0.64,
+      "tag": "",
+      "rounds": 35
+    },
+    {
+      "name": "Skopós",
+      "wr": 47,
+      "kd": 0.77,
+      "tag": "",
+      "rounds": 19
+    }
   ],
   "operatorsAtk": [
-    {"name": "Lion", "wr": 54, "kd": 1.06, "tag": ""},
-    {"name": "Thatcher", "wr": 52, "kd": 1.00, "tag": ""},
-    {"name": "Rauora", "wr": 49, "kd": 0.84, "tag": "160 rds"},
-    {"name": "Deimos", "wr": 48, "kd": 0.72, "tag": "123 rds"}
+    {
+      "name": "Lion",
+      "wr": 54,
+      "kd": 1.06,
+      "tag": "",
+      "rounds": 35
+    },
+    {
+      "name": "Thatcher",
+      "wr": 52,
+      "kd": 1.0,
+      "tag": "",
+      "rounds": 21
+    },
+    {
+      "name": "Rauora",
+      "wr": 49,
+      "kd": 0.84,
+      "tag": "160 rds",
+      "rounds": 160
+    },
+    {
+      "name": "Deimos",
+      "wr": 48,
+      "kd": 0.72,
+      "tag": "123 rds",
+      "rounds": 123
+    }
   ],
   "operatorsCut": [
-    {"name": "Ying", "wr": 40, "kd": 0.91, "tag": "77 rds"},
-    {"name": "Denari", "wr": 39, "kd": 0.36, "tag": ""},
-    {"name": "Kaid", "wr": 32, "kd": 0.53, "tag": ""},
-    {"name": "Nomad", "wr": 29, "kd": 0.95, "tag": ""},
-    {"name": "Castle", "wr": 20, "kd": 0.33, "tag": "despencou"}
+    {
+      "name": "Ying",
+      "wr": 40,
+      "kd": 0.91,
+      "tag": "77 rds",
+      "rounds": 77
+    },
+    {
+      "name": "Denari",
+      "wr": 39,
+      "kd": 0.36,
+      "tag": "",
+      "rounds": 28
+    },
+    {
+      "name": "Kaid",
+      "wr": 32,
+      "kd": 0.53,
+      "tag": "",
+      "rounds": 22
+    },
+    {
+      "name": "Nomad",
+      "wr": 29,
+      "kd": 0.95,
+      "tag": "",
+      "rounds": 28
+    },
+    {
+      "name": "Castle",
+      "wr": 20,
+      "kd": 0.33,
+      "tag": "despencou",
+      "rounds": 10
+    }
   ],
   "maps": [
-    {"name": "Lair", "matches": 9, "seasonWR": 77.8, "kd": 1.21, "atkWR": 50.0, "defWR": 66.7,
-     "def": [{"name":"Tubarão","wr":77},{"name":"Echo","wr":50,"small":true},{"name":"Castle","wr":50,"small":true}],
-     "atk": [{"name":"Thatcher","wr":100,"small":true},{"name":"Rauora","wr":67,"small":true},{"name":"Deimos","wr":43}],
-     "avoid": "Deimos no ataque (43%)."},
-    {"name": "Bank", "matches": 10, "seasonWR": 60.0, "kd": 1.31, "atkWR": 53.3, "defWR": 62.1,
-     "def": [{"name":"Tubarão","wr":82},{"name":"Aruni","wr":60},{"name":"Echo","wr":50,"small":true}],
-     "atk": [{"name":"Lion","wr":67,"small":true},{"name":"Deimos","wr":55},{"name":"Rauora","wr":29,"small":true}]},
-    {"name": "Kafe Dostoyevsky", "matches": 15, "seasonWR": 66.7, "kd": 0.81, "atkWR": 54.8, "defWR": 58.3,
-     "def": [{"name":"Aruni","wr":100,"small":true},{"name":"Tubarão","wr":58},{"name":"Sentry","wr":67,"small":true}],
-     "atk": [{"name":"Rauora","wr":57},{"name":"Deimos","wr":60,"small":true},{"name":"Lion","wr":33,"small":true}]},
-    {"name": "Border", "matches": 20, "seasonWR": 60.0, "kd": 0.82, "atkWR": 56.9, "defWR": 51.0,
-     "def": [{"name":"Azami","wr":80,"small":true},{"name":"Aruni","wr":67,"small":true},{"name":"Tubarão","wr":46}],
-     "atk": [{"name":"Deimos","wr":69},{"name":"Osa","wr":60},{"name":"Ying","wr":50,"small":true}]},
-    {"name": "Chalet", "matches": 17, "seasonWR": 47.1, "kd": 0.67, "atkWR": 60.7, "defWR": 40.4,
-     "def": [{"name":"Tubarão","wr":56},{"name":"Azami","wr":50,"small":true},{"name":"Aruni","wr":40}],
-     "atk": [{"name":"Deimos","wr":69},{"name":"Lion","wr":60,"small":true},{"name":"Rauora","wr":54}],
-     "note": "Defesa é o furo (40%). Jogue retake/agressivo — não segure passivo."},
-    {"name": "Clubhouse", "matches": 11, "seasonWR": 45.5, "kd": 0.85, "atkWR": 51.5, "defWR": 43.2,
-     "def": [{"name":"Tubarão","wr":50},{"name":"Aruni","wr":100,"small":true},{"name":"Sentry","wr":50,"small":true}],
-     "atk": [{"name":"Rauora","wr":67},{"name":"Ying","wr":50},{"name":"Thatcher","wr":50,"small":true}]},
-    {"name": "Coastline", "matches": 14, "seasonWR": 42.9, "kd": 1.02, "atkWR": 57.8, "defWR": 40.0,
-     "def": [{"name":"Skopós","wr":67,"small":true},{"name":"Tubarão","wr":37},{"name":"Sentry","wr":50,"small":true}],
-     "atk": [{"name":"Glaz","wr":80,"small":true},{"name":"Rauora","wr":67},{"name":"Lion","wr":57,"small":true}],
-     "avoid": "Tubarão na defesa (só 37% aqui)."},
-    {"name": "Oregon", "matches": 20, "seasonWR": 35.0, "kd": 0.76, "atkWR": 33.9, "defWR": 54.1,
-     "def": [{"name":"Aruni","wr":89},{"name":"Tubarão","wr":50},{"name":"Sentry","wr":45}],
-     "atk": [{"name":"Ying","wr":55},{"name":"Deimos","wr":41},{"name":"Blackbeard","wr":30}],
-     "avoid": "atacando: Rauora (18%), Denari/Blackbeard (30%). Ataque só de Ying."},
-    {"name": "Consulate", "matches": 19, "seasonWR": 26.3, "kd": 0.69, "atkWR": 32.8, "defWR": 56.4,
-     "def": [{"name":"Tubarão","wr":58},{"name":"Azami","wr":60,"small":true},{"name":"Aruni","wr":40,"small":true}],
-     "atk": [{"name":"Thatcher","wr":44,"small":true},{"name":"Rauora","wr":39},{"name":"Ying","wr":30}],
-     "avoid": "atacando: Deimos (30%/0.25), Nomad (0%)."},
-    {"name": "Nighthaven Labs", "matches": 16, "seasonWR": 25.0, "kd": 0.67, "atkWR": 31.3, "defWR": 43.8,
-     "def": [{"name":"Aruni","wr":57,"small":true},{"name":"Tubarão","wr":48},{"name":"Sentry","wr":50,"small":true}],
-     "atk": [{"name":"Deimos","wr":44},{"name":"Ying","wr":24},{"name":"Rauora","wr":29,"small":true}],
-     "avoid": "Ying no ataque (24%, 21 rds) e Rauora (29%)."},
-    {"name": "Fortress", "matches": 5, "seasonWR": 60.0, "kd": 1.14, "atkWR": 35.3, "defWR": 60.0},
-    {"name": "Villa", "matches": 5, "seasonWR": 60.0, "kd": 1.12, "atkWR": 53.3, "defWR": 56.3},
-    {"name": "Kanal", "matches": 4, "seasonWR": 50.0, "kd": 1.33, "atkWR": 50.0, "defWR": 44.4},
-    {"name": "Skyscraper", "matches": 3, "seasonWR": 0.0, "kd": 1.30, "atkWR": 33.3, "defWR": 25.0},
-    {"name": "Outback", "matches": 2, "seasonWR": 50.0, "kd": 1.29, "atkWR": 20.0, "defWR": 50.0},
-    {"name": "Theme Park", "matches": 1, "seasonWR": 100.0, "kd": 3.75, "atkWR": 50.0, "defWR": 60.0},
-    {"name": "Emerald Plains", "matches": 1, "seasonWR": 0.0, "kd": 0.0, "atkWR": 0.0, "defWR": 0.0}
+    {
+      "name": "Lair",
+      "matches": 9,
+      "seasonWR": 77.8,
+      "kd": 1.21,
+      "atkWR": 50.0,
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Tubarão",
+          "wr": 77,
+          "rounds": 13,
+          "kd": 1.75
+        },
+        {
+          "name": "Echo",
+          "wr": 50,
+          "small": true,
+          "rounds": 4,
+          "kd": 1.0
+        },
+        {
+          "name": "Castle",
+          "wr": 50,
+          "small": true,
+          "rounds": 2,
+          "kd": 3.0
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thatcher",
+          "wr": 100,
+          "small": true,
+          "rounds": 3,
+          "kd": 2.0
+        },
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "small": true,
+          "rounds": 3,
+          "kd": 0.5
+        },
+        {
+          "name": "Deimos",
+          "wr": 43,
+          "rounds": 14,
+          "kd": 1.12
+        }
+      ],
+      "avoid": "Deimos no ataque (43%)."
+    },
+    {
+      "name": "Bank",
+      "matches": 10,
+      "seasonWR": 60.0,
+      "kd": 1.31,
+      "atkWR": 53.3,
+      "defWR": 62.1,
+      "def": [
+        {
+          "name": "Tubarão",
+          "wr": 82,
+          "rounds": 11,
+          "kd": 3.0
+        },
+        {
+          "name": "Aruni",
+          "wr": 60,
+          "rounds": 10,
+          "kd": 1.0
+        },
+        {
+          "name": "Echo",
+          "wr": 50,
+          "small": true,
+          "rounds": 2,
+          "kd": 0.0
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 67,
+          "small": true,
+          "rounds": 6,
+          "kd": 3.0
+        },
+        {
+          "name": "Deimos",
+          "wr": 55,
+          "rounds": 11,
+          "kd": 1.5
+        },
+        {
+          "name": "Rauora",
+          "wr": 29,
+          "small": true,
+          "rounds": 7,
+          "kd": 1.0
+        }
+      ]
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "matches": 15,
+      "seasonWR": 66.7,
+      "kd": 0.81,
+      "atkWR": 54.8,
+      "defWR": 58.3,
+      "def": [
+        {
+          "name": "Aruni",
+          "wr": 100,
+          "small": true,
+          "rounds": 5,
+          "kd": 3.0
+        },
+        {
+          "name": "Tubarão",
+          "wr": 58,
+          "rounds": 24,
+          "kd": 1.18
+        },
+        {
+          "name": "Sentry",
+          "wr": 67,
+          "small": true,
+          "rounds": 6,
+          "kd": 0.4
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 57,
+          "rounds": 30,
+          "kd": 0.79
+        },
+        {
+          "name": "Deimos",
+          "wr": 60,
+          "small": true,
+          "rounds": 5,
+          "kd": 0.33
+        },
+        {
+          "name": "Lion",
+          "wr": 33,
+          "small": true,
+          "rounds": 3,
+          "kd": 0.0
+        }
+      ]
+    },
+    {
+      "name": "Border",
+      "matches": 20,
+      "seasonWR": 60.0,
+      "kd": 0.82,
+      "atkWR": 56.9,
+      "defWR": 51.0,
+      "def": [
+        {
+          "name": "Azami",
+          "wr": 80,
+          "small": true,
+          "rounds": 5,
+          "kd": 1.0
+        },
+        {
+          "name": "Aruni",
+          "wr": 67,
+          "small": true,
+          "rounds": 3,
+          "kd": 1.0
+        },
+        {
+          "name": "Tubarão",
+          "wr": 46,
+          "rounds": 33,
+          "kd": 0.79
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 69,
+          "rounds": 16,
+          "kd": 1.0
+        },
+        {
+          "name": "Osa",
+          "wr": 60,
+          "rounds": 10,
+          "kd": 0.57
+        },
+        {
+          "name": "Ying",
+          "wr": 50,
+          "small": true,
+          "rounds": 6,
+          "kd": 1.25
+        }
+      ]
+    },
+    {
+      "name": "Chalet",
+      "matches": 17,
+      "seasonWR": 47.1,
+      "kd": 0.67,
+      "atkWR": 60.7,
+      "defWR": 40.4,
+      "def": [
+        {
+          "name": "Tubarão",
+          "wr": 56,
+          "rounds": 16,
+          "kd": 0.67
+        },
+        {
+          "name": "Azami",
+          "wr": 50,
+          "small": true,
+          "rounds": 6,
+          "kd": 0.6
+        },
+        {
+          "name": "Aruni",
+          "wr": 40,
+          "rounds": 10,
+          "kd": 0.62
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 69,
+          "rounds": 13,
+          "kd": 0.8
+        },
+        {
+          "name": "Lion",
+          "wr": 60,
+          "small": true,
+          "rounds": 5,
+          "kd": 1.0
+        },
+        {
+          "name": "Rauora",
+          "wr": 54,
+          "rounds": 24,
+          "kd": 1.13
+        }
+      ],
+      "note": "Defesa é o furo (40%). Jogue retake/agressivo — não segure passivo."
+    },
+    {
+      "name": "Clubhouse",
+      "matches": 11,
+      "seasonWR": 45.5,
+      "kd": 0.85,
+      "atkWR": 51.5,
+      "defWR": 43.2,
+      "def": [
+        {
+          "name": "Tubarão",
+          "wr": 50,
+          "rounds": 14,
+          "kd": 0.7
+        },
+        {
+          "name": "Aruni",
+          "wr": 100,
+          "small": true,
+          "rounds": 2,
+          "kd": 1.0
+        },
+        {
+          "name": "Sentry",
+          "wr": 50,
+          "small": true,
+          "rounds": 2,
+          "kd": 3.0
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "rounds": 12,
+          "kd": 1.33
+        },
+        {
+          "name": "Ying",
+          "wr": 50,
+          "rounds": 8,
+          "kd": 1.0
+        },
+        {
+          "name": "Thatcher",
+          "wr": 50,
+          "small": true,
+          "rounds": 4,
+          "kd": 0.33
+        }
+      ]
+    },
+    {
+      "name": "Coastline",
+      "matches": 14,
+      "seasonWR": 42.9,
+      "kd": 1.02,
+      "atkWR": 57.8,
+      "defWR": 40.0,
+      "def": [
+        {
+          "name": "Skopós",
+          "wr": 67,
+          "small": true,
+          "rounds": 3,
+          "kd": 3.0
+        },
+        {
+          "name": "Tubarão",
+          "wr": 37,
+          "rounds": 27,
+          "kd": 0.95
+        },
+        {
+          "name": "Sentry",
+          "wr": 50,
+          "small": true,
+          "rounds": 2,
+          "kd": 0.0
+        }
+      ],
+      "atk": [
+        {
+          "name": "Glaz",
+          "wr": 80,
+          "small": true,
+          "rounds": 5,
+          "kd": 5.0
+        },
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "rounds": 18,
+          "kd": 1.12
+        },
+        {
+          "name": "Lion",
+          "wr": 57,
+          "small": true,
+          "rounds": 7,
+          "kd": 6.0
+        }
+      ],
+      "avoid": "Tubarão na defesa (só 37% aqui)."
+    },
+    {
+      "name": "Oregon",
+      "matches": 20,
+      "seasonWR": 35.0,
+      "kd": 0.76,
+      "atkWR": 33.9,
+      "defWR": 54.1,
+      "def": [
+        {
+          "name": "Aruni",
+          "wr": 89,
+          "rounds": 9,
+          "kd": 5.0
+        },
+        {
+          "name": "Tubarão",
+          "wr": 50,
+          "rounds": 20,
+          "kd": 0.79
+        },
+        {
+          "name": "Sentry",
+          "wr": 45,
+          "rounds": 11,
+          "kd": 0.7
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ying",
+          "wr": 55,
+          "rounds": 11,
+          "kd": 0.88
+        },
+        {
+          "name": "Deimos",
+          "wr": 41,
+          "rounds": 17,
+          "kd": 0.45
+        },
+        {
+          "name": "Blackbeard",
+          "wr": 30,
+          "rounds": 10,
+          "kd": 0.8
+        }
+      ],
+      "avoid": "atacando: Rauora (18%), Denari/Blackbeard (30%). Ataque só de Ying."
+    },
+    {
+      "name": "Consulate",
+      "matches": 19,
+      "seasonWR": 26.3,
+      "kd": 0.69,
+      "atkWR": 32.8,
+      "defWR": 56.4,
+      "def": [
+        {
+          "name": "Tubarão",
+          "wr": 58,
+          "rounds": 31,
+          "kd": 0.71
+        },
+        {
+          "name": "Azami",
+          "wr": 60,
+          "small": true,
+          "rounds": 5,
+          "kd": 0.8
+        },
+        {
+          "name": "Aruni",
+          "wr": 40,
+          "small": true,
+          "rounds": 5,
+          "kd": 2.67
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thatcher",
+          "wr": 44,
+          "small": true,
+          "rounds": 9,
+          "kd": 0.67
+        },
+        {
+          "name": "Rauora",
+          "wr": 39,
+          "rounds": 18,
+          "kd": 0.4
+        },
+        {
+          "name": "Ying",
+          "wr": 30,
+          "rounds": 10,
+          "kd": 0.88
+        }
+      ],
+      "avoid": "atacando: Deimos (30%/0.25), Nomad (0%)."
+    },
+    {
+      "name": "Nighthaven Labs",
+      "matches": 16,
+      "seasonWR": 25.0,
+      "kd": 0.67,
+      "atkWR": 31.3,
+      "defWR": 43.8,
+      "def": [
+        {
+          "name": "Aruni",
+          "wr": 57,
+          "small": true,
+          "rounds": 7,
+          "kd": 1.5
+        },
+        {
+          "name": "Tubarão",
+          "wr": 48,
+          "rounds": 31,
+          "kd": 0.95
+        },
+        {
+          "name": "Sentry",
+          "wr": 50,
+          "small": true,
+          "rounds": 2,
+          "kd": 0.0
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 44,
+          "rounds": 16,
+          "kd": 0.31
+        },
+        {
+          "name": "Ying",
+          "wr": 24,
+          "rounds": 21,
+          "kd": 0.87
+        },
+        {
+          "name": "Rauora",
+          "wr": 29,
+          "small": true,
+          "rounds": 7,
+          "kd": 0.2
+        }
+      ],
+      "avoid": "Ying no ataque (24%, 21 rds) e Rauora (29%)."
+    },
+    {
+      "name": "Fortress",
+      "matches": 5,
+      "seasonWR": 60.0,
+      "kd": 1.14,
+      "atkWR": 35.3,
+      "defWR": 60.0
+    },
+    {
+      "name": "Villa",
+      "matches": 5,
+      "seasonWR": 60.0,
+      "kd": 1.12,
+      "atkWR": 53.3,
+      "defWR": 56.3
+    },
+    {
+      "name": "Kanal",
+      "matches": 4,
+      "seasonWR": 50.0,
+      "kd": 1.33,
+      "atkWR": 50.0,
+      "defWR": 44.4
+    },
+    {
+      "name": "Skyscraper",
+      "matches": 3,
+      "seasonWR": 0.0,
+      "kd": 1.3,
+      "atkWR": 33.3,
+      "defWR": 25.0
+    },
+    {
+      "name": "Outback",
+      "matches": 2,
+      "seasonWR": 50.0,
+      "kd": 1.29,
+      "atkWR": 20.0,
+      "defWR": 50.0
+    },
+    {
+      "name": "Theme Park",
+      "matches": 1,
+      "seasonWR": 100.0,
+      "kd": 3.75,
+      "atkWR": 50.0,
+      "defWR": 60.0
+    },
+    {
+      "name": "Emerald Plains",
+      "matches": 1,
+      "seasonWR": 0.0,
+      "kd": 0.0,
+      "atkWR": 0.0,
+      "defWR": 0.0
+    }
   ]
 }

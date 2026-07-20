@@ -1,41 +1,234 @@
 {
-  "date": "2026-07-18", "season": "Y11S2", "seasonOrder": 42, "seasonLabel": "System Override",
+  "date": "2026-07-18",
+  "season": "Y11S2",
+  "seasonOrder": 42,
+  "seasonLabel": "System Override",
   "basis": "só Y11S2 (atual), ranqueada",
-  "kpis": { "matches": 252, "wins": 119, "losses": 133, "winRate": 47.2, "kd": 0.93, "peakRP": 3285, "latestRP": 3100 },
+  "kpis": {
+    "matches": 252,
+    "wins": 119,
+    "losses": 133,
+    "winRate": 47.2,
+    "kd": 0.93,
+    "peakRP": 3285,
+    "latestRP": 3100
+  },
   "operatorsDef": [
-    {"name": "Valkyrie", "wr": 52, "kd": 1.04, "tag": "main · 370 rds", "star": true},
-    {"name": "Azami", "wr": 67, "kd": 1.38, "tag": ""},
-    {"name": "Thorn", "wr": 55, "kd": 1.16, "tag": ""},
-    {"name": "Bandit", "wr": 52, "kd": 0.87, "tag": "112 rds"},
-    {"name": "Kaid", "wr": 46, "kd": 0.80, "tag": ""}
+    {
+      "name": "Valkyrie",
+      "wr": 52,
+      "kd": 1.04,
+      "tag": "main · 370 rds",
+      "star": true,
+      "rounds": 370
+    },
+    {
+      "name": "Azami",
+      "wr": 67,
+      "kd": 1.38,
+      "tag": "",
+      "rounds": 30
+    },
+    {
+      "name": "Thorn",
+      "wr": 55,
+      "kd": 1.16,
+      "tag": "",
+      "rounds": 44
+    },
+    {
+      "name": "Bandit",
+      "wr": 52,
+      "kd": 0.87,
+      "tag": "112 rds",
+      "rounds": 112
+    },
+    {
+      "name": "Kaid",
+      "wr": 46,
+      "kd": 0.8,
+      "tag": "",
+      "rounds": 22
+    }
   ],
   "operatorsAtk": [
-    {"name": "Sledge", "wr": 49, "kd": 1.12, "tag": ""},
-    {"name": "Fuze", "wr": 49, "kd": 0.89, "tag": ""},
-    {"name": "Dokkaebi", "wr": 48, "kd": 0.92, "tag": ""},
-    {"name": "Ram", "wr": 47, "kd": 0.96, "tag": ""},
-    {"name": "Striker", "wr": 46, "kd": 0.95, "tag": "main · 156 rds"}
+    {
+      "name": "Sledge",
+      "wr": 49,
+      "kd": 1.12,
+      "tag": "",
+      "rounds": 78
+    },
+    {
+      "name": "Fuze",
+      "wr": 49,
+      "kd": 0.89,
+      "tag": "",
+      "rounds": 80
+    },
+    {
+      "name": "Dokkaebi",
+      "wr": 48,
+      "kd": 0.92,
+      "tag": "",
+      "rounds": 56
+    },
+    {
+      "name": "Ram",
+      "wr": 47,
+      "kd": 0.96,
+      "tag": "",
+      "rounds": 68
+    },
+    {
+      "name": "Striker",
+      "wr": 46,
+      "kd": 0.95,
+      "tag": "main · 156 rds",
+      "rounds": 156
+    }
   ],
   "operatorsCut": [
-    {"name": "Mute", "wr": 30, "kd": 0.63, "tag": ""},
-    {"name": "Fenrir", "wr": 40, "kd": 0.51, "tag": "48 rds"},
-    {"name": "Twitch", "wr": 43, "kd": 0.83, "tag": "75 rds"},
-    {"name": "Zero", "wr": 43, "kd": 0.87, "tag": ""},
-    {"name": "Thermite", "wr": 45, "kd": 0.52, "tag": "56 rds"}
+    {
+      "name": "Mute",
+      "wr": 30,
+      "kd": 0.63,
+      "tag": "",
+      "rounds": 33
+    },
+    {
+      "name": "Fenrir",
+      "wr": 40,
+      "kd": 0.51,
+      "tag": "48 rds",
+      "rounds": 48
+    },
+    {
+      "name": "Twitch",
+      "wr": 43,
+      "kd": 0.83,
+      "tag": "75 rds",
+      "rounds": 75
+    },
+    {
+      "name": "Zero",
+      "wr": 43,
+      "kd": 0.87,
+      "tag": "",
+      "rounds": 40
+    },
+    {
+      "name": "Thermite",
+      "wr": 45,
+      "kd": 0.52,
+      "tag": "56 rds",
+      "rounds": 56
+    }
   ],
   "maps": [
-    {"name": "Chalet", "matches": 15, "seasonWR": 73.3, "kd": 1.21, "atkWR": 65.2, "defWR": 51.1},
-    {"name": "Nighthaven Labs", "matches": 22, "seasonWR": 72.7, "kd": 0.98, "atkWR": 57.7, "defWR": 59.1},
-    {"name": "Kafe Dostoyevsky", "matches": 11, "seasonWR": 54.5, "kd": 0.73, "atkWR": 55.3, "defWR": 44.4},
-    {"name": "Consulate", "matches": 15, "seasonWR": 53.3, "kd": 0.91, "atkWR": 41.3, "defWR": 57.1},
-    {"name": "Calypso Casino", "matches": 51, "seasonWR": 52.9, "kd": 1.03, "atkWR": 42.6, "defWR": 59.3},
-    {"name": "Coastline", "matches": 20, "seasonWR": 50.0, "kd": 1.01, "atkWR": 55.0, "defWR": 44.4},
-    {"name": "Clubhouse", "matches": 18, "seasonWR": 50.0, "kd": 0.92, "atkWR": 50.0, "defWR": 50.8},
-    {"name": "Outback", "matches": 10, "seasonWR": 50.0, "kd": 0.87, "atkWR": 48.0, "defWR": 50.0},
-    {"name": "Border", "matches": 16, "seasonWR": 43.8, "kd": 0.80, "atkWR": 49.1, "defWR": 48.2},
-    {"name": "Fortress", "matches": 12, "seasonWR": 33.3, "kd": 0.86, "atkWR": 41.0, "defWR": 47.4},
-    {"name": "Oregon", "matches": 28, "seasonWR": 28.6, "kd": 0.99, "atkWR": 40.6, "defWR": 43.5},
-    {"name": "Bank", "matches": 14, "seasonWR": 28.6, "kd": 0.75, "atkWR": 40.0, "defWR": 46.5},
-    {"name": "Lair", "matches": 16, "seasonWR": 18.8, "kd": 0.84, "atkWR": 26.9, "defWR": 49.0}
+    {
+      "name": "Chalet",
+      "matches": 15,
+      "seasonWR": 73.3,
+      "kd": 1.21,
+      "atkWR": 65.2,
+      "defWR": 51.1
+    },
+    {
+      "name": "Nighthaven Labs",
+      "matches": 22,
+      "seasonWR": 72.7,
+      "kd": 0.98,
+      "atkWR": 57.7,
+      "defWR": 59.1
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "matches": 11,
+      "seasonWR": 54.5,
+      "kd": 0.73,
+      "atkWR": 55.3,
+      "defWR": 44.4
+    },
+    {
+      "name": "Consulate",
+      "matches": 15,
+      "seasonWR": 53.3,
+      "kd": 0.91,
+      "atkWR": 41.3,
+      "defWR": 57.1
+    },
+    {
+      "name": "Calypso Casino",
+      "matches": 51,
+      "seasonWR": 52.9,
+      "kd": 1.03,
+      "atkWR": 42.6,
+      "defWR": 59.3
+    },
+    {
+      "name": "Coastline",
+      "matches": 20,
+      "seasonWR": 50.0,
+      "kd": 1.01,
+      "atkWR": 55.0,
+      "defWR": 44.4
+    },
+    {
+      "name": "Clubhouse",
+      "matches": 18,
+      "seasonWR": 50.0,
+      "kd": 0.92,
+      "atkWR": 50.0,
+      "defWR": 50.8
+    },
+    {
+      "name": "Outback",
+      "matches": 10,
+      "seasonWR": 50.0,
+      "kd": 0.87,
+      "atkWR": 48.0,
+      "defWR": 50.0
+    },
+    {
+      "name": "Border",
+      "matches": 16,
+      "seasonWR": 43.8,
+      "kd": 0.8,
+      "atkWR": 49.1,
+      "defWR": 48.2
+    },
+    {
+      "name": "Fortress",
+      "matches": 12,
+      "seasonWR": 33.3,
+      "kd": 0.86,
+      "atkWR": 41.0,
+      "defWR": 47.4
+    },
+    {
+      "name": "Oregon",
+      "matches": 28,
+      "seasonWR": 28.6,
+      "kd": 0.99,
+      "atkWR": 40.6,
+      "defWR": 43.5
+    },
+    {
+      "name": "Bank",
+      "matches": 14,
+      "seasonWR": 28.6,
+      "kd": 0.75,
+      "atkWR": 40.0,
+      "defWR": 46.5
+    },
+    {
+      "name": "Lair",
+      "matches": 16,
+      "seasonWR": 18.8,
+      "kd": 0.84,
+      "atkWR": 26.9,
+      "defWR": 49.0
+    }
   ]
 }

@@ -22,7 +22,20 @@ docs/<slug>.html           # os apps publicados (GitHub Pages serve daqui)
   "default":   { "def":[3 nomes], "atk":[3 nomes] },
   "maps":      { "Oregon": {"def":[3],"atk":[3]}, … } }
 ```
-- O **motivo é por FUNÇÃO do operador** (negar hard breach, atrasar entrada, abrir parede…) — vale em qualquer mapa, então não há risco de callout errado. Deliberado: não inventamos nome de bomb site/parede de mapas novos.
+### Como a recomendação é calculada (merge amostra × vitória × K/D)
+A ordem dos picks **não** é meta/opinião: é score em `scoreOp()`.
+```
+adjWR = (wr*n + baseWR*10) / (n+10)      # encolhe p/ a média do jogador
+adjKD = (kd*n + baseKD*25) / (n+25)      # K/D varia mais -> encolhe mais
+score = (adjWR - baseWR) + (adjKD - baseKD) * 12
+```
+- `n` = rounds jogados com o op (naquele mapa, senão na season); base = win% e K/D da season do jogador.
+- Amostra pequena é puxada pra média → 100% em 2 rounds não fura a fila; 67% em 30 rounds passa na frente de 52% em 370.
+- **Fonte, em ordem:** dado do op naquele mapa → dado da season → playbook (só se não houver dado). O card rotula qual foi usada.
+- O **motivo cita os números** (`"67% em 30 rounds · K/D 1.38 — bem acima da sua média"`) e abaixo vem a função do op como contexto.
+- Limiares: score ≥10 "bem acima" · ≥3 "acima" · ≤-5 "abaixo — cuidado" · <8 rounds "amostra curta".
+
+- O **motivo de função do operador** (negar hard breach, atrasar entrada, abrir parede…) vale em qualquer mapa, então não há risco de callout errado. Deliberado: não inventamos nome de bomb site/parede de mapas novos.
 - A **dica de estratégia por mapa é gerada no app** a partir do atk×def do próprio jogador (`mapTip()`), então é sempre correta e pessoal.
 - O selo **"você X%"** ao lado do pick vem dos dados do jogador: primeiro o aproveitamento naquele mapa (se coletado), senão o da season.
 - Mapa sem entrada no playbook cai no `default` — todo jogador tem recomendação em todo mapa, mesmo sem coleta por mapa.

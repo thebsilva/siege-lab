@@ -293,6 +293,9 @@ TEMPLATE = r"""<!DOCTYPE html>
   .pwr.mid{color:var(--neu);border-color:rgba(250,204,21,.4)}
   .pwr.low{color:var(--ban);border-color:rgba(240,81,63,.4)}
   .pw{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+  .pwhy{display:block;color:var(--txt);font-weight:600;font-variant-numeric:tabular-nums}
+  .prole{display:block;opacity:.72;margin-top:1px}
+  .pside .sh .src{margin-left:auto;font-size:9px;font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted);opacity:.85}
   .tip{padding:9px 14px;font-size:12px;color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
   .mine{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);background:#101218;line-height:1.5}
   .pl{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px}
@@ -534,20 +537,55 @@ function strongSide(m){
   if(dd<=-8) return `<span class="sbadge def">FORTE NA DEFESA</span>`;
   return `<span class="sbadge bal">EQUILIBRADO</span>`;
 }
-function personalWR(m, opName){
-  for(const a of [m.def, m.atk]){ if(a){ const h=a.find(o=>o.name===opName); if(h) return {wr:h.wr,src:"mapa"}; } }
-  const all=[].concat(active.operatorsDef||[],active.operatorsAtk||[],active.operatorsCut||[]);
-  const h=all.find(o=>o.name===opName);
-  return h?{wr:h.wr,src:"season"}:null;
+function opSide(name){ return ((PLAYBOOK.operators||{})[name]||{}).side || null; }
+function baseOf(){ return {wr:(active.kpis.winRate||50), kd:(active.kpis.kd||1)}; }
+/* merge amostra x vitoria x K/D: encolhe para a media do jogador conforme a amostra */
+function scoreOp(o, base){
+  const P_WR=10, P_KD=25, W_KD=12, n=o.rounds||0;   /* K/D varia mais -> encolhe mais */
+  const wr=(o.wr!=null?o.wr:base.wr), kd=(o.kd!=null?o.kd:base.kd);
+  const adjWR=(wr*n + base.wr*P_WR)/(n+P_WR);
+  const adjKD=(kd*n + base.kd*P_KD)/(n+P_KD);
+  return {n, adjWR, adjKD, score:(adjWR-base.wr) + (adjKD-base.kd)*W_KD};
+}
+function whyData(o, sc){
+  const bits=[`${o.wr}% em ${o.rounds||0} rounds`];
+  if(o.kd!=null) bits.push(`K/D ${o.kd.toFixed(2)}`);
+  let v;
+  if((o.rounds||0)<8) v="amostra curta — indício, confirme jogando";
+  else if(sc.score>=10) v="bem acima da sua média";
+  else if(sc.score>=3) v="acima da sua média";
+  else if(sc.score<=-5) v="abaixo da sua média — cuidado";
+  else v="na sua média";
+  return bits.join(" · ")+" — "+v;
+}
+function candidates(m, side){
+  if(m[side] && m[side].length && m[side].some(o=>o.rounds!=null))
+    return {src:"mapa", list:m[side].filter(o=>o.rounds!=null)};
+  const seasonList = side==="def" ? (active.operatorsDef||[]) : (active.operatorsAtk||[]);
+  const cut = (active.operatorsCut||[]).filter(o=>opSide(o.name)===side);
+  const merged = seasonList.concat(cut).filter(o=>o.rounds!=null);
+  if(merged.length) return {src:"season", list:merged};
+  return {src:"playbook", list:[]};
+}
+function srcLabel(s){
+  return s==="mapa" ? "seu histórico neste mapa"
+       : s==="season" ? "sua season (ainda sem dado por mapa)"
+       : "referência geral (sem dado seu)";
 }
 function pickRows(m, side){
-  const conf=(PLAYBOOK.maps||{})[m.name]||PLAYBOOK.default||{};
-  const list=conf[side]||(PLAYBOOK.default||{})[side]||[];
-  return list.map(n=>{
-    const why=((PLAYBOOK.operators||{})[n]||{}).why||"";
-    const p=personalWR(m,n);
-    const badge=p?`<span class="pwr ${wrClass(p.wr)}" title="seu aproveitamento ${p.src==='mapa'?'neste mapa':'nesta season'}">você ${p.wr}%</span>`:"";
-    return `<div class="prow"><div class="pline"><span class="pn">${esc(n)}</span>${badge}</div><div class="pw">${esc(why)}</div></div>`;
+  const base=baseOf(), c=candidates(m, side);
+  if(c.src==="playbook"){
+    const conf=(PLAYBOOK.maps||{})[m.name]||PLAYBOOK.default||{};
+    return (conf[side]||[]).map(n=>
+      `<div class="prow"><div class="pline"><span class="pn">${esc(n)}</span></div>`+
+      `<div class="pw">${esc(((PLAYBOOK.operators||{})[n]||{}).why||"")}</div></div>`).join("");
+  }
+  const ranked=c.list.map(o=>({o, sc:scoreOp(o,base)})).sort((a,b)=>b.sc.score-a.sc.score).slice(0,3);
+  return ranked.map(({o,sc})=>{
+    const role=((PLAYBOOK.operators||{})[o.name]||{}).why||"";
+    return `<div class="prow"><div class="pline"><span class="pn">${esc(o.name)}</span>`+
+      `<span class="pwr ${wrClass(o.wr)}" title="amostra usada no cálculo">${o.wr}% · ${o.rounds||0} rds</span></div>`+
+      `<div class="pw"><b class="pwhy">${esc(whyData(o,sc))}</b>${role?`<span class="prole">${esc(role)}</span>`:""}</div></div>`;
   }).join("");
 }
 function mapTip(m){
@@ -569,12 +607,12 @@ function renderMapas(){
   const cards = cur.maps.filter(m=>m.matches>=1).map(m=>{
     const t=tierOf(m.seasonWR), v={play:"PRIORIZE",neu:"NEUTRO",ban:"BANIR"}[t];
     const pm=pb[m.name]||{};
+    const cD=candidates(m,"def"), cA=candidates(m,"atk");
     const opsHtml = `<div class="picks">
-        <div class="pside def"><div class="sh"><span class="ic"></span>Pegue na defesa</div>${pickRows(m,"def")}</div>
-        <div class="pside atk"><div class="sh"><span class="ic"></span>Pegue no ataque</div>${pickRows(m,"atk")}</div>
+        <div class="pside def"><div class="sh"><span class="ic"></span>Pegue na defesa<span class="src">${esc(srcLabel(cD.src))}</span></div>${pickRows(m,"def")}</div>
+        <div class="pside atk"><div class="sh"><span class="ic"></span>Pegue no ataque<span class="src">${esc(srcLabel(cA.src))}</span></div>${pickRows(m,"atk")}</div>
       </div>
-      <div class="tip">${esc(mapTip(m))}</div>
-      ${mineLine(m)}`;
+      <div class="tip">${esc(mapTip(m))}</div>`;
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
     return `<div class="map">
       <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>
