@@ -65,23 +65,54 @@ def build_player(pdir):
     print(f"OK -> docs/{os.path.basename(out)}  ({profile.get('name')}: {len(snaps)} season(s): {', '.join(seasons)})")
     latest = max(snaps, key=lambda s: s.get("seasonOrder", 0))
     k = latest.get("kpis", {})
-    rk, color = rank_py(k.get("peakRP"))
+    curRP = k.get("latestRP") if k.get("latestRP") is not None else k.get("peakRP")
+    rk, color = rank_py(curRP)
+    dmain = (latest.get("operatorsDef") or [{}])[0]
+    amain = (latest.get("operatorsAtk") or [{}])[0]
+    rm = latest.get("recentMatches") or []
+    rw = sum(1 for m in rm if m.get("w")); rl = len(rm) - rw
+    rnet = sum(m.get("rp", 0) for m in rm)
     return {"slug": profile.get("slug"), "name": profile.get("name"), "season": latest.get("season"),
-            "rank": rk, "color": color, "wr": k.get("winRate"), "kd": k.get("kd"), "matches": k.get("matches")}
+            "rank": rk, "color": color, "curRP": curRP or 0, "wr": k.get("winRate"), "kd": k.get("kd"),
+            "matches": k.get("matches"), "defMain": dmain.get("name"), "defWr": dmain.get("wr") or 0,
+            "atkMain": amain.get("name"), "atkWr": amain.get("wr") or 0,
+            "rw": rw, "rl": rl, "rnet": rnet, "hasRecent": len(rm) > 0}
 
 
 def write_index(cards):
     import html as _h
-    cells = "".join(
-        f'''<a class="pcard" href="{_h.escape(c['slug'])}.html">
-      <div class="pc-top"><span class="pc-name">{_h.escape(c['name'])}</span>
-        <span class="pc-rank" style="background:{c['color']}22;color:{c['color']}">{_h.escape(c['rank'])}</span></div>
-      <div class="pc-meta">{_h.escape(c['season'])} · {c['wr']:.1f}% vitórias · KD {c['kd']:.2f} · {c['matches']} partidas</div>
-      <div class="pc-go">Abrir análise →</div></a>''' for c in cards)
+    esc = lambda s: _h.escape(str(s))
+    cards = sorted(cards, key=lambda c: (c.get("curRP") or 0), reverse=True)
+    chips = ""
+    if cards:
+        kd = max(cards, key=lambda c: c.get("kd") or 0)
+        dfn = max(cards, key=lambda c: c.get("defWr") or 0)
+        sup = [("🎯", "Maior K/D", kd["name"], f"{kd['kd']:.2f}"),
+               ("🛡", "Melhor defesa", dfn["name"], f"{dfn['defMain']} · {dfn['defWr']:.0f}%")]
+        rec = [c for c in cards if c.get("hasRecent")]
+        if rec:
+            best = max(rec, key=lambda c: c["rw"] - c["rl"])
+            cold = min(rec, key=lambda c: c["rw"] - c["rl"])
+            sup.append(("🔥", "Melhor forma", best["name"], f"{best['rw']}-{best['rl']} últimas"))
+            sup.append(("🧊", "Em maré fria", cold["name"], f"{cold['rw']}-{cold['rl']} · {cold['rnet']:+d} RP"))
+        chips = "".join(
+            f'<div class="sup"><div class="sup-l">{ico} {esc(lbl)}</div>'
+            f'<div class="sup-n">{esc(nm)}</div><div class="sup-v">{esc(v)}</div></div>'
+            for ico, lbl, nm, v in sup)
+    rows = ""
+    for i, c in enumerate(cards, 1):
+        pill = (f'<span class="rf {"up" if c["rw"] >= c["rl"] else "dn"}">{c["rw"]}-{c["rl"]}</span>'
+                if c.get("hasRecent") else "")
+        rows += (
+            f'<a class="prow2" href="{esc(c["slug"])}.html">'
+            f'<div class="ppos">{i}</div>'
+            f'<div class="pmain"><div class="pnm">{esc(c["name"])}</div>'
+            f'<div class="psub">{c["wr"]:.0f}% vitórias · KD {c["kd"]:.2f} · {esc(c["season"])} {pill}</div></div>'
+            f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div></a>')
     out = os.path.join(OUT_DIR, "index.html")
     with open(out, "w", encoding="utf-8") as fh:
-        fh.write(INDEX_TEMPLATE.replace("__CARDS__", cells))
-    print(f"OK -> docs/index.html  (landing com {len(cards)} jogador(es))")
+        fh.write(INDEX_TEMPLATE.replace("__CHIPS__", chips).replace("__ROWS__", rows))
+    print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
 
 
 def main():
@@ -103,34 +134,48 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0e">
-<title>SIEGE·LAB</title>
+<title>SIEGE·LAB — Squad</title>
 <style>
-  :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d}
+  :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d;--play:#34d399;--ban:#f0513f}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-       -webkit-font-smoothing:antialiased;min-height:100vh;padding:32px 18px 60px}
-  .wrap{max-width:640px;margin:0 auto}
-  .top{display:flex;align-items:center;gap:13px;margin-bottom:6px}
+       -webkit-font-smoothing:antialiased;min-height:100vh;padding:30px 18px 60px}
+  .wrap{max-width:660px;margin:0 auto}
+  .top{display:flex;align-items:center;gap:13px;margin-bottom:4px}
   .logo{width:46px;height:46px;border-radius:11px;background:var(--gold);color:#111;display:grid;place-items:center;font-weight:900;font-size:26px;box-shadow:0 0 22px rgba(244,194,13,.32)}
   h1{font-size:22px;letter-spacing:.5px} h1 em{font-style:normal;color:var(--gold)}
-  .sub{color:var(--muted);font-size:13px;margin:4px 0 26px}
-  .pcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;background:var(--panel);
-         padding:16px 18px;margin-bottom:13px;transition:border-color .15s,transform .1s}
-  .pcard:hover{border-color:var(--gold);transform:translateY(-1px)}
-  .pc-top{display:flex;align-items:center;gap:10px}
-  .pc-name{font-size:18px;font-weight:800}
-  .pc-rank{margin-left:auto;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px}
-  .pc-meta{color:var(--muted);font-size:12.5px;margin-top:6px;font-variant-numeric:tabular-nums}
-  .pc-go{color:var(--gold);font-size:12.5px;font-weight:700;margin-top:11px}
-  .foot{color:#5c626d;font-size:11px;text-align:center;margin-top:28px}
+  .sub{color:var(--muted);font-size:13px;margin:4px 0 24px}
+  h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
+  h2::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:2px}
+  .sups{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sup{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px 14px}
+  .sup-l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+  .sup-n{font-size:16px;font-weight:800;margin-top:5px}
+  .sup-v{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
+  .prow2{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
+         background:var(--panel);padding:14px 16px;margin-bottom:10px;transition:border-color .15s,transform .1s}
+  .prow2:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .ppos{width:24px;height:24px;flex:none;border-radius:7px;background:#1d2129;border:1px solid #2b303a;display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}
+  .prow2:first-of-type .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .pmain{flex:1;min-width:0}
+  .pnm{font-size:17px;font-weight:800}
+  .psub{color:var(--muted);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .rf{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#1d2129;border:1px solid #2b303a}
+  .rf.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rf.dn{color:var(--ban);border-color:rgba(240,81,63,.4)}
+  .prk{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;flex:none}
+  .foot{color:#5c626d;font-size:11px;text-align:center;margin-top:26px;line-height:1.6}
+  @media(max-width:440px){.sups{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top"><div class="logo">6</div><h1>SIEGE<em>·</em>LAB</h1></div>
-    <div class="sub">Análise de ranqueada · R6 Siege · dados de r6.tracker.network</div>
-    __CARDS__
-    <div class="foot">Cada card abre o app completo do jogador — season, mapas, operadores e evolução.</div>
+    <div class="sub">O squad · ranqueada R6 · toque num jogador pra abrir a análise completa</div>
+    <h2>Destaques do grupo</h2>
+    <div class="sups">__CHIPS__</div>
+    <h2>Ranking por RP</h2>
+    __ROWS__
+    <div class="foot">Cada jogador abre o app completo — barra-resumo, mapas (quem pegar e por quê), operadores, forma recente e evolução.<br>Dados de r6.tracker.network.</div>
   </div>
 </body>
 </html>
@@ -311,6 +356,31 @@ TEMPLATE = r"""<!DOCTYPE html>
   .fk .fv{font-size:18px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;margin-left:0}
   .fins{font-size:12.5px;color:var(--muted);line-height:1.5;padding:9px 0;border-top:1px solid #1f232b}
   .fins b{color:var(--txt);font-weight:600}
+  .goal{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px;padding:9px 14px;border:1px solid var(--line);
+       border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(244,194,13,.06);font-size:12.5px;color:var(--muted)}
+  .goal b{color:var(--txt);font-weight:700} .goal .gi{color:var(--gold);font-weight:800} .goal .gm{opacity:.8}
+  .rbadge{font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.3px;background:#1d2129;border:1px solid #2b303a}
+  .rbadge.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rbadge.dn{color:var(--ban);border-color:rgba(240,81,63,.4)} .rbadge.eq{color:var(--muted)}
+  .rnote{padding:8px 14px;font-size:11.5px;line-height:1.5;border-top:1px solid var(--line)}
+  .rnote i{font-style:normal;font-weight:800;margin-right:3px}
+  .rnote.up{color:#a6e8c9;background:rgba(52,211,153,.07)} .rnote.up i{color:var(--play)}
+  .rnote.dn{color:#f3a99f;background:rgba(240,81,63,.07)} .rnote.dn i{color:var(--ban)}
+  .rnote b{color:var(--txt);font-weight:600}
+  .sharecard{border:1px solid var(--line);border-radius:16px;background:linear-gradient(160deg,#1a1d24,#0b0d11);
+       padding:22px 18px 18px;text-align:center;position:relative;overflow:hidden;margin:6px 0 14px}
+  .sharecard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 0%,rgba(244,194,13,.12),transparent)}
+  .scbrand{font-weight:800;letter-spacing:1px;font-size:14px;position:relative} .scbrand span{color:var(--gold)}
+  .scemb{margin:12px 0 6px;position:relative} .scemb .remb{filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+  .scname{font-size:22px;font-weight:800;position:relative}
+  .scrank{font-size:13px;font-weight:700;margin-top:2px;position:relative}
+  .scstats{display:flex;justify-content:center;gap:26px;margin:16px 0 4px;position:relative}
+  .scstats b{display:block;font-size:23px;font-weight:800;font-variant-numeric:tabular-nums}
+  .scstats span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .scfoot{font-size:10.5px;color:var(--muted);margin-top:14px;position:relative}
+  .shint{font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:12px}
+  .btn-share{width:100%;padding:12px;border-radius:11px;border:1px solid var(--gold);background:rgba(244,194,13,.12);
+       color:var(--gold);font-weight:800;font-size:14px;cursor:pointer}
+  .btn-share:active{transform:scale(.98)}
   .pl{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px}
   .pl .rk{color:var(--muted);font-size:10.5px;width:13px}
   .pl .nm{flex:1;margin-left:2px;font-weight:600}
@@ -393,6 +463,7 @@ TEMPLATE = r"""<!DOCTYPE html>
       <span class="rk" id="ss-rank"></span>
       <span class="cv">▾</span>
     </div>
+    <button class="qbtn" id="sharebtn" aria-label="Compartilhar"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
     <button class="qbtn" id="helpbtn" aria-label="Como ler">?</button>
   </div>
 </header>
@@ -517,6 +588,7 @@ function renderInicio(){
         <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
       </div>
     </div>
+    ${(()=>{const g=nextGoal();return g?`<div class="goal"><span class="gi">▲</span> Faltam <b>+${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +25 RP</span></div>`:"";})()}
     <div class="kgrid2">
       <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
       <div class="ktile"><div class="v">${k.winRate.toFixed(1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
@@ -532,6 +604,23 @@ function renderInicio(){
       <div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>Pick certo por mapa na aba Mapas.</span></div></div>
       <div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e negativo — corte ou reposicione.</span></div></div>
     </div>`;
+}
+
+function recentByMap(){
+  const o={}; (active.recentMatches||[]).forEach(m=>{o[m.map]=o[m.map]||{w:0,l:0}; m.w?o[m.map].w++:o[m.map].l++;}); return o;
+}
+function nextGoal(){
+  const rp=(active.kpis.latestRP!=null?active.kpis.latestRP:active.kpis.peakRP);
+  if(rp==null||rp>=4500) return null;
+  const nb=(Math.floor(rp/100)+1)*100, nr=rankInfo(nb);
+  return {need:nb-rp, name:nr.name, color:nr.color};
+}
+function recencyNote(m, rr){
+  if(!rr || (rr.w+rr.l)<2) return "";
+  const t=tierOf(m.seasonWR);
+  if(t==="ban" && rr.w>rr.l) return `<div class="rnote up"><i>↗</i> Você vem <b>ganhando</b> aqui (${rr.w}-${rr.l} recente): o "banir" da season pode estar desatualizado — reavalie.</div>`;
+  if(t==="play" && rr.l>rr.w) return `<div class="rnote dn"><i>↘</i> <b>Esfriou</b> (${rr.w}-${rr.l} nas últimas) apesar de ser mapa forte — cuidado ao forçar.</div>`;
+  return "";
 }
 
 /* ---------- MAPAS ---------- */
@@ -651,9 +740,12 @@ function formaRecente(){
 }
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};
+  const rbm=recentByMap();
   const cards = cur.maps.filter(m=>m.matches>=1).map(m=>{
     const t=tierOf(m.seasonWR), v={play:"PRIORIZE",neu:"NEUTRO",ban:"BANIR"}[t];
     const pm=pb[m.name]||{};
+    const rr=rbm[m.name];
+    const rbadge=rr?`<span class="rbadge ${rr.w>rr.l?'up':(rr.l>rr.w?'dn':'eq')}" title="resultado nas partidas recentes">últ. ${rr.w}-${rr.l}</span>`:"";
     const cD=candidates(m,"def"), cA=candidates(m,"atk");
     const opsHtml = `<div class="picks">
         <div class="pside def"><div class="sh"><span class="ic"></span>Pegue na defesa<span class="src">${esc(srcLabel(cD.src))}</span></div>${pickRows(m,"def")}</div>
@@ -662,11 +754,12 @@ function renderMapas(){
       <div class="tip">${esc(mapTip(m))}</div>`;
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
     return `<div class="map">
-      <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>
+      <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>${rbadge}
         <span class="wr"><b>${m.seasonWR.toFixed(1)}%${delta(m.seasonWR,pm.seasonWR,1)}</b><small>${m.matches} PARTIDAS${m.matches<4?" °":""}</small></span></div>
       <div class="ad">${adbar('atk',m.atkWR)}${adbar('def',m.defWR)}</div>
       <div class="strong">${strongSide(m)} <span>KD ${(m.kd||0).toFixed(2)}${delta(m.kd,pm.kd,2)}</span></div>
       ${opsHtml}
+      ${recencyNote(m,rr)}
       ${m.note?`<div class="notew">⚠ ${esc(m.note)}</div>`:""}
       ${m.avoid?`<div class="avoid"><b>Evite:</b> ${esc(m.avoid)}</div>`:""}
     </div>`;
@@ -778,6 +871,27 @@ function openHelp(){
     <div class="legrow"><b style="color:var(--gold)">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
     <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>`);
 }
+function openShare(){
+  const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);
+  const rm=active.recentMatches||[]; const w=rm.filter(m=>m.w).length, l=rm.length-w;
+  const card=`<div class="sharecard">
+    <div class="scbrand">SIEGE<span>·</span>LAB</div>
+    <div class="scemb">${rankEmblem(rk.color,rk.div,rk.champ,90)}</div>
+    <div class="scname">${esc(PLAYER.name)}</div>
+    <div class="scrank" style="color:${rk.color}">${rk.name} · ${curRP.toLocaleString('pt-BR')} RP</div>
+    <div class="scstats">
+      <div><b>${k.winRate.toFixed(0)}%</b><span>vitórias</span></div>
+      <div><b>${k.kd.toFixed(2)}</b><span>K/D</span></div>
+      ${rm.length?`<div><b>${w}-${l}</b><span>últimas</span></div>`:""}
+    </div>
+    <div class="scfoot">${esc(active.season)} · thebsilva.github.io/siege-lab</div>
+  </div>`;
+  openSheet(`<h3>Compartilhar</h3>${card}
+    <div class="shint">Tire um print do card e mande no grupo 👊</div>
+    ${navigator.share?`<button class="btn-share" id="doshare">Compartilhar o link</button>`:`<button class="btn-share" id="docopy">Copiar o link</button>`}`);
+  const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:"SIEGE·LAB — "+PLAYER.name,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
+  const c=document.getElementById("docopy"); if(c) c.onclick=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(location.href); c.textContent="Link copiado ✓"; };
+}
 const bg=document.getElementById("sheetbg"), sh=document.getElementById("sheet");
 function openSheet(html){ sh.innerHTML='<div class="grab"></div>'+html; bg.classList.add("open"); sh.classList.add("open"); }
 function closeSheet(){ bg.classList.remove("open"); sh.classList.remove("open"); }
@@ -787,6 +901,7 @@ function shell(){
   document.getElementById("desktabs").innerHTML = TABS.map(t=>`<button data-t="${t.id}" onclick="go('${t.id}')">${t.label}</button>`).join("");
   document.getElementById("seasonsel").onclick=openSeasons;
   document.getElementById("helpbtn").onclick=openHelp;
+  document.getElementById("sharebtn").onclick=openShare;
   document.getElementById("subline").textContent = PLAYER.name + " · Ranked";
   document.title = "SIEGE·LAB — " + PLAYER.name;
   bg.onclick=closeSheet;
