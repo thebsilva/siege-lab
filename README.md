@@ -10,10 +10,23 @@ players/
   <slug>/
     profile.json           # { name, platform, slug }
     AAAA-MM-DD_<season>.json   # 1 arquivo por season (com seasonOrder)
+playbook.json              # COMPARTILHADO: motivo por operador + picks por mapa
 build.py                   # gera 1 app por jogador
-out/<slug>.html            # os apps (abrir no navegador / celular)
+docs/<slug>.html           # os apps publicados (GitHub Pages serve daqui)
 ```
-`build.py` varre `players/*/`, embute os snapshots + o profile, e escreve `out/<slug>.html`.
+`build.py` varre `players/*/`, embute snapshots + profile + playbook, e escreve `docs/<slug>.html`.
+
+## playbook.json — "quem pegar e por quê"
+```
+{ "operators": { "Bandit": {"side":"def","why":"Eletrifica as reforçadas…"} , … },
+  "default":   { "def":[3 nomes], "atk":[3 nomes] },
+  "maps":      { "Oregon": {"def":[3],"atk":[3]}, … } }
+```
+- O **motivo é por FUNÇÃO do operador** (negar hard breach, atrasar entrada, abrir parede…) — vale em qualquer mapa, então não há risco de callout errado. Deliberado: não inventamos nome de bomb site/parede de mapas novos.
+- A **dica de estratégia por mapa é gerada no app** a partir do atk×def do próprio jogador (`mapTip()`), então é sempre correta e pessoal.
+- O selo **"você X%"** ao lado do pick vem dos dados do jogador: primeiro o aproveitamento naquele mapa (se coletado), senão o da season.
+- Mapa sem entrada no playbook cai no `default` — todo jogador tem recomendação em todo mapa, mesmo sem coleta por mapa.
+- **Pendente/upgrade:** callouts específicos por site (ex.: "Aruni fecha as duas escadas do basement") exigem uma rodada de pesquisa por mapa antes de entrar.
 
 ## Jogadores carregados
 - **superallfa** — Y11S1 (Ouro II, com top-3/mapa) + Y10S4 (Platina IV).
