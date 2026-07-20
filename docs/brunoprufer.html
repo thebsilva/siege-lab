@@ -159,6 +159,19 @@
   .pside .sh .src{margin-left:auto;font-size:9px;font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted);opacity:.85}
   .tip{padding:9px 14px;font-size:12px;color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
   .mine{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);background:#101218;line-height:1.5}
+  .forma{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px 16px}
+  .fhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+  .frec{font-size:14px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .frec b{color:var(--txt);font-size:19px;font-weight:800} .frec span{font-size:11px;margin-left:1px}
+  .fpips{display:flex;gap:4px;flex-wrap:wrap}
+  .pip{width:16px;height:16px;border-radius:4px;flex:none}
+  .pip.w{background:var(--play)} .pip.l{background:var(--ban);opacity:.85}
+  .fkpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+  .fk{background:#101218;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .fk .fl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+  .fk .fv{font-size:18px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;margin-left:0}
+  .fins{font-size:12.5px;color:var(--muted);line-height:1.5;padding:9px 0;border-top:1px solid #1f232b}
+  .fins b{color:var(--txt);font-weight:600}
   .pl{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px}
   .pl .rk{color:var(--muted);font-size:10.5px;width:13px}
   .pl .nm{flex:1;margin-left:2px;font-weight:600}
@@ -369,6 +382,7 @@ function renderInicio(){
       <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
       <div class="ktile"><div class="v">${k.winRate.toFixed(1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
     </div>
+    ${formaRecente()}
     <div class="banner">${banner}</div>
     ${changed}
     <h2 class="sec">Plano de jogo</h2>
@@ -462,6 +476,39 @@ function mineLine(m){
   if(m.def) parts.push(`<b style="color:var(--def)">def</b> ${f(m.def)}`);
   if(m.atk) parts.push(`<b style="color:var(--atk)">atk</b> ${f(m.atk)}`);
   return `<div class="mine">Seus melhores aqui — ${parts.join(" &nbsp;·&nbsp; ")}</div>`;
+}
+function formaRecente(){
+  const ms=active.recentMatches;
+  if(!ms||!ms.length) return "";
+  const n=ms.length, w=ms.filter(m=>m.w).length, l=n-w;
+  const netRP=ms.reduce((s,m)=>s+(m.rp||0),0);
+  const posKD=ms.filter(m=>(m.kd||0)>=1).length;
+  const pips=ms.slice().reverse().map(m=>`<span class="pip ${m.w?'w':'l'}" title="${esc(m.map)} · ${m.w?'V':'D'} · K/D ${(m.kd||0).toFixed(2)}"></span>`).join("");
+  const byMap={};
+  ms.forEach(m=>{byMap[m.map]=byMap[m.map]||{w:0,l:0}; m.w?byMap[m.map].w++:byMap[m.map].l++;});
+  const cold=Object.entries(byMap).filter(([,v])=>v.w===0&&v.l>=2).map(([k])=>k);
+  const hot=Object.entries(byMap).filter(([,v])=>v.l===0&&v.w>=2).map(([k])=>k);
+  let streak=1; const sw=ms[0].w; for(let i=1;i<ms.length;i++){ if(ms[i].w===sw) streak++; else break; }
+  const ins=[];
+  if(!sw && streak>=2) ins.push(`Você parou numa <b>maré de ${streak} derrotas</b>. A estatística é clara: tilt custa RP — descanse antes da próxima.`);
+  if(sw && streak>=3) ins.push(`<b>${streak} vitórias seguidas</b> — você está quente, aproveite enquanto dura.`);
+  if(posKD/n>=0.6 && Math.abs(w-l)<=2) ins.push(`Você fechou positivo no K/D em <b>${posKD} das ${n}</b>, mas o placar ficou <b>${w}-${l}</b>: a derrota vem do round, não da sua mira. Entre junto com o time em vez de fragar solo.`);
+  if(cold.length) ins.push(`Sem nenhuma vitória nas últimas em <b>${cold.join(", ")}</b> — bane no ranqueado.`);
+  if(hot.length) ins.push(`Embalado em <b>${hot.join(", ")}</b> — force esses mapas.`);
+  const rpCls=netRP>0?'up':(netRP<0?'dn':'eq');
+  return `
+    <h2 class="sec">Forma recente<span class="hint">últimas ${n} partidas</span></h2>
+    <div class="forma">
+      <div class="fhead">
+        <div class="frec"><b>${w}</b><span>V</span> · <b>${l}</b><span>D</span></div>
+        <div class="fpips">${pips}</div>
+      </div>
+      <div class="fkpis">
+        <div class="fk"><div class="fl">RP no período</div><div class="fv d ${rpCls}">${netRP>0?'+':''}${netRP}</div></div>
+        <div class="fk"><div class="fl">Jogos com K/D 1.0+</div><div class="fv">${posKD}/${n}</div></div>
+      </div>
+      ${ins.map(t=>`<div class="fins">${t}</div>`).join("")}
+    </div>`;
 }
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};

@@ -690,5 +690,115 @@
       "atkWR": 0.0,
       "defWR": 0.0
     }
+  ],
+  "recentMatches": [
+    {
+      "map": "Kanal",
+      "w": false,
+      "kd": 0.5,
+      "rp": 0
+    },
+    {
+      "map": "Chalet",
+      "w": false,
+      "kd": 1.5,
+      "rp": -23
+    },
+    {
+      "map": "Lair",
+      "w": true,
+      "kd": 2.33,
+      "rp": 25
+    },
+    {
+      "map": "Consulate",
+      "w": false,
+      "kd": 0.67,
+      "rp": -24
+    },
+    {
+      "map": "Bank",
+      "w": true,
+      "kd": 1.0,
+      "rp": 24
+    },
+    {
+      "map": "Skyscraper",
+      "w": false,
+      "kd": 1.0,
+      "rp": -24
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 1.0,
+      "rp": -24
+    },
+    {
+      "map": "Clubhouse",
+      "w": true,
+      "kd": 3.0,
+      "rp": 24
+    },
+    {
+      "map": "Oregon",
+      "w": true,
+      "kd": 5.0,
+      "rp": 23
+    },
+    {
+      "map": "Bank",
+      "w": true,
+      "kd": 1.67,
+      "rp": 22
+    },
+    {
+      "map": "Nighthaven Labs",
+      "w": false,
+      "kd": 0.75,
+      "rp": -24
+    },
+    {
+      "map": "Chalet",
+      "w": true,
+      "kd": 1.5,
+      "rp": 21
+    },
+    {
+      "map": "Skyscraper",
+      "w": false,
+      "kd": 1.33,
+      "rp": -24
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": true,
+      "kd": 5.0,
+      "rp": 21
+    },
+    {
+      "map": "Kanal",
+      "w": true,
+      "kd": 1.33,
+      "rp": 21
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 2.25,
+      "rp": -21
+    },
+    {
+      "map": "Border",
+      "w": true,
+      "kd": 1.75,
+      "rp": 21
+    },
+    {
+      "map": "Consulate",
+      "w": false,
+      "kd": 1.0,
+      "rp": -25
+    }
   ]
 }
