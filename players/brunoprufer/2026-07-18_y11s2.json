@@ -238,5 +238,67 @@
       "atkWR": 34.5,
       "defWR": 46.3
     }
+  ],
+  "recentMatches": [
+    {
+      "map": "Nighthaven Labs",
+      "w": true,
+      "kd": 0.71,
+      "rp": 23
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 1.5,
+      "rp": -20
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 0.5,
+      "rp": -19
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 0.2,
+      "rp": -25
+    },
+    {
+      "map": "Chalet",
+      "w": true,
+      "kd": 1.17,
+      "rp": 26
+    },
+    {
+      "map": "Bank",
+      "w": true,
+      "kd": 1.0,
+      "rp": 18
+    },
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 1.0,
+      "rp": -18
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 1.33,
+      "rp": -24
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": true,
+      "kd": 2.0,
+      "rp": 22
+    },
+    {
+      "map": "Border",
+      "w": false,
+      "kd": 1.29,
+      "rp": -22
+    }
   ]
 }

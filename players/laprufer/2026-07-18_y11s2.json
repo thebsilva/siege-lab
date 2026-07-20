@@ -230,5 +230,67 @@
       "atkWR": 26.9,
       "defWR": 49.0
     }
+  ],
+  "recentMatches": [
+    {
+      "map": "Nighthaven Labs",
+      "w": true,
+      "kd": 0.4,
+      "rp": 26
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 0.5,
+      "rp": -26
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 2.17,
+      "rp": -24
+    },
+    {
+      "map": "Theme Park",
+      "w": true,
+      "kd": 0.44,
+      "rp": 26
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 1.4,
+      "rp": -17
+    },
+    {
+      "map": "Chalet",
+      "w": false,
+      "kd": 0.4,
+      "rp": -26
+    },
+    {
+      "map": "Theme Park",
+      "w": true,
+      "kd": 0.75,
+      "rp": 25
+    },
+    {
+      "map": "Fortress",
+      "w": false,
+      "kd": 1.2,
+      "rp": -22
+    },
+    {
+      "map": "Kanal",
+      "w": true,
+      "kd": 0.83,
+      "rp": 24
+    },
+    {
+      "map": "Fortress",
+      "w": false,
+      "kd": 1.0,
+      "rp": -25
+    }
   ]
 }
