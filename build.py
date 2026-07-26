@@ -15,6 +15,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PLAYERS_DIR = os.path.join(HERE, "players")
 OUT_DIR = os.path.join(HERE, "docs")  # GitHub Pages serve daqui
 
+# ícone do botão "copiar link" de cada jogador na capa
+LINK_SVG = ('<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" '
+            'stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.1.1l3-3a5 5 0 0 0-7.1-7.1L11.3 4.7"/>'
+            '<path d="M14 11a5 5 0 0 0-7.1-.1l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg>')
+
 
 def rank_py(rp):
     if rp is None:
@@ -104,14 +109,24 @@ def write_index(cards):
         pill = (f'<span class="rf {"up" if c["rw"] >= c["rl"] else "dn"}">{c["rw"]}-{c["rl"]}</span>'
                 if c.get("hasRecent") else "")
         rows += (
-            f'<a class="prow2" href="{esc(c["slug"])}.html">'
+            f'<div class="prow2{" top1" if i == 1 else ""}">'
+            f'<a class="pstretch" href="{esc(c["slug"])}.html" aria-label="Abrir a análise de {esc(c["name"])}"></a>'
             f'<div class="ppos">{i}</div>'
             f'<div class="pmain"><div class="pnm">{esc(c["name"])}</div>'
             f'<div class="psub">{c["wr"]:.0f}% vitórias · KD {c["kd"]:.2f} · {esc(c["season"])} {pill}</div></div>'
-            f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div></a>')
+            f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div>'
+            f'<button class="pcopy" data-slug="{esc(c["slug"])}" data-name="{esc(c["name"])}" '
+            f'title="Copiar o link de {esc(c["name"])}" aria-label="Copiar o link de {esc(c["name"])}">{LINK_SVG}</button>'
+            f'</div>')
+    links = "".join(
+        f'<div class="lnk"><div class="lnk-n">{esc(c["name"])}</div>'
+        f'<code class="lnk-u" data-slug="{esc(c["slug"])}">{esc(c["slug"])}.html</code></div>'
+        for c in cards)
     out = os.path.join(OUT_DIR, "index.html")
     with open(out, "w", encoding="utf-8") as fh:
-        fh.write(INDEX_TEMPLATE.replace("__CHIPS__", chips).replace("__ROWS__", rows))
+        fh.write(INDEX_TEMPLATE.replace("__CHIPS__", chips)
+                               .replace("__ROWS__", rows)
+                               .replace("__LINKS__", links))
     print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
 
 
@@ -152,11 +167,25 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
   .sup-l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
   .sup-n{font-size:16px;font-weight:800;margin-top:5px}
   .sup-v{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
-  .prow2{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
+  .prow2{position:relative;display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
          background:var(--panel);padding:14px 16px;margin-bottom:10px;transition:border-color .15s,transform .1s}
   .prow2:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .pstretch{position:absolute;inset:0;border-radius:14px;z-index:1}
   .ppos{width:24px;height:24px;flex:none;border-radius:7px;background:#1d2129;border:1px solid #2b303a;display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}
-  .prow2:first-of-type .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .prow2.top1 .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .pcopy{position:relative;z-index:2;flex:none;width:34px;height:34px;border-radius:10px;background:#1d2129;border:1px solid #2b303a;
+         color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:color .15s,border-color .15s}
+  .pcopy:hover{color:var(--gold);border-color:var(--gold)}
+  .pcopy.ok{color:var(--play);border-color:rgba(52,211,153,.5)}
+  .links{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:0 16px}
+  .links summary{cursor:pointer;list-style:none;padding:13px 0;font-size:13px;font-weight:700;color:var(--txt)}
+  .links summary::-webkit-details-marker{display:none}
+  .links summary::after{content:"▾";float:right;color:var(--muted)}
+  .links[open] summary::after{content:"▴"}
+  .lnk{border-top:1px solid var(--line);padding:11px 0}
+  .lnk-n{font-size:12.5px;font-weight:700;margin-bottom:4px}
+  .lnk-u{display:block;font-size:11.5px;color:var(--gold);word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .lnk-h{border-top:1px solid var(--line);padding:11px 0;color:var(--muted);font-size:11.5px;line-height:1.5}
   .pmain{flex:1;min-width:0}
   .pnm{font-size:17px;font-weight:800}
   .psub{color:var(--muted);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -175,8 +204,58 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
     <div class="sups">__CHIPS__</div>
     <h2>Ranking por RP</h2>
     __ROWS__
+    <h2>Links pra mandar</h2>
+    <details class="links" id="links">
+      <summary>Ver o link de cada jogador</summary>
+      __LINKS__
+      <div class="lnk-h">Toque no link pra copiar — ou use o botão 🔗 na linha do jogador pra copiar/compartilhar direto.</div>
+    </details>
     <div class="foot">Cada jogador abre o app completo — barra-resumo, mapas (quem pegar e por quê), operadores, forma recente e evolução.<br>Dados de r6.tracker.network.</div>
   </div>
+<script>
+(function(){
+  var CHECK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  var base=location.href.split(/[?#]/)[0].replace(/index\.html?$/,"");
+  function abs(slug){ return new URL(slug+".html", base).href; }
+  function legacy(txt){
+    var t=document.createElement("textarea"); t.value=txt; t.setAttribute("readonly","");
+    t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select();
+    t.setSelectionRange(0, txt.length);
+    try{ document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(t); return Promise.resolve();
+  }
+  function copy(txt){
+    if(navigator.clipboard && window.isSecureContext)
+      return navigator.clipboard.writeText(txt).catch(function(){ return legacy(txt); });
+    return legacy(txt);
+  }
+  document.querySelectorAll(".pcopy").forEach(function(b){
+    var icon=b.innerHTML;
+    b.addEventListener("click", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      var url=abs(b.dataset.slug);
+      if(navigator.share){
+        navigator.share({title:"SIEGE·LAB — "+b.dataset.name, text:"Tua análise de R6 no SIEGE·LAB", url:url}).catch(function(){});
+        return;
+      }
+      copy(url).then(function(){
+        b.classList.add("ok"); b.innerHTML=CHECK;
+        setTimeout(function(){ b.classList.remove("ok"); b.innerHTML=icon; }, 1600);
+      });
+    });
+  });
+  document.querySelectorAll(".lnk-u").forEach(function(el){
+    var url=abs(el.dataset.slug); el.textContent=url; el.style.cursor="pointer";
+    el.title="Copiar";
+    el.addEventListener("click", function(){
+      copy(url).then(function(){
+        var old=el.textContent; el.textContent="Link copiado ✓";
+        setTimeout(function(){ el.textContent=old; }, 1400);
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
 """

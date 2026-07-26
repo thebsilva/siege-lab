@@ -71,8 +71,23 @@ de season no topo · botão ? (legenda).
 3. `cd ~/Documents/R6-SuperAllfa && python3 build.py`
 4. Abrir `out/<slug>.html`.
 
+## Links do squad (o que mandar pra cada um)
+Publicado por `.github/workflows/deploy-pages.yml` (push em `main` → GitHub Pages, pasta `docs/`).
+
+| Quem | Link |
+|---|---|
+| **Capa do squad** (manda esse no grupo) | https://thebsilva.github.io/siege-lab/ |
+| BrunoPrufer | https://thebsilva.github.io/siege-lab/brunoprufer.html |
+| laprufer | https://thebsilva.github.io/siege-lab/laprufer.html |
+| SuperAllfa | https://thebsilva.github.io/siege-lab/superallfa.html |
+
+Regra: **o link é sempre `.../siege-lab/<slug>.html`**, e `<slug>` é o nome da pasta em `players/`.
+Na capa, cada linha tem um botão 🔗 que copia (ou abre o compartilhar do celular) o link daquele
+jogador, e a seção **"Links pra mandar"** lista as 3 URLs completas pra copiar. Dentro do app de
+cada jogador o botão de compartilhar no topo faz o mesmo com o link dele.
+
 ## Colocar online
-`out/*.html` são estáticos e self-contained → hospedar em GitHub Pages / Netlify / Cloudflare Pages
+`docs/*.html` são estáticos e self-contained → hospedar em GitHub Pages / Netlify / Cloudflare Pages
 é só subir a pasta. Cada amigo abre `.../<slug>.html`.
 
 ## Próximos (roadmap do Bruno)

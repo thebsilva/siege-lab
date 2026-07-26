@@ -22,11 +22,25 @@
   .sup-l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
   .sup-n{font-size:16px;font-weight:800;margin-top:5px}
   .sup-v{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
-  .prow2{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
+  .prow2{position:relative;display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
          background:var(--panel);padding:14px 16px;margin-bottom:10px;transition:border-color .15s,transform .1s}
   .prow2:hover{border-color:var(--gold);transform:translateY(-1px)}
+  .pstretch{position:absolute;inset:0;border-radius:14px;z-index:1}
   .ppos{width:24px;height:24px;flex:none;border-radius:7px;background:#1d2129;border:1px solid #2b303a;display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}
-  .prow2:first-of-type .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .prow2.top1 .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .pcopy{position:relative;z-index:2;flex:none;width:34px;height:34px;border-radius:10px;background:#1d2129;border:1px solid #2b303a;
+         color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:color .15s,border-color .15s}
+  .pcopy:hover{color:var(--gold);border-color:var(--gold)}
+  .pcopy.ok{color:var(--play);border-color:rgba(52,211,153,.5)}
+  .links{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:0 16px}
+  .links summary{cursor:pointer;list-style:none;padding:13px 0;font-size:13px;font-weight:700;color:var(--txt)}
+  .links summary::-webkit-details-marker{display:none}
+  .links summary::after{content:"▾";float:right;color:var(--muted)}
+  .links[open] summary::after{content:"▴"}
+  .lnk{border-top:1px solid var(--line);padding:11px 0}
+  .lnk-n{font-size:12.5px;font-weight:700;margin-bottom:4px}
+  .lnk-u{display:block;font-size:11.5px;color:var(--gold);word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .lnk-h{border-top:1px solid var(--line);padding:11px 0;color:var(--muted);font-size:11.5px;line-height:1.5}
   .pmain{flex:1;min-width:0}
   .pnm{font-size:17px;font-weight:800}
   .psub{color:var(--muted);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -44,8 +58,58 @@
     <h2>Destaques do grupo</h2>
     <div class="sups"><div class="sup"><div class="sup-l">🎯 Maior K/D</div><div class="sup-n">BrunoPrufer</div><div class="sup-v">1.16</div></div><div class="sup"><div class="sup-l">🛡 Melhor defesa</div><div class="sup-n">SuperAllfa</div><div class="sup-v">Aruni · 64%</div></div><div class="sup"><div class="sup-l">🔥 Melhor forma</div><div class="sup-n">SuperAllfa</div><div class="sup-v">9-9 últimas</div></div><div class="sup"><div class="sup-l">🧊 Em maré fria</div><div class="sup-n">BrunoPrufer</div><div class="sup-v">4-6 · -39 RP</div></div></div>
     <h2>Ranking por RP</h2>
-    <a class="prow2" href="brunoprufer.html"><div class="ppos">1</div><div class="pmain"><div class="pnm">BrunoPrufer</div><div class="psub">46% vitórias · KD 1.16 · Y11S2 <span class="rf dn">4-6</span></div></div><div class="prk" style="background:#2ecc7122;color:#2ecc71">Esmeralda IV</div></a><a class="prow2" href="laprufer.html"><div class="ppos">2</div><div class="pmain"><div class="pnm">laprufer</div><div class="psub">47% vitórias · KD 0.93 · Y11S2 <span class="rf dn">4-6</span></div></div><div class="prk" style="background:#37cfc022;color:#37cfc0">Platina IV</div></a><a class="prow2" href="superallfa.html"><div class="ppos">3</div><div class="pmain"><div class="pnm">SuperAllfa</div><div class="psub">46% vitórias · KD 0.87 · Y11S1 <span class="rf up">9-9</span></div></div><div class="prk" style="background:#f4c20d22;color:#f4c20d">Ouro IV</div></a>
+    <div class="prow2 top1"><a class="pstretch" href="brunoprufer.html" aria-label="Abrir a análise de BrunoPrufer"></a><div class="ppos">1</div><div class="pmain"><div class="pnm">BrunoPrufer</div><div class="psub">46% vitórias · KD 1.16 · Y11S2 <span class="rf dn">4-6</span></div></div><div class="prk" style="background:#2ecc7122;color:#2ecc71">Esmeralda IV</div><button class="pcopy" data-slug="brunoprufer" data-name="BrunoPrufer" title="Copiar o link de BrunoPrufer" aria-label="Copiar o link de BrunoPrufer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.1.1l3-3a5 5 0 0 0-7.1-7.1L11.3 4.7"/><path d="M14 11a5 5 0 0 0-7.1-.1l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg></button></div><div class="prow2"><a class="pstretch" href="laprufer.html" aria-label="Abrir a análise de laprufer"></a><div class="ppos">2</div><div class="pmain"><div class="pnm">laprufer</div><div class="psub">47% vitórias · KD 0.93 · Y11S2 <span class="rf dn">4-6</span></div></div><div class="prk" style="background:#37cfc022;color:#37cfc0">Platina IV</div><button class="pcopy" data-slug="laprufer" data-name="laprufer" title="Copiar o link de laprufer" aria-label="Copiar o link de laprufer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.1.1l3-3a5 5 0 0 0-7.1-7.1L11.3 4.7"/><path d="M14 11a5 5 0 0 0-7.1-.1l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg></button></div><div class="prow2"><a class="pstretch" href="superallfa.html" aria-label="Abrir a análise de SuperAllfa"></a><div class="ppos">3</div><div class="pmain"><div class="pnm">SuperAllfa</div><div class="psub">46% vitórias · KD 0.87 · Y11S1 <span class="rf up">9-9</span></div></div><div class="prk" style="background:#f4c20d22;color:#f4c20d">Ouro IV</div><button class="pcopy" data-slug="superallfa" data-name="SuperAllfa" title="Copiar o link de SuperAllfa" aria-label="Copiar o link de SuperAllfa"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.1.1l3-3a5 5 0 0 0-7.1-7.1L11.3 4.7"/><path d="M14 11a5 5 0 0 0-7.1-.1l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg></button></div>
+    <h2>Links pra mandar</h2>
+    <details class="links" id="links">
+      <summary>Ver o link de cada jogador</summary>
+      <div class="lnk"><div class="lnk-n">BrunoPrufer</div><code class="lnk-u" data-slug="brunoprufer">brunoprufer.html</code></div><div class="lnk"><div class="lnk-n">laprufer</div><code class="lnk-u" data-slug="laprufer">laprufer.html</code></div><div class="lnk"><div class="lnk-n">SuperAllfa</div><code class="lnk-u" data-slug="superallfa">superallfa.html</code></div>
+      <div class="lnk-h">Toque no link pra copiar — ou use o botão 🔗 na linha do jogador pra copiar/compartilhar direto.</div>
+    </details>
     <div class="foot">Cada jogador abre o app completo — barra-resumo, mapas (quem pegar e por quê), operadores, forma recente e evolução.<br>Dados de r6.tracker.network.</div>
   </div>
+<script>
+(function(){
+  var CHECK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  var base=location.href.split(/[?#]/)[0].replace(/index\.html?$/,"");
+  function abs(slug){ return new URL(slug+".html", base).href; }
+  function legacy(txt){
+    var t=document.createElement("textarea"); t.value=txt; t.setAttribute("readonly","");
+    t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select();
+    t.setSelectionRange(0, txt.length);
+    try{ document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(t); return Promise.resolve();
+  }
+  function copy(txt){
+    if(navigator.clipboard && window.isSecureContext)
+      return navigator.clipboard.writeText(txt).catch(function(){ return legacy(txt); });
+    return legacy(txt);
+  }
+  document.querySelectorAll(".pcopy").forEach(function(b){
+    var icon=b.innerHTML;
+    b.addEventListener("click", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      var url=abs(b.dataset.slug);
+      if(navigator.share){
+        navigator.share({title:"SIEGE·LAB — "+b.dataset.name, text:"Tua análise de R6 no SIEGE·LAB", url:url}).catch(function(){});
+        return;
+      }
+      copy(url).then(function(){
+        b.classList.add("ok"); b.innerHTML=CHECK;
+        setTimeout(function(){ b.classList.remove("ok"); b.innerHTML=icon; }, 1600);
+      });
+    });
+  });
+  document.querySelectorAll(".lnk-u").forEach(function(el){
+    var url=abs(el.dataset.slug); el.textContent=url; el.style.cursor="pointer";
+    el.title="Copiar";
+    el.addEventListener("click", function(){
+      copy(url).then(function(){
+        var old=el.textContent; el.textContent="Link copiado ✓";
+        setTimeout(function(){ el.textContent=old; }, 1400);
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
