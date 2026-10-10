@@ -487,6 +487,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   .fsrc{font-size:10.5px;color:#5c626d;margin-top:8px;line-height:1.4}
   .ctable td.csub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding-top:12px;text-align:left}
   .d.nt{color:#9aa3ad}
+  .fcard h4 .exp{margin-left:6px;padding:1px 6px;border-radius:5px;background:rgba(244,194,13,.14);color:var(--gold);font-size:9px;letter-spacing:.6px;vertical-align:1px}
   @media(max-width:400px){ .cmpr .cl{width:92px} .cmpr .cv{width:76px} }
 
   @media(min-width:900px){
@@ -524,6 +525,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   <section class="screen" id="scr-coach"></section>
   <section class="screen" id="scr-mapas"></section>
   <section class="screen" id="scr-ops"></section>
+  <section class="screen" id="scr-squad"></section>
   <section class="screen" id="scr-evo"></section>
   <div class="foot" id="foot"></div>
 </div>
@@ -910,7 +912,12 @@ function goalCard(){
     [.5,.55].forEach(w=>{ if(Math.abs(w-wNow)>=.02) sc.push([w,`${Math.round(w*100)}%`]); });
     sc.sort((a,b)=>a[0]-b[0]);
     const be=Math.round(-100*p.loss/(p.win-p.loss));
+    const Wp=p.win, Lp=-p.loss, rnd=x=>Math.round(+x.toFixed(6));
+    const kmax=n=>{let m=0; for(let i=0;i<=n;i++) if((n-i)*Wp-i*Lp>0) m=i; return m;};
+    const rpf=v=>(v>0?"+":"")+rnd(v);
+    const janela=`A cada 5 partidas você pode perder até <b>${kmax(5)}</b> e ainda subir: 2V-3D dá ${rpf(2*Wp-3*Lp)} RP e 3V-2D, ${rpf(3*Wp-2*Lp)} RP (em 4 partidas: até ${kmax(4)}).`;
     body=`<div class="cg-s" style="margin-top:10px">Seu ritmo nesta season: <b>+${Math.round(p.win)}</b> por vitória e <b>${Math.round(p.loss)}</b> por derrota (${p.n} partidas). Com ${be}% de vitórias você já não perde RP.</div>
+      <div class="cg-s" style="margin-top:6px">${janela}</div>
       <table class="ctable"><tr><th>Vitórias</th><th>RP por partida</th><th>Partidas até ${esc(g.label)}</th></tr>
       ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${x>0?"+":""}${x.toFixed(1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
       <div class="fsrc">Cenário, não promessa: supõe que cada vitória e cada derrota continuem valendo a média desta season.</div>`;
@@ -977,7 +984,7 @@ function squadCard(cur,base){
       ${bq?`<tr><td colspan="4" class="csub">${esc(base.season)} · últimas ${bq.n} partidas</td></tr>${squadRows(bq)}`:""}
     </table>
     ${note?`<div class="fread" style="margin-top:10px">${note}</div>`:""}
-    <div class="fsrc">Squad = partida no mesmo minuto e no mesmo mapa de outro perfil daqui${who?` (nesta season: ${who})`:""}.${few?" Fila com menos de 15 partidas é indício, não prova.":""}</div></div>`;
+    <div class="fsrc">Squad = partida no mesmo minuto e no mesmo mapa de outro perfil daqui${who?` (nesta season: ${who})`:""}.${few?" Fila com menos de 15 partidas é indício, não prova.":""} Detalhe por amigo na aba Squad.</div></div>`;
 }
 
 function bars(rows){                   // [rótulo, %, texto, é você?]
@@ -987,7 +994,7 @@ function fcard(title,big,sub,inner,read,src){
   return `<div class="fcard"><h4>${title}</h4><div class="fbig">${big}</div><div class="fsub">${sub}</div>${inner||""}${read?`<div class="fread">${read}</div>`:""}${src?`<div class="fsrc">${src}</div>`:""}</div>`;
 }
 function coachCards(cur){
-  const c=cur.coach, s=cur.style, out=[];
+  const c=cur.coach, s=cur.style, K={};
   if(c&&c.lastAlive){
     const la=c.lastAlive, lr=c.lastAliveRef, me=pf(la.atk[0],la.atk[1]), ref=pf(lr.atk[0],lr.atk[1]);
     const fd=pf(c.firstDeath.atk[0],c.firstDeath.atk[1]), fdr=pf(c.firstDeathRef.atk[0],c.firstDeathRef.atk[1]);
@@ -997,7 +1004,7 @@ function coachCards(cur){
       : `No ataque você sobra sozinho perto do que acontece com eles.`;
     read += ` Na defesa: ${md}% (eles, ${rd}%)${Math.abs(md-rd)<8?", normal":""}.`;
     if(k&&k.alone) read += ` Dos seus ${nf(k.total)} abates, ${k.alone} saíram com você já sozinho; ${k.aloneLost} desses, em round perdido.`;
-    out.push(fcard("Último vivo no ataque",`${me}%`,"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
+    K.lastAlive=(fcard("Último vivo no ataque",`${me}%`,"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
       bars([["Você",me,`${la.atk[0]} de ${la.atk[1]}`,1],["Bons jogadores*",ref,`${lr.atk[0]} de ${lr.atk[1]}`],["Acaso (1 em 5)",20,"20%"]]),
       read,`* ${esc(c.refLabel)}. Base: ${c.matches} partidas, ${nf(c.rounds)} rounds.`));
   }
@@ -1007,7 +1014,7 @@ function coachCards(cur){
     const read = rE-meE>=8
       ? `Você quase não participa da abertura: só <b>${meE}%</b> das suas kills são um dos 2 primeiros abates do round (eles, ${rE}%). Chegue junto do entry que a abertura vira sua.`
       : `A distribuição é parecida com a dos bons jogadores (abertura ${meE}% × ${rE}%, fim ${meL}% × ${rL}%). Ou seja: o "último vivo" não vem da hora das suas kills — vem de onde você está quando os outros caem.`;
-    out.push(fcard("Quando suas kills acontecem",`${meE}% · ${meL}%`,"das suas kills abrem o round (2 primeiros abates) · fecham o round (2 últimos)",
+    K.killTiming=(fcard("Quando suas kills acontecem",`${meE}% · ${meL}%`,"das suas kills abrem o round (2 primeiros abates) · fecham o round (2 últimos)",
       bars([["Você — abertura",meE,`${kt.meEarly[0]} de ${kt.meEarly[1]}`,1],["Bons — abertura",rE,`${kt.refEarly[0]} de ${nf(kt.refEarly[1])}`],
             ["Você — fim",meL,`${kt.meLate[0]} de ${kt.meLate[1]}`,1],["Bons — fim",rL,`${kt.refLate[0]} de ${nf(kt.refLate[1])}`]]),
       read,`* ${esc(c.refLabel)}.`));
@@ -1016,14 +1023,14 @@ function coachCards(cur){
     const st=c.states, a44=st["4v4"], a45=st["4v5"];
     const L=[["5v4","Vocês na frente (5v4)"],["4v4","Troca feita (4v4)"],["4v5","Um a menos (4v5)"],["5v3","Dois na frente (5v3)"],["3v5","Dois a menos (3v5)"],["3v3","3v3"],["2v2","2v2"]];
     const rows=L.filter(([k])=>(st[k]||[0,0])[1]>=8).map(([k,l])=>{const[w,n]=st[k];return `<tr><td>${l}</td><td><b>${pf(w,n)}%</b></td><td><small>${w} de ${n}</small></td></tr>`;}).join("");
-    out.push(fcard("O round pelo placar de vivos",`${pf(a44[0],a44[1])}% × ${pf(a45[0],a45[1])}%`,"round vencido com a troca feita (4v4) × um a menos (4v5)",
+    K.states=(fcard("O round pelo placar de vivos",`${pf(a44[0],a44[1])}% × ${pf(a45[0],a45[1])}%`,"round vencido com a troca feita (4v4) × um a menos (4v5)",
       `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>${rows}</table>`,
       `Perder o 1º duelo não fecha o round se vier a troca: em 4v4 vocês vencem <b>${pf(a44[0],a44[1])}%</b>; sem a troca (4v5), <b>${pf(a45[0],a45[1])}%</b>. É o número por trás do "morreu um, troque na hora".`,
       "Primeira vez que o round chega em cada placar, pelo kill feed."));
   }
   if(s&&s.clutchBy){
     const cb=s.clutchBy, tot=cb.reduce((a,x)=>a+x[1],0), w=cb.reduce((a,x)=>a+x[0],0), hard=cb[3][1]+cb[4][1];
-    if(tot) out.push(fcard("Quando você sobra sozinho",`${w} de ${tot}`,"situações de 1 contra X que você venceu nesta season",
+    if(tot) K.clutch=(fcard("Quando você sobra sozinho",`${w} de ${tot}`,"situações de 1 contra X que você venceu nesta season",
       bars(cb.map((x,i)=>[`1 contra ${i+1}`,pf(x[0],x[1]),`${x[0]} de ${x[1]}`,0])),
       hard?`<b>${hard}</b> das ${tot} foram 1 contra 4 ou 5. Ali quase ninguém vence: o ganho está em não chegar lá.`:"",
       "Contagem do r6.tracker.network."));
@@ -1032,13 +1039,13 @@ function coachCards(cur){
     const hb=c.hardBreach, a=pf(hb.with[0],hb.with[1]), b=pf(hb.without[0],hb.without[1]);
     const rows=[["Com hard breach",a,`${hb.with[0]} de ${hb.with[1]}`],["Sem hard breach",b,`${hb.without[0]} de ${hb.without[1]}`]];
     if(hb.self&&hb.self[1]) rows.push(["Você de breacher",pf(hb.self[0],hb.self[1]),`${hb.self[0]} de ${hb.self[1]}`,1]);
-    out.push(fcard("Hard breach no ataque",`${a}% × ${b}%`,"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
+    K.hardBreach=(fcard("Hard breach no ataque",`${a}% × ${b}%`,"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
       bars(rows),`Em <b>${hb.without[1]} dos ${hb.with[1]+hb.without[1]}</b> rounds de ataque ninguém do seu time levou.`,""));
   }
   if(c&&c.score&&c.score.led20[1]>=8&&c.score.trail02[1]>=8){
     const sc=c.score, otShare=pf(sc.ot[1],c.matches);
     const row=(l,a,v)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]} ${v}</small></td></tr>`;
-    out.push(fcard("O placar da partida",`${pf(sc.led20[0],sc.led20[1])}% × ${pf(sc.trail02[0],sc.trail02[1])}%`,"partidas fechadas quando você abre 2-0 × viradas quando leva 0-2",
+    K.score=(fcard("O placar da partida",`${pf(sc.led20[0],sc.led20[1])}% × ${pf(sc.trail02[0],sc.trail02[1])}%`,"partidas fechadas quando você abre 2-0 × viradas quando leva 0-2",
       `<table class="ctable"><tr><th>Situação</th><th></th><th></th></tr>
         ${row("Abriu 2-0",sc.led20,"fechadas")}${row("Levou 0-2",sc.trail02,"viradas")}
         ${sc.ot[1]?row("Foi pro overtime (3-3)",sc.ot,"ganhas"):""}${sc.otRounds[1]?row("Rounds de overtime",sc.otRounds,"vencidos"):""}</table>`,
@@ -1049,7 +1056,7 @@ function coachCards(cur){
     const t=c.teams, d=t.matesRP-t.enemiesRP, avg=Math.round((4*t.matesRP+t.meRP)/5);
     const big=Math.abs(d)<=50?"Mesmo nível":(d<0?"Um pouco abaixo":"Um pouco acima");
     const atk=pf(c.sideRounds.atk[0],c.sideRounds.atk[1]), def=pf(c.sideRounds.def[0],c.sideRounds.def[1]);
-    out.push(fcard("Seus times são mais fracos?",big,"seu time × time inimigo, no começo de cada partida",
+    K.teams=(fcard("Seus times são mais fracos?",big,"seu time × time inimigo, no começo de cada partida",
       `<table class="ctable"><tr><th></th><th>Colegas</th><th>Inimigos</th></tr>
         <tr><td>RP médio</td><td><b>${nf(t.matesRP)}</b></td><td><b>${nf(t.enemiesRP)}</b></td></tr>
         <tr><td>K/D</td><td><b>${t.matesKD.toFixed(2)}</b></td><td><b>${t.enemiesKD.toFixed(2)}</b></td></tr>
@@ -1057,7 +1064,84 @@ function coachCards(cur){
       `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do inimigo porque o seu entra na mesma conta: os dois times matam quase o mesmo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
       "Colegas = os outros 4 do seu time, sem você. RP de antes da partida."));
   }
-  return out.join("");
+  if(c&&c.pressure&&c.pressure.mine[1]>=15&&c.pressure.theirs[1]>=15){
+    const a=c.pressure.mine, b=c.pressure.theirs;
+    const pa=pf(a[0],a[1]), pb=pf(b[0],b[1]);
+    const lead=Math.abs(pa-pb)<=6
+      ? `Fechar e sobreviver valem quase o mesmo pra você (~${Math.round((pa+pb)/20)} em 10).`
+      : pa>pb ? `Você fecha melhor (${pa}%) do que segura (${pb}%).` : `Você segura melhor (${pb}%) do que fecha (${pa}%).`;
+    K.pressure=fcard("Sob pressão",`${pf(a[0],a[1])}% × ${pf(b[0],b[1])}%`,"rounds fechados com match point seu × segurados com match point deles",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>
+        <tr><td>Match point seu</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>
+        <tr><td>Match point deles</td><td><b>${pf(b[0],b[1])}%</b></td><td><small>${b[0]} de ${b[1]}</small></td></tr></table>`,
+      `${lead} Com match point seu, jogue o round mais simples do dia: utilidade toda, zero herói — é o round que time nervoso joga pior.`,
+      "Match point = um time com 3 rounds a favor e o outro com até 2 (no overtime, com 4).");
+  }
+  if(c&&c.trades&&c.trades.mateDeaths>0&&c.trades.myDeaths>0){
+    const t=c.trades, me=pf(t.byMe,t.mateDeaths), mates=pf(t.byMe+t.byOthers,t.mateDeaths), per=Math.round(100*t.byOthers/t.mateDeaths/3), mt=pf(t.meTraded,t.myDeaths);
+    const quem=Math.abs(me-per)<=2?"como um colega médio":me>per?"mais que um colega médio":"menos que um colega médio";
+    let read=`Você troca ${quem} (${me}% das mortes deles; um time de 4 troca ~${per}% por cabeça).`;
+    if(mt<mates) read+=` O problema é a distância: os colegas são trocados em ${mates}% das mortes e você em só ${mt}% — você morre longe. Ande a uma sala do entry: a troca dele é sua, e a sua é dele.`;
+    K.trades=fcard("Trocas",`${me}% × ${mt}%`,"mortes de colegas que você trocou × suas mortes que o time trocou",
+      `<table class="ctable"><tr><th></th><th>Mortes</th><th>Trocadas</th></tr>
+        <tr><td>Colegas</td><td><b>${nf(t.mateDeaths)}</b></td><td>você ${t.byMe} · outros ${t.byOthers}</td></tr>
+        <tr><td>Você</td><td><b>${nf(t.myDeaths)}</b></td><td>${t.meTraded}</td></tr></table>`,
+      read,"Troca = quem matou cai nos 2 abates seguintes do round.");
+  }
+  if(c&&c.postClutch&&c.postClutch.afterLost[1]>=20){
+    const pc=c.postClutch, l=pf(pc.afterLost[0],pc.afterLost[1]), an=pf(pc.afterAnyLost[0],pc.afterAnyLost[1]);
+    K.postClutch=fcard("O round depois do clutch",`${l}%`,"round seguinte vencido depois de você perder um clutch",
+      bars([["Depois de clutch perdido",l,`${pc.afterLost[0]} de ${pc.afterLost[1]}`,1],
+            ["Depois de round perdido comum",an,`${pc.afterAnyLost[0]} de ${pc.afterAnyLost[1]}`],
+            ["Depois de clutch vencido",pf(pc.afterWon[0],pc.afterWon[1]),`${pc.afterWon[0]} de ${pc.afterWon[1]}`]]),
+      l<an
+        ? `Depois que você sobra sozinho e perde, o time vence o seguinte ${l}% — abaixo dos ${an}% de um round perdido comum. Meio round de pedágio: respira no próximo, não force entrada pra compensar.`
+        : `Depois que você sobra sozinho e perde, o time vence o seguinte ${l}% — igual ou acima dos ${an}% de um round perdido comum: sem pedágio visível.`,
+      "Clutch = você é o último vivo do seu time no round.");
+  }
+  if(c&&c.noKill&&c.noKill.died[1]>=30){
+    const nk=c.noKill, al=pf(nk.alive[0],nk.alive[1]), di=pf(nk.died[0],nk.died[1]), dk=pf(nk.diedWithKill[0],nk.diedWithKill[1]);
+    const share=pf(nk.alive[1]+nk.died[1],c.rounds);
+    const row=(l,a)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>`;
+    K.noKill=fcard("Seu round sem abate",`${al}% × ${di}%`,"rounds com 0 abate seu: vencidos quando você fica vivo × quando você morre",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>${row("0 abate, vivo no fim",nk.alive)}${row("0 abate, morto",nk.died)}${row("Morto, mesmo levando 1+",nk.diedWithKill)}</table>`,
+      `${share>=40&&share<=55?"Quase metade dos seus rounds termina":`Em ${share}% dos seus rounds você termina`} sem abate seu — e tudo bem: vivo, ${al}% viram vitória. O round não pede seu frag, pede você vivo; morrer ${Math.abs(dk-di)<=8?"custa quase o mesmo":"não custa o mesmo"} levando alguém junto (${dk}%) ou não (${di}%).`,
+      `Vivo no fim e vitória andam juntos por natureza (defesa que segura o relógio termina viva) — leia como "morte barata custa round", não como "esconder-se vence".`);
+  }
+  if(c&&c.rival&&c.rival.with[1]>=8){
+    const a=c.rival.with, b=c.rival.without, tot=a[1]+b[1];
+    K.rival=fcard(`O duelo repetido <span class="exp">experimental</span>`,`${a[0]} de ${a[1]}`,"partidas vencidas quando um mesmo inimigo te matou 3+ vezes",
+      bars([["Com rival",pf(a[0],a[1]),`${a[0]} de ${a[1]}`,1],["Sem rival",pf(b[0],b[1]),`${b[0]} de ${b[1]}`]]),
+      `Em ${a[1]} das ${tot} partidas alguém te matou 3+ vezes — você venceu ${a[0]}. Amostra curta e em ranked o adversário muda a cada partida (por isso o selo experimental); o uso é ao vivo: perdeu o MESMO duelo duas vezes, troque a rota — não volte pro mesmo ângulo.`,
+      "");
+  }
+  // ordem = o que se decide DURANTE o jogo primeiro; contexto e perfil depois
+  return ["states","pressure","lastAlive","hardBreach","trades","killTiming","postClutch","noKill","clutch","rival","score","teams"]
+    .map(k=>K[k]||"").join("");
+}
+function trendBlock(cur){
+  const t=cur.coach&&cur.coach.trend;
+  if(!t||t.last.n<10) return "";
+  const L=t.last, R=t.rest;
+  const d1=x=>x.toFixed(1).replace(".",","), d2=x=>x.toFixed(2).replace(".",","), sg1=x=>(x>0?"+":"")+d1(x);
+  const eL=L.esr[1]?pf(L.esr[0],L.esr[1]):null, eR=R.esr[1]?pf(R.esr[0],R.esr[1]):null;
+  let read=L.rp>R.rp
+    ? `As últimas ${L.n} são seu melhor trecho da season: ${sg1(L.rp)} de RP por partida contra ${sg1(R.rp)} antes.`
+    : `As últimas ${L.n} renderam ${sg1(L.rp)} de RP por partida contra ${sg1(R.rp)} antes.`;
+  if(eL!=null&&eR!=null&&eL<eR){
+    read+=` O 1º duelo caiu (${eL}% × ${eR}%)`;
+    read+=(L.esr[1]/L.n<R.esr[1]/R.n)
+      ? " — você está ganhando mais entrando menos no duelo de abertura, que é exatamente o plano."
+      : ".";
+  }
+  return `<h2 class="sec">Tendência<span class="hint">últimas ${L.n} × o resto da season</span></h2>
+    <div class="cbox"><table class="ctable"><tr><th></th><th>Últimas ${L.n}</th><th>Antes (${R.n})</th></tr>
+      <tr><td>Vitórias</td><td><b>${pf(L.w,L.n)}%</b> <small>${L.w} de ${L.n}</small></td><td>${pf(R.w,R.n)}% <small>${R.w} de ${R.n}</small></td></tr>
+      <tr><td>K/D</td><td><b>${d2(L.kd)}</b></td><td>${d2(R.kd)}</td></tr>
+      ${eL!=null?`<tr><td>1º duelo vencido</td><td><b>${eL}%</b> <small>${L.esr[0]} de ${L.esr[1]}</small></td><td>${eR!=null?eR+"%":"—"} <small>${R.esr[0]} de ${R.esr[1]}</small></td></tr>`:""}
+      <tr><td>RP por partida</td><td><b>${sg1(L.rp)}</b></td><td>${sg1(R.rp)}</td></tr></table>
+      <div class="fread" style="margin-top:10px">${read}</div>
+      <div class="fsrc">Últimas ${L.n} partidas da season × as outras ${R.n}. K/D e 1º duelo vêm do kill feed.</div></div>`;
 }
 function tiltCard(cur){
   const t=cur.tilt; if(!t) return "";
@@ -1131,15 +1215,33 @@ function renderCoach(){
     return;
   }
   el.innerHTML=`
-    ${latest?`<h2 class="sec" style="margin-top:4px">Meta</h2>${goalCard()}
-      <h2 class="sec">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}`
+    ${latest?`<h2 class="sec" style="margin-top:4px">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}
+      <h2 class="sec">Meta</h2>${goalCard()}`
       :`<div class="banner" style="margin:0 0 6px">📅 Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.</div>`}
     <h2 class="sec">O que os rounds mostram<span class="hint">${esc(cur.season)}</span></h2>
     ${cur.coach?"":`<div class="banner" style="margin:0 0 12px">🔎 O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.</div>`}
     <div class="fcards">${coachCards(cur)}</div>
+    ${trendBlock(cur)}
     ${cur.squad?`<h2 class="sec">Fila<span class="hint">sozinho × com o squad</span></h2>${squadCard(cur,base)}`:""}
     <h2 class="sec">Seu estilo em números<span class="hint">${base&&base.style?"vs "+esc(base.season):esc(cur.season)}</span></h2>${styleTable(cur,base)}
     ${cur.tilt?`<h2 class="sec">Sequência</h2>${tiltCard(cur)}`:""}`;
+}
+
+/* ---------- SQUAD ---------- */
+const SQUAD_AVISO=`👥 Amostra pequena vira indício, não veredito — vocês jogaram pouco juntos nesta season. Squad = partida no mesmo minuto e mapa de outro perfil daqui; amigo de fora do app conta como "sozinho".`;
+function squadTable(sn){
+  const q=sn.squad;
+  const row=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>`:"";
+  const friends=Object.entries(q.perFriend||{}).filter(([,a])=>a[1]>0).sort((a,b)=>b[1][1]-a[1][1])
+    .map(([sl,a])=>row(esc(NAMES[sl]||sl),a)).join("");
+  return `<div class="cbox"><table class="ctable"><tr><th>Fila</th><th>Vitórias</th><th>Partidas</th></tr>
+    ${row("Sozinho",q.solo)}${friends}${row("Trio",q.trio)}</table></div>`;
+}
+function renderSquad(){
+  const el=document.getElementById("scr-squad");
+  const seas=SEASONS.filter(s=>s.squad);
+  if(!seas.length){ el.innerHTML=`<div class="banner">👥 Sem dados de fila carregados.</div>`; return; }
+  el.innerHTML=seas.map((s,i)=>`<h2 class="sec"${i?"":' style="margin-top:4px"'}>${esc(s.season)}<span class="hint">${esc(s.seasonLabel||"")} · ${s.squad.n} partidas</span></h2>${squadTable(s)}${i===0?`<div class="banner">${SQUAD_AVISO}</div>`:""}`).join("");
 }
 
 /* ---------- SELETOR / SHELL ---------- */
@@ -1148,6 +1250,7 @@ const TABS=[
   {id:"coach",label:"Coach",icon:'<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>'},
   {id:"mapas",label:"Mapas",icon:'<svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>'},
   {id:"ops",label:"Operadores",icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>'},
+  {id:"squad",label:"Squad",icon:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.6"/><path d="M14.8 14.6c.7-.4 1.4-.6 2.2-.6 2.3 0 4.1 1.5 4.6 4.3"/></svg>'},
   {id:"evo",label:"Evolução",icon:'<svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-8"/></svg>'}
 ];
 function go(id){
@@ -1155,7 +1258,7 @@ function go(id){
   document.querySelectorAll("nav.bottom button,.desktabs button").forEach(b=>b.classList.toggle("on", b.dataset.t===id));
   window.scrollTo({top:0});
 }
-function renderAll(){ renderInicio(); renderCoach(); renderMapas(); renderOps(); renderEvo(); syncHeader(); }
+function renderAll(){ renderInicio(); renderCoach(); renderMapas(); renderOps(); renderSquad(); renderEvo(); syncHeader(); }
 function syncHeader(){
   const rk=rankInfo(active.kpis.peakRP);
   document.getElementById("ss-season").textContent = active.season;
@@ -1186,7 +1289,8 @@ function openHelp(){
     <div class="legrow"><b style="color:var(--gold)">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
     <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>
     <div class="legrow"><b style="color:#9aa3ad">▲</b> cinza no Coach: mudou o estilo, não o resultado (nem bom nem ruim)</div>
-    <div class="legrow"><b>💡</b> Coach: sua meta, o plano pra próxima sessão e o que os rounds mostram</div>`);
+    <div class="legrow"><b>💡</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards de cima são os que valem olhar durante o jogo</div>
+    <div class="legrow"><b>👥</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
 }
 function openShare(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);

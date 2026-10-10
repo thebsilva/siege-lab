@@ -274,6 +274,8 @@ def squad_of(slug, rows, others):
     Cada modo vira [vitórias, partidas, abates, mortes, soma de RP]."""
     acc = {"solo": [0, 0, 0, 0, 0], "together": [0, 0, 0, 0, 0]}
     who = collections.Counter()
+    per = {o: [0, 0] for o in others if o != slug}   # [vitórias, partidas] SÓ com aquele amigo
+    trio = [0, 0]                                    # com 2+ do squad na mesma partida
     for r in rows:
         if not r.get("map"):
             continue
@@ -283,7 +285,33 @@ def squad_of(slug, rows, others):
         a[0] += r["win"]; a[1] += 1; a[2] += r["kills"] or 0; a[3] += r["deaths"] or 0
         a[4] += r["rankPointsDelta"] or 0
         who.update(mates)
-    return {**acc, "with": dict(who), "n": sum(a[1] for a in acc.values())}
+        grp = trio if len(mates) >= 2 else (per[mates[0]] if mates else None)
+        if grp is not None:
+            grp[0] += r["win"]; grp[1] += 1
+    return {**acc, "with": dict(who), "n": sum(a[1] for a in acc.values()),
+            "perFriend": per, "trio": trio}
+
+
+def trend_of(rows, rounds_path):
+    """Últimas 15 partidas × o resto da season: vitórias, K/D e 1º duelo (do kill feed,
+    juntando pelo prefixo de 8 caracteres do id) e RP médio por partida."""
+    feed = {}
+    for l in open(rounds_path, encoding="utf-8"):
+        if l.strip():
+            m = json.loads(l)
+            feed[m["id"]] = next(p for p in m["P"] if p[1] == 1)
+    ch = sorted([r for r in rows if r.get("map")], key=lambda r: r["timestamp"])
+
+    def agg(part):
+        k = d = fk = fd = 0
+        for r in part:
+            p = feed.get((r.get("id") or "")[:8])
+            if p:
+                k += p[4]; d += p[5]; fk += p[7]; fd += p[8]
+        rp = [r["rankPointsDelta"] or 0 for r in part]
+        return {"w": sum(1 for r in part if r["win"]), "n": len(part), "kd": round(k / max(1, d), 2),
+                "esr": [fk, fk + fd], "rp": round(statistics.mean(rp), 1) if rp else None}
+    return {"last": agg(ch[-15:]), "rest": agg(ch[:-15])}
 
 
 # ---------------------------------------------------------------- kill feed → coach
@@ -321,9 +349,26 @@ def coach_of(path, side_of):
         good = {i for i in range(10) if i != me and P[i][4] / max(1, P[i][5]) >= REF_KD}
         myw = enw = 0
         mflags = set()
+        prev_alone, prev_lost = None, False      # round anterior: fui o último vivo (W/L)? perdemos?
+        deaths_by = collections.Counter()        # quem me matou, nesta partida
         for r, s in enumerate(m["R"]):
             w, ev = s.split(":")
             won = int(w) == T
+            # match point, pelo placar ANTES do round
+            if (myw == 3 and enw <= 2) or myw == 4:
+                c["mp_mine"] += 1
+                c["mp_mine_w"] += won
+            if (enw == 3 and myw <= 2) or enw == 4:
+                c["mp_theirs"] += 1
+                c["mp_theirs_w"] += won
+            # o round seguinte a um clutch (eu último vivo) e a qualquer derrota de round
+            if prev_lost:
+                c["pc_any"] += 1
+                c["pc_any_w"] += won
+            if prev_alone:
+                c[f"pc_{prev_alone}"] += 1
+                c[f"pc_{prev_alone}_w"] += won
+            prev_alone, prev_lost = None, not won
             myw += won
             enw += not won
             if (myw, enw) in {(2, 0), (0, 2), (3, 3)}:
@@ -358,7 +403,7 @@ def coach_of(path, side_of):
             d_idx = 0
             reached = set()
             alive = set(range(10))
-            last, first, alone_me, my_k = {}, {}, False, 0
+            last, first, alone_me, my_k, me_died = {}, {}, False, 0, False
             for j, (kc, vc) in enumerate(E):
                 if vc == "x":
                     continue
@@ -390,8 +435,11 @@ def coach_of(path, side_of):
                         c["traded_by_others"] += 1
                 if v == me and kk in ens:
                     c["my_deaths"] += 1
+                    deaths_by[kk] += 1
                     if any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt):
                         c["me_traded"] += 1
+                if v == me:
+                    me_died = True
                 alive.discard(v)
                 d_idx += 1
                 stt = f"{sum(1 for i in team if i in alive)}v{sum(1 for i in ens if i in alive)}"
@@ -426,6 +474,13 @@ def coach_of(path, side_of):
             k2 = "multi2" if my_k >= 2 else "multi01"
             c[k2] += 1
             c[k2 + "_won"] += won
+            # round sem abate seu (vivo no fim × morto) e morto mesmo levando 1+
+            nk = ("nk_died" if me_died else "nk_alive") if my_k == 0 else ("nk_dk" if me_died else None)
+            if nk:
+                c[nk] += 1
+                c[nk + "_w"] += won
+            if alone_me:
+                prev_alone = "W" if won else "L"
             for stt in reached:
                 c[f"st_{stt}"] += 1
                 c[f"st_{stt}_won"] += won
@@ -446,6 +501,9 @@ def coach_of(path, side_of):
         for f in mflags:
             c[f"m_{f}"] += 1
             c[f"m_{f}_w"] += mwon
+        rv = "rv" if deaths_by and max(deaths_by.values()) >= 3 else "norv"   # alguém me matou 3+ vezes
+        c[rv] += 1
+        c[rv + "_w"] += mwon
     r1 = lambda x: round(x, 1)
     out = {
         "matches": len(ms), "rounds": c["rounds_feed"],
@@ -469,6 +527,12 @@ def coach_of(path, side_of):
                        "refEarly": [ref["k_early"], ref["kills"]], "refLate": [ref["k_late"], ref["kills"]]},
         "score": {"led20": [c["m_20_w"], c["m_20"]], "trail02": [c["m_02_w"], c["m_02"]],
                   "ot": [c["m_33_w"], c["m_33"]], "otRounds": [c["ot_rounds_won"], c["ot_rounds"]]},
+        "pressure": {"mine": [c["mp_mine_w"], c["mp_mine"]], "theirs": [c["mp_theirs_w"], c["mp_theirs"]]},
+        "postClutch": {"afterLost": [c["pc_L_w"], c["pc_L"]], "afterWon": [c["pc_W_w"], c["pc_W"]],
+                       "afterAnyLost": [c["pc_any_w"], c["pc_any"]]},
+        "noKill": {"alive": [c["nk_alive_w"], c["nk_alive"]], "died": [c["nk_died_w"], c["nk_died"]],
+                   "diedWithKill": [c["nk_dk_w"], c["nk_dk"]]},
+        "rival": {"with": [c["rv_w"], c["rv"]], "without": [c["norv_w"], c["norv"]]},
         "teams": {"meRP": round(statistics.mean(rp_me)) if rp_me else None,
                   "matesRP": round(statistics.mean(rp_mates)) if rp_mates else None,
                   "enemiesRP": round(statistics.mean(rp_en)) if rp_en else None,
@@ -528,6 +592,8 @@ def main(date):
             rounds = os.path.join(raw, f"{date}_s{sn}_rounds.jsonl")
             if os.path.exists(rounds):
                 snap["coach"] = coach_of(rounds, side_all)
+                if srows:
+                    snap["coach"]["trend"] = trend_of(srows, rounds)
             out = os.path.join(PLAYERS, slug, f"{date}_{code.lower()}.json")
             with open(out, "w", encoding="utf-8") as fh:
                 json.dump(snap, fh, ensure_ascii=False, indent=2)

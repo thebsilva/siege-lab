@@ -472,6 +472,20 @@
       "laprufer": 31,
       "superallfa": 3
     },
-    "n": 105
+    "n": 105,
+    "perFriend": {
+      "laprufer": [
+        15,
+        31
+      ],
+      "superallfa": [
+        1,
+        3
+      ]
+    },
+    "trio": [
+      0,
+      0
+    ]
   }
 }

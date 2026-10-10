@@ -495,6 +495,20 @@
       "superallfa": 6,
       "brunoprufer": 3
     },
-    "n": 29
+    "n": 29,
+    "perFriend": {
+      "brunoprufer": [
+        2,
+        3
+      ],
+      "superallfa": [
+        5,
+        6
+      ]
+    },
+    "trio": [
+      0,
+      0
+    ]
   }
 }

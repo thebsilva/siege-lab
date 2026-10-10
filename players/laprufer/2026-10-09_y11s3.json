@@ -458,6 +458,20 @@
     "with": {
       "brunoprufer": 31
     },
-    "n": 51
+    "n": 51,
+    "perFriend": {
+      "brunoprufer": [
+        15,
+        31
+      ],
+      "superallfa": [
+        0,
+        0
+      ]
+    },
+    "trio": [
+      0,
+      0
+    ]
   }
 }

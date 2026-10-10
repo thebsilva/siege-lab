@@ -2,7 +2,8 @@
 
 App single-file (por jogador) com interface de produto, **seletor de season** e
 comparação season-a-season (deltas ▲▼). Rank derivado do RP, split ataque/defesa
-por mapa e uma aba **Coach** com meta, plano e diagnóstico round a round.
+por mapa, uma aba **Coach** com plano, meta e diagnóstico round a round e uma aba **Squad**
+(resultado sozinho × com cada amigo).
 Funciona offline. Base pra infoproduto/assinatura.
 
 No ar: https://thebsilva.github.io/siege-lab/ (Pages publica `docs/` a cada push, via `deploy-pages.yml`).
@@ -53,11 +54,14 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 
 ## Telas / features
 Início (KPIs + rank + deltas, falta pro próximo rank, forma recente, "o que mudou desde {season}", plano de jogo) ·
-**Coach** (meta com cenário de RP, plano pra próxima sessão, último vivo no ataque, clutch por 1vX,
-hard breach, nível dos times, fila sozinho × squad, estilo em números, tilt) ·
+**Coach**, na ordem do que se decide *durante* a partida pro que é contexto: plano pra próxima sessão →
+meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) → **o que os rounds mostram**
+(placar de vivos · sob pressão · último vivo no ataque · hard breach · trocas · quando suas kills acontecem ·
+round depois do clutch · round sem abate · clutch por 1vX · duelo repetido *(experimental)* · placar da
+partida · nível dos times) → tendência (últimas 15 × o resto da season) → fila → estilo em números → tilt ·
 Mapas (tier auto + card por mapa com barras atk/def e top-3 de operador) ·
-Operadores (mains def/atk + corte) · Evolução (sparklines season a season) · seletor de season no topo ·
-botão ? (legenda) · card de compartilhar.
+Operadores (mains def/atk + corte) · **Squad** (vitórias sozinho × com cada amigo, uma tabela por season) ·
+Evolução (sparklines season a season) · seletor de season no topo · botão ? (legenda) · card de compartilhar.
 
 Na aba Coach as setas têm cor por direção: verde melhorou, vermelho piorou, **cinza = estilo** (nem bom nem ruim).
 Meta e plano só aparecem na season mais nova; season antiga mostra só o diagnóstico daquela época.
@@ -71,13 +75,22 @@ Meta e plano só aparecem na season mais nova; season antiga mostra só o diagn�
   recentMatches:[ {map,w,kd,rp} ],                  # últimas 20, mais nova primeiro
   style:{rounds,roundWR,fb,fd,openPct,esr,kpr,hs,clutchW,clutchL,clutchPct,clutchBy[[w,n]×5],multiPct,atkRoundWR,defRoundWR,…},
   rpRate:{win,loss,n}, tilt:{afterLoss[w,n],afterWin[w,n],sessions,matches},
-  squad:{solo[w,n,k,d,rp], together[…], with{slug:n}, n},
-  coach?:{lastAlive,lastAliveRef,firstDeath,alone,hardBreach,opening,teams,trades,kills,…} }   # só com rounds.jsonl
+  squad:{solo[w,n,k,d,rp], together[…], with{slug:n}, perFriend{slug:[w,n]}, trio[w,n], n},
+  coach?:{lastAlive,lastAliveRef,firstDeath,alone,hardBreach,opening,teams,trades,kills,
+          pressure{mine,theirs}, postClutch{afterLost,afterWon,afterAnyLost}, noKill{alive,died,diedWithKill},
+          rival{with,without}, trend{last,rest}, …} }   # só com rounds.jsonl
 ```
 - Tier do mapa = auto (win% ≥55 priorize · <40 banir · resto neutro).
 - Rank = derivado do RP (bandas 500: Prata 2000/Ouro 2500/Platina 3000/Esmeralda 3500/Diamante 4000 + divisão de 100 RP, I alta → V baixa).
 - "Squad" = partida no mesmo minuto e mapa de outro perfil daqui. Amigo fora do app conta como sozinho.
+  `perFriend` = partidas **só com aquele amigo**; `trio` = com 2+ amigos (não se sobrepõem). A aba Squad lista só as linhas com partida.
 - Régua do "último vivo": outros jogadores das mesmas partidas com K/D 1,2+ na partida (`REF_KD` no ingest).
+- Chaves novas do `coach` (todas `[vitórias, partidas ou rounds]`, exceto `trend`):
+  `pressure` = rounds com match point seu / deles (3 rounds a favor e o outro com até 2; no overtime, 4) ·
+  `postClutch` = round seguinte a um clutch perdido, a um vencido e a qualquer round perdido ·
+  `noKill` = rounds com 0 abate seu: vivo no fim / morto / morto mesmo levando 1+ ·
+  `rival` = partidas em que um mesmo inimigo te matou 3+ vezes × as demais ·
+  `trend` = `{last, rest}` das últimas 15 partidas × o resto, cada um `{w,n,kd,esr[fk,fk+fd],rp}`.
 
 ## Como atualizar (coleta → ingest → build)
 1. **Coletar** no r6.tracker.network (o Claude faz pelo navegador do app; o Cloudflare bloqueia fetch direto).

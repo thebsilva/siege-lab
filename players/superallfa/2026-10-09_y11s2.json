@@ -448,6 +448,20 @@
       "brunoprufer": 17,
       "laprufer": 6
     },
-    "n": 32
+    "n": 32,
+    "perFriend": {
+      "brunoprufer": [
+        8,
+        17
+      ],
+      "laprufer": [
+        5,
+        6
+      ]
+    },
+    "trio": [
+      0,
+      0
+    ]
   }
 }
