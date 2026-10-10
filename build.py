@@ -1001,6 +1001,26 @@ function coachCards(cur){
       bars([["Você",me,`${la.atk[0]} de ${la.atk[1]}`,1],["Bons jogadores*",ref,`${lr.atk[0]} de ${lr.atk[1]}`],["Acaso (1 em 5)",20,"20%"]]),
       read,`* ${esc(c.refLabel)}. Base: ${c.matches} partidas, ${nf(c.rounds)} rounds.`));
   }
+  if(c&&c.killTiming&&c.killTiming.meEarly[1]>=100){
+    const kt=c.killTiming, meE=pf(kt.meEarly[0],kt.meEarly[1]), rE=pf(kt.refEarly[0],kt.refEarly[1]);
+    const meL=pf(kt.meLate[0],kt.meLate[1]), rL=pf(kt.refLate[0],kt.refLate[1]);
+    const read = rE-meE>=8
+      ? `Você quase não participa da abertura: só <b>${meE}%</b> das suas kills são um dos 2 primeiros abates do round (eles, ${rE}%). Chegue junto do entry que a abertura vira sua.`
+      : `A distribuição é parecida com a dos bons jogadores (abertura ${meE}% × ${rE}%, fim ${meL}% × ${rL}%). Ou seja: o "último vivo" não vem da hora das suas kills — vem de onde você está quando os outros caem.`;
+    out.push(fcard("Quando suas kills acontecem",`${meE}% · ${meL}%`,"das suas kills abrem o round (2 primeiros abates) · fecham o round (2 últimos)",
+      bars([["Você — abertura",meE,`${kt.meEarly[0]} de ${kt.meEarly[1]}`,1],["Bons — abertura",rE,`${kt.refEarly[0]} de ${nf(kt.refEarly[1])}`],
+            ["Você — fim",meL,`${kt.meLate[0]} de ${kt.meLate[1]}`,1],["Bons — fim",rL,`${kt.refLate[0]} de ${nf(kt.refLate[1])}`]]),
+      read,`* ${esc(c.refLabel)}.`));
+  }
+  if(c&&c.states&&(c.states["4v4"]||[0,0])[1]>=10&&(c.states["4v5"]||[0,0])[1]>=10){
+    const st=c.states, a44=st["4v4"], a45=st["4v5"];
+    const L=[["5v4","Vocês na frente (5v4)"],["4v4","Troca feita (4v4)"],["4v5","Um a menos (4v5)"],["5v3","Dois na frente (5v3)"],["3v5","Dois a menos (3v5)"],["3v3","3v3"],["2v2","2v2"]];
+    const rows=L.filter(([k])=>(st[k]||[0,0])[1]>=8).map(([k,l])=>{const[w,n]=st[k];return `<tr><td>${l}</td><td><b>${pf(w,n)}%</b></td><td><small>${w} de ${n}</small></td></tr>`;}).join("");
+    out.push(fcard("O round pelo placar de vivos",`${pf(a44[0],a44[1])}% × ${pf(a45[0],a45[1])}%`,"round vencido com a troca feita (4v4) × um a menos (4v5)",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>${rows}</table>`,
+      `Perder o 1º duelo não fecha o round se vier a troca: em 4v4 vocês vencem <b>${pf(a44[0],a44[1])}%</b>; sem a troca (4v5), <b>${pf(a45[0],a45[1])}%</b>. É o número por trás do "morreu um, troque na hora".`,
+      "Primeira vez que o round chega em cada placar, pelo kill feed."));
+  }
   if(s&&s.clutchBy){
     const cb=s.clutchBy, tot=cb.reduce((a,x)=>a+x[1],0), w=cb.reduce((a,x)=>a+x[0],0), hard=cb[3][1]+cb[4][1];
     if(tot) out.push(fcard("Quando você sobra sozinho",`${w} de ${tot}`,"situações de 1 contra X que você venceu nesta season",
@@ -1014,6 +1034,16 @@ function coachCards(cur){
     if(hb.self&&hb.self[1]) rows.push(["Você de breacher",pf(hb.self[0],hb.self[1]),`${hb.self[0]} de ${hb.self[1]}`,1]);
     out.push(fcard("Hard breach no ataque",`${a}% × ${b}%`,"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
       bars(rows),`Em <b>${hb.without[1]} dos ${hb.with[1]+hb.without[1]}</b> rounds de ataque ninguém do seu time levou.`,""));
+  }
+  if(c&&c.score&&c.score.led20[1]>=8&&c.score.trail02[1]>=8){
+    const sc=c.score, otShare=pf(sc.ot[1],c.matches);
+    const row=(l,a,v)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]} ${v}</small></td></tr>`;
+    out.push(fcard("O placar da partida",`${pf(sc.led20[0],sc.led20[1])}% × ${pf(sc.trail02[0],sc.trail02[1])}%`,"partidas fechadas quando você abre 2-0 × viradas quando leva 0-2",
+      `<table class="ctable"><tr><th>Situação</th><th></th><th></th></tr>
+        ${row("Abriu 2-0",sc.led20,"fechadas")}${row("Levou 0-2",sc.trail02,"viradas")}
+        ${sc.ot[1]?row("Foi pro overtime (3-3)",sc.ot,"ganhas"):""}${sc.otRounds[1]?row("Rounds de overtime",sc.otRounds,"vencidos"):""}</table>`,
+      `Quem abre 2-0 quase leva: você fechou <b>${sc.led20[0]} de ${sc.led20[1]}</b> e virou só <b>${sc.trail02[0]} de ${sc.trail02[1]}</b> — os dois primeiros rounds valem a partida, jogue eles a sério desde o pick.${otShare>=25?` E <b>${otShare}%</b> das suas partidas foram pro overtime: round 7 é rotina, não exceção.`:""}`,
+      `${c.matches} partidas com kill feed.`));
   }
   if(c&&c.teams){
     const t=c.teams, d=t.matesRP-t.enemiesRP, avg=Math.round((4*t.matesRP+t.meRP)/5);
@@ -1036,8 +1066,21 @@ function tiltCard(cur){
   if(ln<8){ big="Pouca sequência"; read="Poucas partidas seguidas na mesma sessão pra medir."; }
   else if(l>=45){ big="Sem sinal de tilt"; read=`Depois de uma derrota você venceu a seguinte <b>${lw} de ${ln}</b> (${l}%); depois de uma vitória, ${ww} de ${wn} (${w}%).`; }
   else { big="Cuidado com a sequência"; read=`Depois de uma derrota você venceu a seguinte só <b>${lw} de ${ln}</b> (${l}%); depois de uma vitória, ${ww} de ${wn} (${w}%).`; }
+  let bg="";
+  const G=t.byGame;
+  if(G&&G.some(x=>x[1]>=5)){
+    const lbl=["1ª da sessão","2ª","3ª","4ª em diante"];
+    bg=`<div class="fsub" style="margin-top:12px"><b style="color:var(--txt)">Vitórias pela posição na sessão</b></div>
+      <table class="ctable">${G.map((x,i)=>x[1]?`<tr><td>${lbl[i]}</td><td><b>${pf(x[0],x[1])}%</b></td><td><small>${x[0]} de ${x[1]}</small></td></tr>`:"").join("")}</table>`;
+    const g1=G[0], mid=[G[1][0]+G[2][0], G[1][1]+G[2][1]];
+    if(g1[1]>=10&&mid[1]>=10&&pf(mid[0],mid[1])-pf(g1[0],g1[1])>=12)
+      read+=` A <b>1ª partida da sessão</b> é a sua pior: ${g1[0]} de ${g1[1]} (${pf(g1[0],g1[1])}%), contra ${pf(mid[0],mid[1])}% na 2ª e 3ª — você entra frio.`;
+    const pre=[G[0][0]+mid[0], G[0][1]+mid[1]];
+    if(G[3][1]>=8&&pf(pre[0],pre[1])-pf(G[3][0],G[3][1])>=12)
+      read+=` Da <b>4ª em diante</b> cai pra ${pf(G[3][0],G[3][1])}% — sessão longa não paga.`;
+  }
   return fcard("Depois de perder",big,"a partida seguinte, na mesma sessão",
-    bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]]),
+    bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]])+bg,
     read,`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas.`);
 }
 function coachRules(cur,base){
@@ -1066,6 +1109,12 @@ function coachRules(cur,base){
   const t=cur.tilt;
   if(t&&t.afterLoss[1]>=8&&pf(t.afterLoss[0],t.afterLoss[1])<45)
     R.push(rule("🧠","ban","Perdeu duas seguidas? Pausa antes da próxima.",`Depois de uma derrota você venceu a seguinte só ${t.afterLoss[0]} de ${t.afterLoss[1]}.`));
+  if(t&&t.byGame){
+    const g1=t.byGame[0], mid=[t.byGame[1][0]+t.byGame[2][0], t.byGame[1][1]+t.byGame[2][1]];
+    if(g1[1]>=10&&mid[1]>=10&&pf(mid[0],mid[1])-pf(g1[0],g1[1])>=12)
+      R.push(rule("🔥","play","Aqueça antes da primeira ranqueada.",
+        `Sua 1ª partida da sessão é a pior: ${g1[0]} de ${g1[1]} (${pf(g1[0],g1[1])}%), contra ${pf(mid[0],mid[1])}% na 2ª e 3ª. Estande de tiro ou uma casual antes de dar queue.`));
+  }
   const sq=[[cur.squad,cur],[base&&base.squad,base]].find(([q])=>q&&q.solo[1]>=10&&q.together[1]>=10);
   if(sq){
     const [q,sn]=sq, a=pf(q.together[0],q.together[1]), b=pf(q.solo[0],q.solo[1]);

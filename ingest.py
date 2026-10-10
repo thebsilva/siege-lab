@@ -39,6 +39,7 @@ CURRENT = 43
 SEASON_START = {43: "2026-09-01T12"}
 
 HARD_BREACH = {"Thermite", "Hibana", "Ace", "Maverick"}
+STATES = {"5v4", "4v5", "4v4", "5v3", "3v5", "3v3", "2v2"}  # placares de vivos (1ª vez que o round chega neles)
 REF_KD = 1.2        # régua do "último vivo": outros jogadores das mesmas partidas com K/D >= 1,2 na partida
 MIN_ROUNDS = 8      # operador abaixo disso não entra nas listas (é o "°" do app)
 SOLID_ROUNDS = 15  # abaixo disso o operador não abre a lista nem ganha estrela
@@ -243,18 +244,29 @@ def ts_min(t):
 
 
 def tilt_of(rows):
-    """Resultado da partida seguinte dentro da mesma sessão (pausa > 75 min abre sessão nova)."""
+    """Resultado da partida seguinte dentro da mesma sessão (pausa > 75 min abre sessão nova)
+    + vitórias pela posição na sessão (1ª, 2ª, 3ª, 4ª+ partida)."""
     ch = sorted([r for r in rows if r.get("map")], key=lambda r: r["timestamp"])
-    after_l, after_w, sessions = [0, 0], [0, 0], 1
-    for a, b in zip(ch, ch[1:]):
-        gap = ts_min(b["timestamp"]) - ts_min(a["timestamp"]) - (a.get("durationMs") or 30 * 60000) / 60000
-        if gap > SESSION_GAP_MIN:
+    after_l, after_w, sessions = [0, 0], [0, 0], 0
+    by_game = [[0, 0] for _ in range(4)]
+    gi, prev = 0, None
+    for m in ch:
+        gap = (ts_min(m["timestamp"]) - ts_min(prev["timestamp"])
+               - (prev.get("durationMs") or 30 * 60000) / 60000) if prev else None
+        if prev is None or gap > SESSION_GAP_MIN:
             sessions += 1
-            continue
-        t = after_w if a["win"] else after_l
-        t[0] += b["win"]
-        t[1] += 1
-    return {"afterLoss": after_l, "afterWin": after_w, "sessions": sessions, "matches": len(ch)}
+            gi = 1
+        else:
+            gi += 1
+            t = after_w if prev["win"] else after_l
+            t[0] += m["win"]
+            t[1] += 1
+        b = by_game[min(gi, 4) - 1]
+        b[0] += m["win"]
+        b[1] += 1
+        prev = m
+    return {"afterLoss": after_l, "afterWin": after_w, "sessions": sessions, "matches": len(ch),
+            "byGame": by_game}
 
 
 def squad_of(slug, rows, others):
@@ -307,9 +319,18 @@ def coach_of(path, side_of):
         kills_en += sum(P[i][4] for i in ens)
         ops = {i: (P[i][10].split(".") if P[i][10] else []) for i in team}
         good = {i for i in range(10) if i != me and P[i][4] / max(1, P[i][5]) >= REF_KD}
+        myw = enw = 0
+        mflags = set()
         for r, s in enumerate(m["R"]):
             w, ev = s.split(":")
             won = int(w) == T
+            myw += won
+            enw += not won
+            if (myw, enw) in {(2, 0), (0, 2), (3, 3)}:
+                mflags.add(f"{myw}{enw}")
+            if r >= 6:
+                c["ot_rounds"] += 1
+                c["ot_rounds_won"] += won
             sd = None
             for i in [me] + mates:
                 if r < len(ops[i]) and side_of.get(ops[i][r]):
@@ -333,6 +354,9 @@ def coach_of(path, side_of):
             if not E:
                 continue
             c["rounds_feed"] += 1
+            n_die = sum(1 for _, vc in E if vc != "x")
+            d_idx = 0
+            reached = set()
             alive = set(range(10))
             last, first, alone_me, my_k = {}, {}, False, 0
             for j, (kc, vc) in enumerate(E):
@@ -344,9 +368,19 @@ def coach_of(path, side_of):
                     my_k += 1
                     c["kills"] += 1
                     c["kills_lost"] += not won
+                    if d_idx < 2:
+                        c["kt_me_early"] += 1
+                    if d_idx >= n_die - 2:
+                        c["kt_me_late"] += 1
                     if alone_me:
                         c["kills_alone"] += 1
                         c["kills_alone_lost"] += not won
+                if kk in good:
+                    ref["kills"] += 1
+                    if d_idx < 2:
+                        ref["k_early"] += 1
+                    if d_idx >= n_die - 2:
+                        ref["k_late"] += 1
                 nxt = E[j + 1:j + 3]
                 if v in mates and kk in ens:
                     c["mate_deaths"] += 1
@@ -359,6 +393,10 @@ def coach_of(path, side_of):
                     if any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt):
                         c["me_traded"] += 1
                 alive.discard(v)
+                d_idx += 1
+                stt = f"{sum(1 for i in team if i in alive)}v{sum(1 for i in ens if i in alive)}"
+                if stt in STATES and stt not in reached:
+                    reached.add(stt)
                 t = P[v][0]
                 first.setdefault(t, v)
                 tl = [i for i in range(10) if P[i][0] == t and i in alive]
@@ -388,6 +426,9 @@ def coach_of(path, side_of):
             k2 = "multi2" if my_k >= 2 else "multi01"
             c[k2] += 1
             c[k2 + "_won"] += won
+            for stt in reached:
+                c[f"st_{stt}"] += 1
+                c[f"st_{stt}_won"] += won
             # último vivo / primeiro a morrer — você e a régua
             if T in last:
                 c[f"to1_{sd}"] += 1
@@ -401,6 +442,10 @@ def coach_of(path, side_of):
                 if t in last:
                     ref[f"to1_{s2}"] += 1
                     ref[f"last_{s2}"] += last[t] == i
+        mwon = myw > enw
+        for f in mflags:
+            c[f"m_{f}"] += 1
+            c[f"m_{f}_w"] += mwon
     r1 = lambda x: round(x, 1)
     out = {
         "matches": len(ms), "rounds": c["rounds_feed"],
@@ -419,6 +464,11 @@ def coach_of(path, side_of):
                   "aloneLost": c["kills_alone_lost"]},
         "trades": {"mateDeaths": c["mate_deaths"], "byMe": c["traded_by_me"], "byOthers": c["traded_by_others"],
                    "myDeaths": c["my_deaths"], "meTraded": c["me_traded"]},
+        "states": {k: [c[f"st_{k}_won"], c[f"st_{k}"]] for k in ("5v4", "4v4", "4v5", "5v3", "3v5", "3v3", "2v2")},
+        "killTiming": {"meEarly": [c["kt_me_early"], c["kills"]], "meLate": [c["kt_me_late"], c["kills"]],
+                       "refEarly": [ref["k_early"], ref["kills"]], "refLate": [ref["k_late"], ref["kills"]]},
+        "score": {"led20": [c["m_20_w"], c["m_20"]], "trail02": [c["m_02_w"], c["m_02"]],
+                  "ot": [c["m_33_w"], c["m_33"]], "otRounds": [c["ot_rounds_won"], c["ot_rounds"]]},
         "teams": {"meRP": round(statistics.mean(rp_me)) if rp_me else None,
                   "matesRP": round(statistics.mean(rp_mates)) if rp_mates else None,
                   "enemiesRP": round(statistics.mean(rp_en)) if rp_en else None,
