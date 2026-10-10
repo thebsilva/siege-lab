@@ -1,0 +1,1215 @@
+{
+  "date": "2026-10-09",
+  "season": "Y11S3",
+  "seasonOrder": 43,
+  "seasonLabel": "Split Fire",
+  "basis": "só Y11S3 (em andamento, até 08/10), ranqueada",
+  "kpis": {
+    "matches": 68,
+    "wins": 29,
+    "losses": 38,
+    "winRate": 42.6,
+    "kd": 1.31,
+    "peakRP": 2714,
+    "latestRP": 2702
+  },
+  "operatorsDef": [
+    {
+      "name": "Wamai",
+      "wr": 55,
+      "kd": 1.38,
+      "rounds": 111,
+      "tag": "main · 111 rds",
+      "star": true
+    },
+    {
+      "name": "Clash",
+      "wr": 62,
+      "kd": 0.57,
+      "rounds": 13,
+      "tag": ""
+    },
+    {
+      "name": "Kaid",
+      "wr": 56,
+      "kd": 1.6,
+      "rounds": 9,
+      "tag": ""
+    }
+  ],
+  "operatorsAtk": [
+    {
+      "name": "Thermite",
+      "wr": 53,
+      "kd": 2.0,
+      "rounds": 19,
+      "tag": ""
+    },
+    {
+      "name": "Rauora",
+      "wr": 49,
+      "kd": 1.62,
+      "rounds": 88,
+      "tag": "main · 88 rds"
+    }
+  ],
+  "operatorsCut": [
+    {
+      "name": "Ying",
+      "wr": 40,
+      "kd": 0.76,
+      "rounds": 25,
+      "tag": "25 rds"
+    },
+    {
+      "name": "Doc",
+      "wr": 44,
+      "kd": 1.36,
+      "rounds": 16,
+      "tag": "16 rds"
+    },
+    {
+      "name": "Zero",
+      "wr": 25,
+      "kd": 0.6,
+      "rounds": 16,
+      "tag": "16 rds"
+    },
+    {
+      "name": "Lion",
+      "wr": 40,
+      "kd": 1.2,
+      "rounds": 10,
+      "tag": "10 rds"
+    },
+    {
+      "name": "Deimos",
+      "wr": 25,
+      "kd": 1.4,
+      "rounds": 8,
+      "tag": "8 rds"
+    }
+  ],
+  "maps": [
+    {
+      "name": "Calypso Casino",
+      "matches": 1,
+      "seasonWR": 100.0,
+      "kd": 2.67,
+      "atkWR": 33.3,
+      "defWR": 100.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Clubhouse",
+      "matches": 6,
+      "seasonWR": 66.7,
+      "kd": 1.83,
+      "atkWR": 61.1,
+      "defWR": 52.6,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 56,
+          "rounds": 16,
+          "kd": 2.11
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 75,
+          "rounds": 8,
+          "kd": 8.0
+        },
+        {
+          "name": "Ying",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Nighthaven Labs",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 0.77,
+      "atkWR": 55.6,
+      "defWR": 62.5,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 1.67,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Theme Park",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 1.62,
+      "atkWR": 40.0,
+      "defWR": 77.8,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 88,
+          "rounds": 8,
+          "kd": 2.4
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.67,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Skyscraper",
+      "matches": 9,
+      "seasonWR": 55.6,
+      "kd": 1.37,
+      "atkWR": 48.1,
+      "defWR": 58.6,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 60,
+          "rounds": 20,
+          "kd": 1.33
+        },
+        {
+          "name": "Doc",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 48,
+          "rounds": 25,
+          "kd": 1.89
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Border",
+      "matches": 4,
+      "seasonWR": 50.0,
+      "kd": 1.29,
+      "atkWR": 45.5,
+      "defWR": 53.8,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 4.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Lair",
+      "matches": 2,
+      "seasonWR": 50.0,
+      "kd": 2.29,
+      "atkWR": 42.9,
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Coastline",
+      "matches": 7,
+      "seasonWR": 42.9,
+      "kd": 1.19,
+      "atkWR": 45.5,
+      "defWR": 45.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 50,
+          "rounds": 10,
+          "kd": 1.14
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 38,
+          "rounds": 8,
+          "kd": 1.0
+        },
+        {
+          "name": "Lion",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 5.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Chalet",
+      "matches": 7,
+      "seasonWR": 42.9,
+      "kd": 0.85,
+      "atkWR": 35.0,
+      "defWR": 56.2,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 62,
+          "rounds": 8,
+          "kd": 0.75
+        },
+        {
+          "name": "Doc",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Zero",
+          "wr": 22,
+          "rounds": 9,
+          "kd": 0.5
+        },
+        {
+          "name": "Rauora",
+          "wr": 50,
+          "rounds": 8,
+          "kd": 2.67
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Zero no ataque (22% em 9 rounds)."
+    },
+    {
+      "name": "Villa",
+      "matches": 8,
+      "seasonWR": 37.5,
+      "kd": 1.8,
+      "atkWR": 40.0,
+      "defWR": 58.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 69,
+          "rounds": 13,
+          "kd": 3.2
+        },
+        {
+          "name": "Clash",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 43,
+          "rounds": 14,
+          "kd": 1.25
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Bank",
+      "matches": 4,
+      "seasonWR": 25.0,
+      "kd": 1.29,
+      "atkWR": 33.3,
+      "defWR": 27.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 0,
+          "rounds": 6,
+          "kd": 0.67,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Wamai na defesa (0% em 6 rounds)."
+    },
+    {
+      "name": "Fortress",
+      "matches": 4,
+      "seasonWR": 25.0,
+      "kd": 0.81,
+      "atkWR": 25.0,
+      "defWR": 64.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 62,
+          "rounds": 8,
+          "kd": 0.71
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ying",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Consulate",
+      "matches": 5,
+      "seasonWR": 20.0,
+      "kd": 1.47,
+      "atkWR": 50.0,
+      "defWR": 40.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 1.25,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "matches": 5,
+      "seasonWR": 0.0,
+      "kd": 0.95,
+      "atkWR": 40.0,
+      "defWR": 0.0,
+      "note": "Defesa: 0 de 15 rounds nesta season.",
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 0,
+          "rounds": 4,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 4,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 1.33,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    }
+  ],
+  "recentMatches": [
+    {
+      "map": "Coastline",
+      "w": true,
+      "kd": 1.4,
+      "rp": 31
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 1.0,
+      "rp": -29
+    },
+    {
+      "map": "Chalet",
+      "w": false,
+      "kd": 0.67,
+      "rp": -14
+    },
+    {
+      "map": "Coastline",
+      "w": true,
+      "kd": 2.5,
+      "rp": 40
+    },
+    {
+      "map": "Clubhouse",
+      "w": true,
+      "kd": 3.0,
+      "rp": 32
+    },
+    {
+      "map": "Clubhouse",
+      "w": false,
+      "kd": 0.25,
+      "rp": -26
+    },
+    {
+      "map": "Villa",
+      "w": true,
+      "kd": 7.0,
+      "rp": 30
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 1.67,
+      "rp": -32
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 0.0,
+      "rp": -30
+    },
+    {
+      "map": "Theme Park",
+      "w": false,
+      "kd": 1.0,
+      "rp": -12
+    },
+    {
+      "map": "Clubhouse",
+      "w": true,
+      "kd": 0.25,
+      "rp": 36
+    },
+    {
+      "map": "Border",
+      "w": true,
+      "kd": 1.0,
+      "rp": 38
+    },
+    {
+      "map": "Nighthaven Labs",
+      "w": true,
+      "kd": 5.0,
+      "rp": 38
+    },
+    {
+      "map": "Consulate",
+      "w": false,
+      "kd": 2.67,
+      "rp": -6
+    },
+    {
+      "map": "Fortress",
+      "w": true,
+      "kd": 2.0,
+      "rp": 39
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 1.5,
+      "rp": -33
+    },
+    {
+      "map": "Skyscraper",
+      "w": false,
+      "kd": 0.75,
+      "rp": -6
+    },
+    {
+      "map": "Skyscraper",
+      "w": true,
+      "kd": 0.0,
+      "rp": 34
+    },
+    {
+      "map": "Chalet",
+      "w": false,
+      "kd": 0.33,
+      "rp": -22
+    },
+    {
+      "map": "Bank",
+      "w": true,
+      "kd": 2.67,
+      "rp": 39
+    }
+  ],
+  "style": {
+    "rounds": 405,
+    "roundWR": 47.2,
+    "fb": 37,
+    "fd": 16,
+    "openPct": 13.1,
+    "esr": 70.0,
+    "kpr": 0.79,
+    "dpr": 0.6,
+    "apr": 0.17,
+    "hs": 52.0,
+    "clutchW": 17,
+    "clutchL": 76,
+    "clutchPct": 23.0,
+    "clutchBy": [
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        27
+      ],
+      [
+        3,
+        21
+      ],
+      [
+        0,
+        15
+      ],
+      [
+        0,
+        15
+      ]
+    ],
+    "multi": [
+      62,
+      21,
+      2,
+      0
+    ],
+    "multiRounds": 85,
+    "multiPct": 21.0,
+    "atkRoundWR": 43.3,
+    "atkRounds": [
+      88,
+      203
+    ],
+    "defRoundWR": 51.0,
+    "defRounds": [
+      103,
+      202
+    ]
+  },
+  "rpRate": {
+    "win": 37.9,
+    "loss": -24.1,
+    "n": 63
+  },
+  "tilt": {
+    "afterLoss": [
+      15,
+      28
+    ],
+    "afterWin": [
+      7,
+      16
+    ],
+    "sessions": 24,
+    "matches": 68
+  },
+  "squad": {
+    "solo": [
+      28,
+      65,
+      318,
+      231,
+      101
+    ],
+    "together": [
+      1,
+      3,
+      3,
+      14,
+      -6
+    ],
+    "with": {
+      "brunoprufer": 3
+    },
+    "n": 68
+  },
+  "coach": {
+    "matches": 67,
+    "rounds": 410,
+    "lastAlive": {
+      "atk": [
+        56,
+        114
+      ],
+      "def": [
+        30,
+        113
+      ]
+    },
+    "lastAliveRef": {
+      "atk": [
+        57,
+        280
+      ],
+      "def": [
+        64,
+        258
+      ]
+    },
+    "firstDeath": {
+      "atk": [
+        13,
+        205
+      ],
+      "def": [
+        25,
+        205
+      ]
+    },
+    "firstDeathRef": {
+      "atk": [
+        100,
+        637
+      ],
+      "def": [
+        104,
+        615
+      ]
+    },
+    "alone": {
+      "atk": [
+        6,
+        56,
+        3.0
+      ],
+      "def": [
+        6,
+        30,
+        3.0
+      ]
+    },
+    "sideRounds": {
+      "atk": [
+        89,
+        205
+      ],
+      "def": [
+        105,
+        205
+      ]
+    },
+    "hardBreach": {
+      "with": [
+        62,
+        122
+      ],
+      "without": [
+        27,
+        83
+      ],
+      "self": [
+        13,
+        26
+      ]
+    },
+    "opening": {
+      "kill": [
+        129,
+        204
+      ],
+      "death": [
+        65,
+        206
+      ]
+    },
+    "multi": {
+      "twoPlus": [
+        52,
+        86
+      ],
+      "oneOrLess": [
+        142,
+        324
+      ]
+    },
+    "kills": {
+      "total": 324,
+      "lostRounds": 143,
+      "alone": 55,
+      "aloneLost": 38
+    },
+    "trades": {
+      "mateDeaths": 1189,
+      "byMe": 94,
+      "byOthers": 244,
+      "myDeaths": 242,
+      "meTraded": 56
+    },
+    "teams": {
+      "meRP": 2540,
+      "matesRP": 2461,
+      "enemiesRP": 2467,
+      "matesKD": 0.92,
+      "enemiesKD": 1.0,
+      "teamKills": 1424,
+      "enemyKills": 1438
+    },
+    "clutchBy": [
+      [
+        4,
+        11
+      ],
+      [
+        4,
+        23
+      ],
+      [
+        3,
+        23
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        0,
+        16
+      ]
+    ],
+    "clutchByRef": [
+      [
+        14,
+        19
+      ],
+      [
+        9,
+        41
+      ],
+      [
+        3,
+        31
+      ],
+      [
+        2,
+        22
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    "refLabel": "outros jogadores com K/D 1,2+ nessas mesmas partidas"
+  }
+}

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SIEGE·LAB — gera app.html (produto multi-season) a partir de snapshots/*.json.
-Cada snapshot = uma medição de UMA season. O app embute todos, oferece um
-SELETOR DE SEASON, e compara a season escolhida com a anterior (deltas ▲▼),
-derivando rank a partir do RP e o split ataque/defesa por mapa.
+SIEGE·LAB — gera docs/<slug>.html (um app por jogador) e docs/index.html (squad)
+a partir de players/<slug>/*.json. Cada snapshot = uma medição de UMA season.
+O app embute todos, oferece um SELETOR DE SEASON e compara a season escolhida
+com a anterior (deltas ▲▼). Abas: Início, Coach, Mapas, Operadores, Evolução.
 
 Uso:  python3 build.py
-Nova medição/season: novo snapshots/AAAA-MM-DD_season.json (com seasonOrder) e rodar de novo.
+Nova medição: coletar em players/<slug>/raw/, rodar `python3 ingest.py AAAA-MM-DD`
+(gera os snapshots) e depois este script.
 """
 import json, glob, os
 
@@ -33,7 +34,19 @@ def rank_py(rp):
     return (f"{t[0]} {R[div]}", t[2])
 
 
-def build_player(pdir):
+def load_names(dirs):
+    """slug -> nome de todos os perfis (a aba Coach mostra com quem foi a fila)."""
+    names = {}
+    for d in dirs:
+        p = os.path.join(d, "profile.json")
+        if os.path.exists(p):
+            with open(p, encoding="utf-8") as fh:
+                prof = json.load(fh)
+            names[prof.get("slug")] = prof.get("name")
+    return names
+
+
+def build_player(pdir, names=None):
     prof_path = os.path.join(pdir, "profile.json")
     if not os.path.exists(prof_path):
         return None
@@ -56,7 +69,8 @@ def build_player(pdir):
     html = (TEMPLATE
             .replace("__DATA__", json.dumps(snaps, ensure_ascii=False))
             .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False))
-            .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False)))
+            .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False))
+            .replace("__NAMES__", json.dumps(names or {}, ensure_ascii=False)))
     os.makedirs(OUT_DIR, exist_ok=True)
     out = os.path.join(OUT_DIR, profile.get("slug", "player") + ".html")
     with open(out, "w", encoding="utf-8") as fh:
@@ -119,9 +133,10 @@ def main():
     dirs = [d for d in sorted(glob.glob(os.path.join(PLAYERS_DIR, "*"))) if os.path.isdir(d)]
     if not dirs:
         raise SystemExit("Nenhum player em players/*/")
+    names = load_names(dirs)
     cards = []
     for d in dirs:
-        s = build_player(d)
+        s = build_player(d, names)
         if s:
             cards.append(s)
     cards.sort(key=lambda c: (c.get("wr") or 0), reverse=True)
@@ -439,7 +454,43 @@ TEMPLATE = r"""<!DOCTYPE html>
 
   .foot{margin:26px 0 10px;color:#5c626d;font-size:11px;text-align:center}
 
+  /* COACH */
+  .cgoal{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:14px;background:var(--panel);padding:14px 16px}
+  .cg-top{display:flex;gap:12px;align-items:center}
+  .cg-l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+  .cg-v{font-size:16px;margin-top:2px} .cg-v b{font-weight:800}
+  .cg-s{font-size:12px;color:var(--muted);margin-top:3px} .cg-s b{color:var(--txt)}
+  .ctable{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;margin-top:10px}
+  .ctable th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;text-align:right;padding:0 4px 6px}
+  .ctable td{padding:7px 4px;border-top:1px solid #1f232b;text-align:right;color:var(--muted);white-space:nowrap}
+  .ctable td b{color:var(--txt)}
+  .ctable th:first-child,.ctable td:first-child{text-align:left;color:var(--txt);white-space:normal}
+  .ctable small{color:var(--muted);font-size:10.5px}
+  .cbox{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:4px 16px 12px}
+  .fcards{display:grid;grid-template-columns:1fr;gap:12px}
+  .fcard{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px 16px}
+  .fcard h4{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
+  .fbig{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+  .fsub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .cmp{display:flex;flex-direction:column;gap:7px;margin:12px 0 10px}
+  .cmpr{display:flex;align-items:center;gap:9px;font-size:11.5px}
+  .cmpr .cl{width:118px;flex:none;color:var(--muted);line-height:1.2}
+  .cmpr .cb{flex:1;height:8px;border-radius:4px;background:#20242c;overflow:hidden}
+  .cmpr .cb i{display:block;height:100%;border-radius:4px;background:#5c626d}
+  .cmpr.me .cl{color:var(--txt);font-weight:700}
+  .cmpr.me .cb i{background:var(--gold)}
+  .cmpr .cv{width:84px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .cmpr .cv small{font-size:10px;opacity:.8}
+  .cmpr.me .cv{color:var(--txt);font-weight:700}
+  .fread{font-size:13px;line-height:1.55;color:#cfd3d8}
+  .fread b{color:var(--txt)}
+  .fsrc{font-size:10.5px;color:#5c626d;margin-top:8px;line-height:1.4}
+  .ctable td.csub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding-top:12px;text-align:left}
+  .d.nt{color:#9aa3ad}
+  @media(max-width:400px){ .cmpr .cl{width:92px} .cmpr .cv{width:76px} }
+
   @media(min-width:900px){
+    .fcards{grid-template-columns:repeat(2,1fr)}
     body{padding-bottom:24px}
     nav.bottom{display:none}
     .desktabs{display:flex}
@@ -470,6 +521,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
 <div class="wrap">
   <section class="screen" id="scr-inicio"></section>
+  <section class="screen" id="scr-coach"></section>
   <section class="screen" id="scr-mapas"></section>
   <section class="screen" id="scr-ops"></section>
   <section class="screen" id="scr-evo"></section>
@@ -485,6 +537,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 const SNAPSHOTS = __DATA__;
 const PLAYER = __PLAYER__;
 const PLAYBOOK = __PLAYBOOK__;
+const NAMES = __NAMES__;              // slug -> nome de quem é do squad
 
 /* ---------- base ---------- */
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -500,9 +553,8 @@ ALL.forEach(s=>{ seasonMap[s.seasonOrder]=s; });
 const SEASONS = Object.values(seasonMap).sort((a,b)=>b.seasonOrder-a.seasonOrder);
 let active = SEASONS[0];              // season selecionada (default = mais recente)
 
-function baselineOf(snap){            // medição imediatamente anterior no tempo
-  const i = ALL.indexOf(snap);
-  return i>0 ? ALL[i-1] : null;
+function baselineOf(snap){            // última medição da season anterior (nunca uma parcial da mesma season)
+  return SEASONS.find(s=>s.seasonOrder<snap.seasonOrder) || null;
 }
 
 function rankInfo(rp){
@@ -588,7 +640,7 @@ function renderInicio(){
         <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
       </div>
     </div>
-    ${(()=>{const g=nextGoal();return g?`<div class="goal"><span class="gi">▲</span> Faltam <b>+${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +25 RP</span></div>`:"";})()}
+    ${(()=>{const g=nextGoal(), p=rpPace();return g?`<div class="goal"><span class="gi">▲</span> Faltam <b>+${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +${p?Math.round(p.win):25} RP</span></div>`:"";})()}
     <div class="kgrid2">
       <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
       <div class="ktile"><div class="v">${k.winRate.toFixed(1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
@@ -600,9 +652,9 @@ function renderInicio(){
     <div class="plan">
       <div class="pi"><div class="ico ban">⛔</div><div><b>Bane ${esc(bans[0]?.name||"—")}.</b> <span>${bans.length>1?"Depois "+esc(bans.slice(1,3).map(m=>m.name).join(" / "))+". ":""}Seus piores mapas.</span></div></div>
       <div class="pi"><div class="ico play">✔</div><div><b>Force ${esc(plays.slice(0,4).map(m=>m.name).join(", ")||"—")}.</b> <span>Vote neles sempre.</span></div></div>
-      <div class="pi"><div class="ico def">🛡</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor${cur.operatorsDef[1]?" — "+esc(cur.operatorsDef[1].name)+" de apoio":""}.</span></div></div>
-      <div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>Pick certo por mapa na aba Mapas.</span></div></div>
-      <div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e negativo — corte ou reposicione.</span></div></div>
+      ${dM?`<div class="pi"><div class="ico def">🛡</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor${cur.operatorsDef[1]?" — "+esc(cur.operatorsDef[1].name)+" de apoio":""}.</span></div></div>`:""}
+      ${aM?`<div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>Pick certo por mapa na aba Mapas.</span></div></div>`:""}
+      ${cM?`<div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e negativo — corte ou reposicione.</span></div></div>`:""}
     </div>`;
 }
 
@@ -828,9 +880,223 @@ function renderEvo(){
       ${rows}</div>`;
 }
 
+/* ---------- COACH ---------- */
+const pf=(a,b)=>b?Math.round(100*a/b):0;
+const nf=n=>n==null?"—":Number(n).toLocaleString('pt-BR');
+const sg=v=>(v>0?"+":"")+v;
+const HARD_BREACH=["Thermite","Hibana","Ace","Maverick"];
+function rpPace(){                     // RP médio por vitória e por derrota na season ativa
+  if(active.rpRate&&active.rpRate.n>=6) return active.rpRate;
+  const ms=active.recentMatches||[], avg=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  const W=ms.filter(m=>m.w&&m.rp>0).map(m=>m.rp), L=ms.filter(m=>!m.w&&m.rp<0).map(m=>m.rp);
+  return (W.length>=3&&L.length>=3)?{win:avg(W),loss:avg(L),n:W.length+L.length}:null;
+}
+function goalOf(){                     // meta do profile.json; sem ela, a próxima cor de rank
+  const k=active.kpis, rp=(k.latestRP!=null?k.latestRP:k.peakRP);
+  if(rp==null||rp>=4500) return null;
+  const g=PLAYER.goal, mine=!!(g&&g.rp>rp);
+  const target=mine?g.rp:[1000,1500,2000,2500,3000,3500,4000,4500].find(t=>t>rp);
+  const r=rankInfo(target);
+  return {rp,target,need:target-rp,mine,label:(mine&&g.label)?g.label:(r.tier||r.name),color:r.color,div:r.div,champ:r.champ};
+}
+function goalCard(){
+  const g=goalOf(); if(!g) return "";
+  const p=rpPace(), k=active.kpis;
+  const wNow=(k.wins!=null&&k.losses!=null&&(k.wins+k.losses))?k.wins/(k.wins+k.losses):(k.winRate||0)/100;
+  let body="";
+  if(p&&p.win>0&&p.loss<0){
+    const per=w=>p.win*w+p.loss*(1-w);
+    const sc=[[wNow,`${Math.round(wNow*100)}% <small>(hoje)</small>`]];
+    [.5,.55].forEach(w=>{ if(Math.abs(w-wNow)>=.02) sc.push([w,`${Math.round(w*100)}%`]); });
+    sc.sort((a,b)=>a[0]-b[0]);
+    const be=Math.round(-100*p.loss/(p.win-p.loss));
+    body=`<div class="cg-s" style="margin-top:10px">Seu ritmo nesta season: <b>+${Math.round(p.win)}</b> por vitória e <b>${Math.round(p.loss)}</b> por derrota (${p.n} partidas). Com ${be}% de vitórias você já não perde RP.</div>
+      <table class="ctable"><tr><th>Vitórias</th><th>RP por partida</th><th>Partidas até ${esc(g.label)}</th></tr>
+      ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${x>0?"+":""}${x.toFixed(1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
+      <div class="fsrc">Cenário, não promessa: supõe que cada vitória e cada derrota continuem valendo a média desta season.</div>`;
+  }
+  return `<div class="cgoal"><div class="cg-top">${rankEmblem(g.color,g.div,g.champ,44)}<div>
+      <div class="cg-l">${g.mine?"Sua meta":"Próximo rank"}</div>
+      <div class="cg-v"><b style="color:${g.color}">${esc(g.label)}</b> · faltam <b>+${nf(g.need)} RP</b></div>
+      <div class="cg-s">${nf(g.rp)} → ${nf(g.target)} RP</div></div></div>${body}</div>`;
+}
+
+/* chave, rótulo, unidade, casas, direção (1 = subir é bom · -1 = subir é ruim · 0 = estilo) */
+const STYLE_ROWS=[
+  ["roundWR","Rounds vencidos","%",0,1],
+  ["atkRoundWR","Rounds vencidos no ataque","%",0,1],
+  ["defRoundWR","Rounds vencidos na defesa","%",0,1],
+  ["esr","1º duelo que você vence","%",0,1],
+  ["openPct","Rounds em que você entra no 1º duelo","%",0,0],
+  ["fdPct","Rounds em que a 1ª morte é a sua","%",0,0],
+  ["clutchPct","Rounds em que você sobra sozinho","%",0,-1],
+  ["clutchWin","Vence quando sobra sozinho","%",0,1],
+  ["hs","Abates na cabeça","%",0,1],
+  ["kpr","Abates por round","",2,1],
+  ["multiPct","Rounds com 2+ abates seus","%",0,1]
+];
+function styleVal(s,k){
+  if(!s) return null;
+  if(k==="fdPct") return s.rounds?100*s.fd/s.rounds:null;
+  if(k==="clutchWin") return (s.clutchW+s.clutchL)?100*s.clutchW/(s.clutchW+s.clutchL):null;
+  return s[k]!=null?s[k]:null;
+}
+function deltaDir(c,p,dec,dir){        // a seta mostra o sentido; a cor diz se foi bom, ruim ou só estilo
+  const h=delta(c,p,dec); if(!h||dir===1) return h;
+  return h.replace(/class="d (up|dn)"/,(m,x)=>`class="d ${dir===0?"nt":(x==="up"?"dn":"up")}"`);
+}
+function styleTable(cur,base){
+  const s=cur.style, b=base&&base.style;
+  const fmt=(v,u,d)=>v==null?"—":v.toFixed(d)+u;
+  const rows=STYLE_ROWS.map(([k,l,u,d,dir])=>{
+    const v=styleVal(s,k), pv=styleVal(b,k);
+    return `<tr><td>${l}</td><td><b>${fmt(v,u,d)}</b>${deltaDir(v,pv,d,dir)}</td>${b?`<td>${fmt(pv,u,d)}</td>`:""}</tr>`;
+  }).join("");
+  return `<div class="cbox"><table class="ctable"><tr><th></th><th>${esc(cur.season)}</th>${b?`<th>${esc(base.season)}</th>`:""}</tr>${rows}</table>
+    <div class="fsrc">${nf(s.rounds)} rounds${b?` (${esc(base.season)}: ${nf(b.rounds)})`:""}. Verde = melhorou, vermelho = piorou, cinza = muda o estilo, não o resultado.</div></div>`;
+}
+
+function squadRows(q){
+  const r=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b> <small>${a[0]} de ${a[1]}</small></td><td>${a[3]?(a[2]/a[3]).toFixed(2):"—"}</td><td>${sg(a[4])}</td></tr>`:"";
+  return r("Sozinho",q.solo)+r("Com o squad",q.together);
+}
+function squadCard(cur,base){
+  const q=cur.squad; if(!q) return "";
+  const bq=base&&base.squad;
+  const who=Object.entries(q.with||{}).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`${esc(NAMES[s]||s)} ${n}`).join(" · ");
+  let note="";
+  [[q,cur],[bq,base]].forEach(([x,sn])=>{
+    if(note||!x) return;
+    const so=x.solo, tg=x.together;
+    if(tg[1]>=10&&so[1]>=8&&so[3]&&tg[3]&&(tg[2]/tg[3])<(so[2]/so[3])-0.3)
+      note=`Com o squad o seu K/D cai (${(tg[2]/tg[3]).toFixed(2)} × ${(so[2]/so[3]).toFixed(2)} sozinho, na ${esc(sn.season)}). O provável: a partida sobe pro nível deles.`;
+  });
+  const few=[q,bq].some(x=>x&&(x.solo[1]<15||x.together[1]<15));
+  return `<div class="cbox"><table class="ctable"><tr><th></th><th>Vitórias</th><th>K/D</th><th>RP</th></tr>
+      <tr><td colspan="4" class="csub">${esc(cur.season)} · ${q.n} partidas</td></tr>${squadRows(q)}
+      ${bq?`<tr><td colspan="4" class="csub">${esc(base.season)} · últimas ${bq.n} partidas</td></tr>${squadRows(bq)}`:""}
+    </table>
+    ${note?`<div class="fread" style="margin-top:10px">${note}</div>`:""}
+    <div class="fsrc">Squad = partida no mesmo minuto e no mesmo mapa de outro perfil daqui${who?` (nesta season: ${who})`:""}.${few?" Fila com menos de 15 partidas é indício, não prova.":""}</div></div>`;
+}
+
+function bars(rows){                   // [rótulo, %, texto, é você?]
+  return `<div class="cmp">${rows.map(([l,v,t,me])=>`<div class="cmpr${me?" me":""}"><span class="cl">${l}</span><span class="cb"><i style="width:${Math.max(2,Math.min(100,v))}%"></i></span><span class="cv">${t}</span></div>`).join("")}</div>`;
+}
+function fcard(title,big,sub,inner,read,src){
+  return `<div class="fcard"><h4>${title}</h4><div class="fbig">${big}</div><div class="fsub">${sub}</div>${inner||""}${read?`<div class="fread">${read}</div>`:""}${src?`<div class="fsrc">${src}</div>`:""}</div>`;
+}
+function coachCards(cur){
+  const c=cur.coach, s=cur.style, out=[];
+  if(c&&c.lastAlive){
+    const la=c.lastAlive, lr=c.lastAliveRef, me=pf(la.atk[0],la.atk[1]), ref=pf(lr.atk[0],lr.atk[1]);
+    const fd=pf(c.firstDeath.atk[0],c.firstDeath.atk[1]), fdr=pf(c.firstDeathRef.atk[0],c.firstDeathRef.atk[1]);
+    const md=pf(la.def[0],la.def[1]), rd=pf(lr.def[0],lr.def[1]), al=c.alone.atk, k=c.kills;
+    let read = me-ref>=10
+      ? `No ataque você fica pra trás: é o 1º do time a morrer em só <b>${fd}%</b> dos rounds (eles, ${fdr}%) e, quando sobra, encara <b>${String(al[2]).replace(".",",")} inimigos</b> em média. Sozinho no ataque, venceu <b>${al[0]} de ${al[1]}</b>.`
+      : `No ataque você sobra sozinho perto do que acontece com eles.`;
+    read += ` Na defesa: ${md}% (eles, ${rd}%)${Math.abs(md-rd)<8?", normal":""}.`;
+    if(k&&k.alone) read += ` Dos seus ${nf(k.total)} abates, ${k.alone} saíram com você já sozinho; ${k.aloneLost} desses, em round perdido.`;
+    out.push(fcard("Último vivo no ataque",`${me}%`,"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
+      bars([["Você",me,`${la.atk[0]} de ${la.atk[1]}`,1],["Bons jogadores*",ref,`${lr.atk[0]} de ${lr.atk[1]}`],["Acaso (1 em 5)",20,"20%"]]),
+      read,`* ${esc(c.refLabel)}. Base: ${c.matches} partidas, ${nf(c.rounds)} rounds.`));
+  }
+  if(s&&s.clutchBy){
+    const cb=s.clutchBy, tot=cb.reduce((a,x)=>a+x[1],0), w=cb.reduce((a,x)=>a+x[0],0), hard=cb[3][1]+cb[4][1];
+    if(tot) out.push(fcard("Quando você sobra sozinho",`${w} de ${tot}`,"situações de 1 contra X que você venceu nesta season",
+      bars(cb.map((x,i)=>[`1 contra ${i+1}`,pf(x[0],x[1]),`${x[0]} de ${x[1]}`,0])),
+      hard?`<b>${hard}</b> das ${tot} foram 1 contra 4 ou 5. Ali quase ninguém vence: o ganho está em não chegar lá.`:"",
+      "Contagem do r6.tracker.network."));
+  }
+  if(c&&c.hardBreach&&c.hardBreach.with[1]>=10&&c.hardBreach.without[1]>=10){
+    const hb=c.hardBreach, a=pf(hb.with[0],hb.with[1]), b=pf(hb.without[0],hb.without[1]);
+    const rows=[["Com hard breach",a,`${hb.with[0]} de ${hb.with[1]}`],["Sem hard breach",b,`${hb.without[0]} de ${hb.without[1]}`]];
+    if(hb.self&&hb.self[1]) rows.push(["Você de breacher",pf(hb.self[0],hb.self[1]),`${hb.self[0]} de ${hb.self[1]}`,1]);
+    out.push(fcard("Hard breach no ataque",`${a}% × ${b}%`,"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
+      bars(rows),`Em <b>${hb.without[1]} dos ${hb.with[1]+hb.without[1]}</b> rounds de ataque ninguém do seu time levou.`,""));
+  }
+  if(c&&c.teams){
+    const t=c.teams, d=t.matesRP-t.enemiesRP, avg=Math.round((4*t.matesRP+t.meRP)/5);
+    const big=Math.abs(d)<=50?"Mesmo nível":(d<0?"Um pouco abaixo":"Um pouco acima");
+    const atk=pf(c.sideRounds.atk[0],c.sideRounds.atk[1]), def=pf(c.sideRounds.def[0],c.sideRounds.def[1]);
+    out.push(fcard("Seus times são mais fracos?",big,"seu time × time inimigo, no começo de cada partida",
+      `<table class="ctable"><tr><th></th><th>Colegas</th><th>Inimigos</th></tr>
+        <tr><td>RP médio</td><td><b>${nf(t.matesRP)}</b></td><td><b>${nf(t.enemiesRP)}</b></td></tr>
+        <tr><td>K/D</td><td><b>${t.matesKD.toFixed(2)}</b></td><td><b>${t.enemiesKD.toFixed(2)}</b></td></tr>
+        <tr><td>Abates <small>(time todo)</small></td><td><b>${nf(t.teamKills)}</b></td><td><b>${nf(t.enemyKills)}</b></td></tr></table>`,
+      `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do inimigo porque o seu entra na mesma conta: os dois times matam quase o mesmo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
+      "Colegas = os outros 4 do seu time, sem você. RP de antes da partida."));
+  }
+  return out.join("");
+}
+function tiltCard(cur){
+  const t=cur.tilt; if(!t) return "";
+  const [lw,ln]=t.afterLoss, [ww,wn]=t.afterWin, l=pf(lw,ln), w=pf(ww,wn);
+  let big, read;
+  if(ln<8){ big="Pouca sequência"; read="Poucas partidas seguidas na mesma sessão pra medir."; }
+  else if(l>=45){ big="Sem sinal de tilt"; read=`Depois de uma derrota você venceu a seguinte <b>${lw} de ${ln}</b> (${l}%); depois de uma vitória, ${ww} de ${wn} (${w}%).`; }
+  else { big="Cuidado com a sequência"; read=`Depois de uma derrota você venceu a seguinte só <b>${lw} de ${ln}</b> (${l}%); depois de uma vitória, ${ww} de ${wn} (${w}%).`; }
+  return fcard("Depois de perder",big,"a partida seguinte, na mesma sessão",
+    bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]]),
+    read,`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas.`);
+}
+function coachRules(cur,base){
+  const c=cur.coach, s=cur.style, R=[];
+  const rule=(ico,cls,b,t)=>`<div class="pi"><div class="ico ${cls}">${ico}</div><div><b>${b}</b> <span>${t}</span></div></div>`;
+  if(c&&c.lastAlive){
+    const la=c.lastAlive.atk, lr=c.lastAliveRef.atk, me=pf(la[0],la[1]), ref=pf(lr[0],lr[1]), al=c.alone.atk;
+    if(me-ref>=10) R.push(rule("⚔","atk","No ataque, seja o 2º a entrar, não o 5º.",
+      `Ande a uma sala do seu entry: se ele cair, você troca na hora. Hoje, quando o time fica com 1 vivo no ataque, é você ${me}% das vezes (o normal é 20%), e sozinho você venceu ${al[0]} de ${al[1]}.`));
+  }
+  if(s&&s.esr>=60&&(s.fb+s.fd)>=20){
+    const o=c&&c.opening;
+    R.push(rule("🎯","play","Confie no seu 1º duelo.",
+      `Quando você entra nele, vence ${Math.round(s.esr)}% (${s.fb} de ${s.fb+s.fd}).${o?` Round que começa com abate do seu time vira vitória ${pf(o.kill[0],o.kill[1])}% das vezes; com morte, ${pf(o.death[0],o.death[1])}%.`:""}`));
+  }
+  if(c&&c.hardBreach){
+    const hb=c.hardBreach, a=pf(hb.with[0],hb.with[1]), b=pf(hb.without[0],hb.without[1]);
+    if(hb.with[1]>=10&&hb.without[1]>=10&&a-b>=8){
+      const mine=(cur.operatorsAtk||[]).concat(cur.operatorsCut||[]).filter(o=>HARD_BREACH.includes(o.name)).sort((x,y)=>(y.rounds||0)-(x.rounds||0))[0];
+      R.push(rule("🧨","atk",`Sem hard breach no time? Pegue ${esc(mine?mine.name:"Thermite")}.`,
+        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+mine.kd.toFixed(2):""}.`:""}`));
+    }
+  }
+  const bans=(cur.maps||[]).filter(m=>m.matches>=4&&m.seasonWR<40).sort((x,y)=>x.seasonWR-y.seasonWR);
+  if(bans.length){ const m=bans[0]; R.push(rule("⛔","ban",`Bane ${esc(m.name)}.`,`${m.seasonWR.toFixed(0)}% em ${m.matches} partidas.${m.note?" "+esc(m.note):""}`)); }
+  const t=cur.tilt;
+  if(t&&t.afterLoss[1]>=8&&pf(t.afterLoss[0],t.afterLoss[1])<45)
+    R.push(rule("🧠","ban","Perdeu duas seguidas? Pausa antes da próxima.",`Depois de uma derrota você venceu a seguinte só ${t.afterLoss[0]} de ${t.afterLoss[1]}.`));
+  const sq=[[cur.squad,cur],[base&&base.squad,base]].find(([q])=>q&&q.solo[1]>=10&&q.together[1]>=10);
+  if(sq){
+    const [q,sn]=sq, a=pf(q.together[0],q.together[1]), b=pf(q.solo[0],q.solo[1]);
+    if(a-b>=8) R.push(rule("👥","play","Jogue com o squad quando der.",`Na ${esc(sn.season)}: ${q.together[0]} de ${q.together[1]} juntos (${a}%); sozinho, ${q.solo[0]} de ${q.solo[1]} (${b}%).`));
+  }
+  return R.length?`<div class="plan">${R.join("")}</div>`
+    :`<div class="banner" style="margin-top:0">Nenhuma regra passou no corte dos seus números ainda. Mapas e operadores estão no Plano de jogo do Início.</div>`;
+}
+function renderCoach(){
+  const cur=active, base=baselineOf(cur), latest=cur===SEASONS[0];
+  const el=document.getElementById("scr-coach");
+  if(!cur.style){
+    el.innerHTML=`<div class="banner">🧭 O coach usa dados que só existem a partir da Y11S2. Troque a season no seletor do topo.</div>`;
+    return;
+  }
+  el.innerHTML=`
+    ${latest?`<h2 class="sec" style="margin-top:4px">Meta</h2>${goalCard()}
+      <h2 class="sec">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}`
+      :`<div class="banner" style="margin:0 0 6px">📅 Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.</div>`}
+    <h2 class="sec">O que os rounds mostram<span class="hint">${esc(cur.season)}</span></h2>
+    ${cur.coach?"":`<div class="banner" style="margin:0 0 12px">🔎 O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.</div>`}
+    <div class="fcards">${coachCards(cur)}</div>
+    ${cur.squad?`<h2 class="sec">Fila<span class="hint">sozinho × com o squad</span></h2>${squadCard(cur,base)}`:""}
+    <h2 class="sec">Seu estilo em números<span class="hint">${base&&base.style?"vs "+esc(base.season):esc(cur.season)}</span></h2>${styleTable(cur,base)}
+    ${cur.tilt?`<h2 class="sec">Sequência</h2>${tiltCard(cur)}`:""}`;
+}
+
 /* ---------- SELETOR / SHELL ---------- */
 const TABS=[
   {id:"inicio",label:"Início",icon:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>'},
+  {id:"coach",label:"Coach",icon:'<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>'},
   {id:"mapas",label:"Mapas",icon:'<svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>'},
   {id:"ops",label:"Operadores",icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>'},
   {id:"evo",label:"Evolução",icon:'<svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-8"/></svg>'}
@@ -840,7 +1106,7 @@ function go(id){
   document.querySelectorAll("nav.bottom button,.desktabs button").forEach(b=>b.classList.toggle("on", b.dataset.t===id));
   window.scrollTo({top:0});
 }
-function renderAll(){ renderInicio(); renderMapas(); renderOps(); renderEvo(); syncHeader(); }
+function renderAll(){ renderInicio(); renderCoach(); renderMapas(); renderOps(); renderEvo(); syncHeader(); }
 function syncHeader(){
   const rk=rankInfo(active.kpis.peakRP);
   document.getElementById("ss-season").textContent = active.season;
@@ -869,7 +1135,9 @@ function openHelp(){
     <div class="legrow"><b>°</b> amostra pequena — indicativo</div>
     <div class="legrow"><b style="color:var(--def)">■</b> defesa · <b style="color:var(--atk)">■</b> ataque</div>
     <div class="legrow"><b style="color:var(--gold)">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
-    <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>`);
+    <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>
+    <div class="legrow"><b style="color:#9aa3ad">▲</b> cinza no Coach: mudou o estilo, não o resultado (nem bom nem ruim)</div>
+    <div class="legrow"><b>💡</b> Coach: sua meta, o plano pra próxima sessão e o que os rounds mostram</div>`);
 }
 function openShare(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);

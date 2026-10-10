@@ -1,0 +1,445 @@
+{
+  "date": "2026-10-09",
+  "season": "Y11S3",
+  "seasonOrder": 43,
+  "seasonLabel": "Split Fire",
+  "basis": "só Y11S3 (em andamento, até 05/10), ranqueada",
+  "kpis": {
+    "matches": 51,
+    "wins": 24,
+    "losses": 27,
+    "winRate": 47.1,
+    "kd": 0.83,
+    "peakRP": 3560,
+    "latestRP": 3440
+  },
+  "operatorsDef": [
+    {
+      "name": "Wamai",
+      "wr": 61,
+      "kd": 0.65,
+      "rounds": 23,
+      "tag": "main · 23 rds",
+      "star": true
+    },
+    {
+      "name": "Melusi",
+      "wr": 48,
+      "kd": 0.72,
+      "rounds": 23,
+      "tag": ""
+    },
+    {
+      "name": "Mute",
+      "wr": 75,
+      "kd": 1.67,
+      "rounds": 8,
+      "tag": ""
+    },
+    {
+      "name": "Castle",
+      "wr": 58,
+      "kd": 1.0,
+      "rounds": 12,
+      "tag": ""
+    },
+    {
+      "name": "Maestro",
+      "wr": 56,
+      "kd": 1.0,
+      "rounds": 9,
+      "tag": ""
+    }
+  ],
+  "operatorsAtk": [
+    {
+      "name": "Grim",
+      "wr": 62,
+      "kd": 0.3,
+      "rounds": 16,
+      "tag": "main · 16 rds",
+      "star": true
+    },
+    {
+      "name": "Hibana",
+      "wr": 62,
+      "kd": 3.33,
+      "rounds": 8,
+      "tag": ""
+    },
+    {
+      "name": "Zofia",
+      "wr": 54,
+      "kd": 1.43,
+      "rounds": 13,
+      "tag": ""
+    }
+  ],
+  "operatorsCut": [
+    {
+      "name": "Thermite",
+      "wr": 33,
+      "kd": 1.64,
+      "rounds": 21,
+      "tag": "21 rds"
+    },
+    {
+      "name": "Lion",
+      "wr": 40,
+      "kd": 0.65,
+      "rounds": 20,
+      "tag": "20 rds"
+    },
+    {
+      "name": "Ash",
+      "wr": 21,
+      "kd": 0.8,
+      "rounds": 14,
+      "tag": "14 rds"
+    },
+    {
+      "name": "Nomad",
+      "wr": 38,
+      "kd": 0.67,
+      "rounds": 13,
+      "tag": "13 rds"
+    },
+    {
+      "name": "Buck",
+      "wr": 33,
+      "kd": 0.12,
+      "rounds": 9,
+      "tag": "9 rds"
+    }
+  ],
+  "maps": [
+    {
+      "name": "Consulate",
+      "matches": 1,
+      "seasonWR": 100.0,
+      "kd": 4.5,
+      "atkWR": 50.0,
+      "defWR": 75.0
+    },
+    {
+      "name": "Calypso Casino",
+      "matches": 5,
+      "seasonWR": 80.0,
+      "kd": 0.54,
+      "atkWR": 50.0,
+      "defWR": 60.0
+    },
+    {
+      "name": "Lair",
+      "matches": 4,
+      "seasonWR": 75.0,
+      "kd": 0.23,
+      "atkWR": 72.7,
+      "defWR": 57.1
+    },
+    {
+      "name": "Bank",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 1.86,
+      "atkWR": 75.0,
+      "defWR": 60.0
+    },
+    {
+      "name": "Skyscraper",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 0.67,
+      "atkWR": 50.0,
+      "defWR": 60.0
+    },
+    {
+      "name": "Chalet",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 1.25,
+      "atkWR": 50.0,
+      "defWR": 75.0
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "matches": 7,
+      "seasonWR": 57.1,
+      "kd": 1.08,
+      "atkWR": 42.1,
+      "defWR": 73.7
+    },
+    {
+      "name": "Villa",
+      "matches": 6,
+      "seasonWR": 50.0,
+      "kd": 1.5,
+      "atkWR": 38.1,
+      "defWR": 66.7
+    },
+    {
+      "name": "Theme Park",
+      "matches": 2,
+      "seasonWR": 50.0,
+      "kd": 0.22,
+      "atkWR": 16.7,
+      "defWR": 75.0
+    },
+    {
+      "name": "Clubhouse",
+      "matches": 8,
+      "seasonWR": 25.0,
+      "kd": 0.53,
+      "atkWR": 38.9,
+      "defWR": 37.5
+    },
+    {
+      "name": "Coastline",
+      "matches": 4,
+      "seasonWR": 0.0,
+      "kd": 0.61,
+      "atkWR": 16.7,
+      "defWR": 22.2,
+      "note": "Ataque: 2 de 12 rounds nesta season."
+    },
+    {
+      "name": "Nighthaven Labs",
+      "matches": 3,
+      "seasonWR": 0.0,
+      "kd": 0.77,
+      "atkWR": 50.0,
+      "defWR": 20.0,
+      "note": "Defesa: 2 de 10 rounds nesta season."
+    },
+    {
+      "name": "Border",
+      "matches": 1,
+      "seasonWR": 0.0,
+      "kd": 1.4,
+      "atkWR": 0.0,
+      "defWR": 66.7
+    },
+    {
+      "name": "Fortress",
+      "matches": 1,
+      "seasonWR": 0.0,
+      "kd": 0.2,
+      "atkWR": 0.0,
+      "defWR": 66.7
+    }
+  ],
+  "recentMatches": [
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 0.4,
+      "rp": -26
+    },
+    {
+      "map": "Clubhouse",
+      "w": false,
+      "kd": 0.2,
+      "rp": -34
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 0.4,
+      "rp": -3
+    },
+    {
+      "map": "Lair",
+      "w": true,
+      "kd": 0.0,
+      "rp": 29
+    },
+    {
+      "map": "Clubhouse",
+      "w": false,
+      "kd": 0.0,
+      "rp": -26
+    },
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 2.67,
+      "rp": -30
+    },
+    {
+      "map": "Clubhouse",
+      "w": false,
+      "kd": 0.0,
+      "rp": -30
+    },
+    {
+      "map": "Clubhouse",
+      "w": true,
+      "kd": 2.0,
+      "rp": 30
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": true,
+      "kd": 1.5,
+      "rp": 31
+    },
+    {
+      "map": "Lair",
+      "w": true,
+      "kd": 0.4,
+      "rp": 33
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": true,
+      "kd": 1.5,
+      "rp": 32
+    },
+    {
+      "map": "Clubhouse",
+      "w": false,
+      "kd": 0.6,
+      "rp": -23
+    },
+    {
+      "map": "Bank",
+      "w": true,
+      "kd": 6.0,
+      "rp": 26
+    },
+    {
+      "map": "Chalet",
+      "w": true,
+      "kd": 3.0,
+      "rp": 31
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 2.0,
+      "rp": -10
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 0.0,
+      "rp": -2
+    },
+    {
+      "map": "Coastline",
+      "w": false,
+      "kd": 0.0,
+      "rp": -30
+    },
+    {
+      "map": "Bank",
+      "w": false,
+      "kd": 1.67,
+      "rp": -29
+    },
+    {
+      "map": "Nighthaven Labs",
+      "w": false,
+      "kd": 1.0,
+      "rp": -29
+    },
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 1.0,
+      "rp": -7
+    }
+  ],
+  "style": {
+    "rounds": 299,
+    "roundWR": 49.2,
+    "fb": 23,
+    "fd": 19,
+    "openPct": 14.0,
+    "esr": 55.0,
+    "kpr": 0.56,
+    "dpr": 0.67,
+    "apr": 0.19,
+    "hs": 38.0,
+    "clutchW": 7,
+    "clutchL": 34,
+    "clutchPct": 13.7,
+    "clutchBy": [
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        0,
+        11
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "multi": [
+      24,
+      8,
+      1,
+      0
+    ],
+    "multiRounds": 33,
+    "multiPct": 11.0,
+    "atkRoundWR": 43.2,
+    "atkRounds": [
+      67,
+      155
+    ],
+    "defRoundWR": 55.6,
+    "defRounds": [
+      80,
+      144
+    ]
+  },
+  "rpRate": {
+    "win": 30.4,
+    "loss": -25.4,
+    "n": 46
+  },
+  "tilt": {
+    "afterLoss": [
+      10,
+      21
+    ],
+    "afterWin": [
+      7,
+      18
+    ],
+    "sessions": 12,
+    "matches": 51
+  },
+  "squad": {
+    "solo": [
+      9,
+      20,
+      86,
+      83,
+      -23
+    ],
+    "together": [
+      15,
+      31,
+      80,
+      116,
+      26
+    ],
+    "with": {
+      "brunoprufer": 31
+    },
+    "n": 51
+  }
+}

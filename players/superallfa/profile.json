@@ -1,1 +1,2 @@
-{ "name": "SuperAllfa", "platform": "psn", "slug": "superallfa" }
+{ "name": "SuperAllfa", "platform": "psn", "slug": "superallfa",
+  "goal": { "rp": 3000, "label": "Platina", "set": "2026-10-09" } }

@@ -1,0 +1,11 @@
+{"season":43,"keys":["map","roundsPlayed","roundsWon","kills","deaths"],"ops":{
+"Wamai":[["Villa",13,9,16,5],["Nighthaven Labs",4,2,2,3],["Theme Park",8,7,12,5],["Kafe Dostoyevsky",4,0,2,4],["Skyscraper",20,12,16,12],["Calypso Casino",1,1,2,0],["Coastline",10,5,8,7],["Chalet",8,5,6,8],["Border",3,1,2,3],["Fortress",8,5,5,7],["Consulate",6,3,5,4],["Clubhouse",16,9,19,9],["Bank",6,0,4,6],["Lair",4,2,6,3]],
+"Rauora":[["Theme Park",4,1,5,3],["Nighthaven Labs",5,3,5,3],["Bank",1,1,0,1],["Lair",1,0,1,1],["Skyscraper",25,12,17,9],["Coastline",8,3,5,5],["Border",3,2,1,1],["Fortress",2,0,1,2],["Kafe Dostoyevsky",5,2,4,3],["Consulate",3,2,3,1],["Villa",14,6,10,8],["Chalet",8,4,8,3],["Calypso Casino",1,1,0,1],["Clubhouse",8,6,8,1]],
+"Ying":[["Fortress",5,2,3,2],["Clubhouse",5,2,4,4],["Kafe Dostoyevsky",1,0,0,1],["Bank",2,1,1,1],["Chalet",1,0,0,1],["Theme Park",2,2,0,1],["Coastline",3,0,1,3],["Lair",2,0,2,2],["Skyscraper",1,1,1,1],["Nighthaven Labs",1,1,0,0],["Border",1,0,0,1],["Consulate",1,1,1,0]],
+"Thermite":[["Theme Park",2,1,3,1],["Lair",2,1,3,0],["Consulate",3,1,2,2],["Clubhouse",1,1,0,0],["Fortress",2,0,0,2],["Nighthaven Labs",1,1,1,1],["Villa",2,1,1,1],["Chalet",1,1,0,1],["Kafe Dostoyevsky",2,1,3,0],["Coastline",3,2,5,1]],
+"Doc":[["Skyscraper",3,1,2,2],["Consulate",1,0,1,1],["Villa",2,1,3,1],["Kafe Dostoyevsky",4,0,2,4],["Chalet",2,1,1,1],["Nighthaven Labs",2,2,2,2],["Border",2,2,4,0]],
+"Zero":[["Border",1,0,0,1],["Villa",1,0,1,0],["Chalet",9,2,4,8],["Kafe Dostoyevsky",1,1,0,0],["Consulate",2,1,0,0],["Clubhouse",2,0,1,1]],
+"Clash":[["Kafe Dostoyevsky",1,0,0,1],["Villa",3,1,3,3],["Skyscraper",3,3,0,1],["Calypso Casino",1,1,0,0],["Chalet",1,0,1,0],["Coastline",2,2,0,0],["Nighthaven Labs",2,1,0,2]],
+"Lion":[["Clubhouse",1,1,0,0],["Villa",1,0,0,1],["Coastline",4,2,3,1],["Bank",4,1,3,3]],
+"Kaid":[["Consulate",3,1,3,2],["Border",1,0,0,1],["Villa",1,1,1,0],["Fortress",2,2,3,1],["Skyscraper",1,0,0,1],["Clubhouse",1,1,1,0]],
+"Deimos":[["Border",1,1,0,1],["Villa",2,0,3,0],["Calypso Casino",1,0,2,1],["Fortress",1,1,1,0],["Theme Park",1,0,0,1],["Consulate",2,0,1,2]]}}
