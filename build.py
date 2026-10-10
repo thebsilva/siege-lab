@@ -418,6 +418,24 @@ TEMPLATE = r"""<!DOCTYPE html>
   .oprow .nm{font-weight:600;font-size:14px}
   .oprow .st{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
   .oprow .st b{color:var(--txt)} .star{color:var(--gold)}
+  .oprow.clk{cursor:pointer}
+  .fchips{display:flex;gap:7px;margin-bottom:10px}
+  .fchip{font-size:12px;padding:5px 11px;border-radius:7px;background:#1d2129;border:1px solid #2b303a;font-weight:600;color:var(--muted);cursor:pointer}
+  .fchip.on{color:var(--txt);border-color:var(--gold);background:rgba(244,194,13,.08)}
+  .optable tr{cursor:pointer}
+  .optable tr.dim{color:var(--muted)}
+  .optable th.on{color:var(--gold)}
+  .tag.sm{font-size:9px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+  .otwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .optable th{white-space:nowrap}
+  @media(max-width:560px){
+    #allops{padding-left:8px;padding-right:8px}
+    .ctable.optable .ar{display:none}
+    .ctable.optable th{font-size:9px;letter-spacing:.2px;padding:0 3px 6px}
+    .ctable.optable td{font-size:12px;padding:7px 3px}
+    .ctable.optable td small{display:none}
+    .ctable.optable .tag.sm{font-size:8px;padding:1px 3px;margin-left:4px}
+  }
 
   /* EVOLUÇÃO */
   .evo{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px;margin-bottom:12px}
@@ -836,7 +854,7 @@ function opPanel(list, pl){
   const p=byName(pl);
   return (list||[]).map(o=>{
     const kd=o.kd!=null?` · ${o.kd.toFixed(2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
-    return `<div class="oprow"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?"°":""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
+    return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?"°":""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
   }).join("");
 }
 function renderOps(){
@@ -847,7 +865,93 @@ function renderOps(){
       <div class="opcard"><h3><span class="tag def">DEFESA</span> Suas mains</h3>${opPanel(cur.operatorsDef,base.operatorsDef)}</div>
       <div class="opcard"><h3><span class="tag atk">ATAQUE</span> Suas mains</h3>${opPanel(cur.operatorsAtk,base.operatorsAtk)}</div>
       <div class="opcard"><h3><span class="tag cut">CORTE / REPENSE</span></h3>${opPanel(cur.operatorsCut,base.operatorsCut)}</div>
-    </div>`;
+    </div>
+    ${hardBreachCard(cur)}
+    ${cur.opsAll?`<h2 class="sec">Todos os operadores<span class="hint">${cur.opsAll.length} jogados nesta season</span></h2>
+    <div class="cbox" id="allops"></div>`:""}`;
+  renderOpsTable();
+}
+let opsFilter="all", opsSort="r";
+const OPS_COLS=[["r","Rounds"],["wr","Vitórias"],["kd","K/D"],["hs","HS%"],["fb","1º duelo"]];
+function opVal(o,k){
+  if(k==="wr") return o.r?o.w/o.r:-1;
+  if(k==="kd") return o.k/Math.max(1,o.d);
+  if(k==="hs") return o.k?o.hs/o.k:-1;
+  if(k==="fb") return (o.fb+o.fd)?o.fb/(o.fb+o.fd):-1;
+  return o.r;
+}
+function renderOpsTable(){
+  const cur=active, el=document.getElementById("allops");
+  if(!el||!cur.opsAll) return;
+  const chips=[["all","Tudo"],["d","Defesa"],["a","Ataque"]]
+    .map(([v,l])=>`<button class="fchip ${opsFilter===v?"on":""}" onclick="opsFilter='${v}';renderOpsTable()">${l}</button>`).join("");
+  const th=OPS_COLS.map(([k,l])=>`<th class="${opsSort===k?"on":""}" style="cursor:pointer" onclick="opsSort='${k}';renderOpsTable()">${l}${opsSort===k?'<span class="ar"> ↓</span>':""}</th>`).join("");
+  const rows=cur.opsAll
+    .filter(o=>opsFilter==="all"||o.s===opsFilter)
+    .slice().sort((a,b)=>{
+      if(opsSort!=="r"){ const sa=a.r<8?1:0, sb=b.r<8?1:0; if(sa!==sb) return sa-sb; }
+      return opVal(b,opsSort)-opVal(a,opsSort)||b.r-a.r;
+    })
+    .map(o=>{
+      const kd=(o.k/Math.max(1,o.d)).toFixed(2);
+      const hs=o.k?Math.round(100*o.hs/o.k)+"%":"—";
+      const fb=(o.fb+o.fd)?`${o.fb} de ${o.fb+o.fd}`:"—";
+      return `<tr class="${o.r<8?"dim":""}" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)">
+        <td>${esc(o.n)}${o.r<8?" °":""}<span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEF":"ATK"}</span></td>
+        <td>${o.r}</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td>
+        <td>${kd}</td><td>${hs}</td><td>${fb}</td></tr>`;
+    }).join("");
+  el.innerHTML=`<div class="fchips">${chips}</div>
+    <div class="otwrap"><table class="ctable optable"><tr><th>Operador</th>${th}</tr>${rows}</table></div>
+    <div class="fsrc">° abaixo de 8 rounds: indicativo, não veredito (nas ordenações por vitória, K/D, HS% e 1º duelo, esses ficam no fim). 1º duelo = first bloods × first deaths do tracker. Toque num operador pra abrir a ficha.</div>`;
+}
+function hardBreachCard(cur){
+  if(!cur.opsAll) return "";
+  const got=HARD_BREACH.map(n=>cur.opsAll.find(o=>o.n===n)).filter(Boolean);
+  if(!got.length) return "";
+  const rows=HARD_BREACH.map(n=>{
+    const o=cur.opsAll.find(x=>x.n===n);
+    if(!o) return `<div class="oprow"><span class="nm" style="color:var(--muted)">${n}</span><span class="st">sem rounds nesta season</span></div>`;
+    const kd=(o.k/Math.max(1,o.d)).toFixed(2);
+    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?"°":""} · ${o.w} de ${o.r} rds · KD ${kd}</span></div>`;
+  }).join("");
+  const best=got.filter(o=>o.r>=15).sort((a,b)=>b.r-a.r)[0];
+  const read=best
+    ? `Sua opção com amostra real: <b>${esc(best.n)}</b> (${best.w} de ${best.r}, K/D ${(best.k/Math.max(1,best.d)).toFixed(2)}). Os outros quase não têm rounds — treine um segundo pra semana de ban.`
+    : `Nenhum hard breach com amostra de verdade nesta season.`;
+  return `<div class="opcard" style="margin-top:12px"><h3><span class="tag atk">ATAQUE</span> Hard breach — plano B</h3>${rows}
+    <div class="fsrc" style="margin-top:8px">${read} O card do coach mostra o quanto rodar sem hard breach custa.</div></div>`;
+}
+function openOpSheet(name){
+  const cur=active, o=(cur.opsAll||[]).find(x=>x.n===name);
+  if(!o) return;
+  const kd=(o.k/Math.max(1,o.d)).toFixed(2);
+  const duel=(o.fb+o.fd)?`<b>${o.fb} de ${o.fb+o.fd}</b> (${pf(o.fb,o.fb+o.fd)}%)`:`— <small>não entra na 1ª troca</small>`;
+  const stats=`<table class="ctable">
+    <tr><td>Rounds</td><td><b>${o.r}</b> <small>em ${o.m} ${o.m===1?"partida":"partidas"}</small></td></tr>
+    <tr><td>Rounds vencidos</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td></tr>
+    <tr><td>Partidas vencidas</td><td><b>${pf(o.mw,o.m)}%</b> <small>${o.mw} de ${o.m}</small></td></tr>
+    <tr><td>K/D</td><td><b>${kd}</b> <small>${o.k} × ${o.d} · ${o.a} assist.</small></td></tr>
+    <tr><td>Na cabeça</td><td><b>${o.k?pf(o.hs,o.k)+"%":"—"}</b> <small>${o.hs} de ${o.k}</small></td></tr>
+    <tr><td>1º duelo do round</td><td>${duel}</td></tr>
+    <tr><td>Clutch</td><td><b>${o.cw}</b> ganhos · ${o.cl} perdidos</td></tr></table>`;
+  const evo=SEASONS.map(s=>({s,e:(s.opsAll||[]).find(x=>x.n===name)})).filter(x=>x.e&&x.e.r>0);
+  const evoHtml=evo.length>1?`<h3 style="margin:14px 0 8px">Season a season</h3><table class="ctable">${
+    evo.map(({s,e})=>`<tr><td>${esc(s.season)}</td><td><b>${pf(e.w,e.r)}%</b> <small>${e.r} rds</small></td><td>KD ${(e.k/Math.max(1,e.d)).toFixed(2)}</td></tr>`).join("")}</table>`:"";
+  const mm=(cur.opsMaps||{})[name];
+  const mapsHtml=mm&&mm.length?`<h3 style="margin:14px 0 8px">Por mapa</h3><table class="ctable">${
+    mm.slice().sort((a,b)=>b[1]-a[1]).slice(0,4).map(r=>`<tr><td>${esc(r[0])}</td><td><b>${pf(r[2],r[1])}%</b> <small>${r[2]} de ${r[1]}</small></td><td>KD ${(r[3]/Math.max(1,r[4])).toFixed(2)}</td></tr>`).join("")}</table>`:"";
+  const fr=((cur.coach||{}).opsRole||{})[name];
+  const feedHtml=fr?`<h3 style="margin:14px 0 8px">O que o kill feed mostra</h3><table class="ctable">
+    <tr><td>Vivo no fim do round</td><td><b>${pf(fr[2],fr[0])}%</b> <small>${fr[2]} de ${fr[0]}</small></td></tr>
+    <tr><td>1ª morte do time é você</td><td><b>${pf(fr[3],fr[0])}%</b></td></tr>
+    <tr><td>Rounds com kill sua na abertura</td><td><b>${pf(fr[4],fr[0])}%</b> <small>no fim: ${pf(fr[5],fr[0])}%</small></td></tr></table>
+    <div class="fsrc">Kill feed desta season (${fr[0]} rounds); pode divergir 1–2% do tracker.</div>`:"";
+  const why=((PLAYBOOK.operators||{})[name]||{}).why;
+  openSheet(`<h3>${esc(name)} <span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEFESA":"ATAQUE"}</span></h3>
+    ${o.r<8?`<div class="fsrc" style="margin-bottom:10px">° amostra curta (${o.r} ${o.r===1?"round":"rounds"}) — leia como indicativo, não veredito.</div>`:""}
+    ${stats}${evoHtml}${mapsHtml}${feedHtml}
+    ${why?`<div class="fsrc" style="margin-top:10px">Função: ${esc(why)}</div>`:""}`);
 }
 
 /* ---------- EVOLUÇÃO ---------- */
@@ -1290,6 +1394,7 @@ function openHelp(){
     <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>
     <div class="legrow"><b style="color:#9aa3ad">▲</b> cinza no Coach: mudou o estilo, não o resultado (nem bom nem ruim)</div>
     <div class="legrow"><b>💡</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards de cima são os que valem olhar durante o jogo</div>
+    <div class="legrow"><b>🎖</b> Operadores: toque em qualquer operador (mains, hard breach ou tabela) pra abrir a ficha completa</div>
     <div class="legrow"><b>👥</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
 }
 function openShare(){

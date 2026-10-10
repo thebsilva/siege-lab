@@ -162,6 +162,19 @@ def op_lists(rows, base_wr, base_kd):
     return side_list("def"), side_list("atk"), cut_out, {o["name"]: o["side"] for o in ops}
 
 
+def ops_all(rows):
+    """Lista completa de operadores da season, direto do raw do tracker (sem corte de amostra)."""
+    out = []
+    for r in rows:
+        name, sd = r[0].strip(), r[1]
+        if not sd or not r[4]:
+            continue
+        out.append({"n": name, "s": sd, "r": r[4], "w": r[5], "k": r[6], "d": r[7], "a": r[8],
+                    "hs": r[9], "fb": r[10], "fd": r[11], "cw": r[12], "cl": r[13],
+                    "m": r[2], "mw": r[3]})
+    return sorted(out, key=lambda o: -o["r"])
+
+
 # ---------------------------------------------------------------- mapas
 def maps_of(rows, opmaps, op_side):
     tot = [r for r in rows if r[1] == ""]
@@ -546,6 +559,44 @@ def coach_of(path, side_of):
 
 
 # ---------------------------------------------------------------- main
+def ops_role(path):
+    """Papel por operador nos rounds do kill feed: [rounds, vencidos, vivo no fim,
+    1ª morte do time, rounds com kill minha na abertura (2 primeiros abates),
+    rounds com kill minha no fim (2 últimos), kills]. Só ops com 10+ rounds no feed."""
+    agg = {}
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            rec = json.loads(line)
+            P = rec["P"]
+            me = next(i for i, p in enumerate(P) if p[1])
+            myteam, mych = P[me][0], str(me)
+            team = {str(i) for i, p in enumerate(P) if p[0] == myteam}
+            ops = P[me][10].split(".") if P[me][10] else []
+            for j, rnd in enumerate(rec["R"]):
+                if j >= len(ops) or not ops[j]:
+                    continue
+                win, ev = rnd.split(":", 1)
+                pairs = [(ev[i], ev[i + 1]) for i in range(0, len(ev) - 1, 2)]
+                a = agg.setdefault(ops[j], [0] * 7)
+                a[0] += 1
+                if int(win) == myteam:
+                    a[1] += 1
+                if not any(v == mych for _, v in pairs):
+                    a[2] += 1
+                for _, v in pairs:
+                    if v in team:
+                        if v == mych:
+                            a[3] += 1
+                        break
+                kills = [i for i, (k, _) in enumerate(pairs) if k == mych]
+                a[6] += len(kills)
+                if any(i < 2 for i in kills):
+                    a[4] += 1
+                if any(i >= len(pairs) - 2 for i in kills):
+                    a[5] += 1
+    return {op: a for op, a in agg.items() if a[0] >= 10}
+
+
 def main(date):
     side_all = side_table(PLAYERS)
     raws = {}
@@ -580,9 +631,11 @@ def main(date):
             else:
                 basis = f"só {code} (fechada), ranqueada"
             snap = {"date": date, "season": code, "seasonOrder": sn, "seasonLabel": label, "basis": basis,
-                    "kpis": k, "operatorsDef": d_list, "operatorsAtk": a_list, "operatorsCut": cut,
+                    "kpis": k, "operatorsDef": d_list, "operatorsAtk": a_list, "operatorsCut": cut, "opsAll": ops_all(op_rows),
                     "maps": maps_of(maps_rows, opmaps, {**side_all, **op_side}),
                     "recentMatches": recent_of(srows), "style": style_of(o, maps_rows)}
+            if opmaps:
+                snap["opsMaps"] = opmaps["ops"]
             rr = rp_rate(srows)
             if rr:
                 snap["rpRate"] = rr
@@ -592,6 +645,7 @@ def main(date):
             rounds = os.path.join(raw, f"{date}_s{sn}_rounds.jsonl")
             if os.path.exists(rounds):
                 snap["coach"] = coach_of(rounds, side_all)
+                snap["coach"]["opsRole"] = ops_role(rounds)
                 if srows:
                     snap["coach"]["trend"] = trend_of(srows, rounds)
             out = os.path.join(PLAYERS, slug, f"{date}_{code.lower()}.json")

@@ -60,7 +60,7 @@ meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) 
 round depois do clutch · round sem abate · clutch por 1vX · duelo repetido *(experimental)* · placar da
 partida · nível dos times) → tendência (últimas 15 × o resto da season) → fila → estilo em números → tilt ·
 Mapas (tier auto + card por mapa com barras atk/def e top-3 de operador) ·
-Operadores (mains def/atk + corte) · **Squad** (vitórias sozinho × com cada amigo, uma tabela por season) ·
+Operadores (mains def/atk + corte, card de hard breach "plano B", tabela completa ordenável com HS% e 1º duelo, e ficha por operador: stats, season a season, por mapa, kill feed e função do playbook) · **Squad** (vitórias sozinho × com cada amigo, uma tabela por season) ·
 Evolução (sparklines season a season) · seletor de season no topo · botão ? (legenda) · card de compartilhar.
 
 Na aba Coach as setas têm cor por direção: verde melhorou, vermelho piorou, **cinza = estilo** (nem bom nem ruim).
@@ -76,9 +76,12 @@ Meta e plano só aparecem na season mais nova; season antiga mostra só o diagn�
   style:{rounds,roundWR,fb,fd,openPct,esr,kpr,hs,clutchW,clutchL,clutchPct,clutchBy[[w,n]×5],multiPct,atkRoundWR,defRoundWR,…},
   rpRate:{win,loss,n}, tilt:{afterLoss[w,n],afterWin[w,n],sessions,matches},
   squad:{solo[w,n,k,d,rp], together[…], with{slug:n}, perFriend{slug:[w,n]}, trio[w,n], n},
+  opsAll:[ {n,s,r,w,k,d,a,hs,fb,fd,cw,cl,m,mw} ],   # todos os ops da season (tracker)
+  opsMaps:{op:[[mapa,rounds,won,k,d]]},              # só com opmaps coletado
   coach?:{lastAlive,lastAliveRef,firstDeath,alone,hardBreach,opening,teams,trades,kills,
           pressure{mine,theirs}, postClutch{afterLost,afterWon,afterAnyLost}, noKill{alive,died,diedWithKill},
-          rival{with,without}, trend{last,rest}, …} }   # só com rounds.jsonl
+          rival{with,without}, trend{last,rest},
+          opsRole{op:[r,w,vivoFim,1ªmorteTime,killAbre,killFecha,kills]}, …} }   # só com rounds.jsonl
 ```
 - Tier do mapa = auto (win% ≥55 priorize · <40 banir · resto neutro).
 - Rank = derivado do RP (bandas 500: Prata 2000/Ouro 2500/Platina 3000/Esmeralda 3500/Diamante 4000 + divisão de 100 RP, I alta → V baixa).
@@ -90,7 +93,7 @@ Meta e plano só aparecem na season mais nova; season antiga mostra só o diagn�
   `postClutch` = round seguinte a um clutch perdido, a um vencido e a qualquer round perdido ·
   `noKill` = rounds com 0 abate seu: vivo no fim / morto / morto mesmo levando 1+ ·
   `rival` = partidas em que um mesmo inimigo te matou 3+ vezes × as demais ·
-  `trend` = `{last, rest}` das últimas 15 partidas × o resto, cada um `{w,n,kd,esr[fk,fk+fd],rp}`.
+  `trend` = `{last, rest}` das últimas 15 partidas × o resto, cada um `{w,n,kd,esr[fk,fk+fd],rp}` · `opsRole` = papel por operador no feed (ops com 10+ rounds).
 
 ## Como atualizar (coleta → ingest → build)
 1. **Coletar** no r6.tracker.network (o Claude faz pelo navegador do app; o Cloudflare bloqueia fetch direto).
