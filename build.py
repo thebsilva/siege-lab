@@ -96,32 +96,33 @@ def build_player(pdir, names=None):
 def write_index(cards):
     import html as _h
     esc = lambda s: _h.escape(str(s))
+    dec = lambda v: f"{v:.2f}".replace(".", ",")
     cards = sorted(cards, key=lambda c: (c.get("curRP") or 0), reverse=True)
     chips = ""
     if cards:
         kd = max(cards, key=lambda c: c.get("kd") or 0)
         dfn = max(cards, key=lambda c: c.get("defWr") or 0)
-        sup = [("🎯", "Maior K/D", kd["name"], f"{kd['kd']:.2f}"),
+        sup = [("🎯", "Maior K/D", kd["name"], dec(kd['kd'])),
                ("🛡", "Melhor defesa", dfn["name"], f"{dfn['defMain']} · {dfn['defWr']:.0f}%")]
         rec = [c for c in cards if c.get("hasRecent")]
         if rec:
             best = max(rec, key=lambda c: c["rw"] - c["rl"])
             cold = min(rec, key=lambda c: c["rw"] - c["rl"])
-            sup.append(("🔥", "Melhor forma", best["name"], f"{best['rw']}-{best['rl']} últimas"))
-            sup.append(("🧊", "Em maré fria", cold["name"], f"{cold['rw']}-{cold['rl']} · {cold['rnet']:+d} RP"))
+            sup.append(("🔥", "Melhor forma", best["name"], f"{best['rw']}V-{best['rl']}D nas últimas"))
+            sup.append(("🧊", "Em maré fria", cold["name"], f"{cold['rw']}V-{cold['rl']}D · {cold['rnet']:+d} RP"))
         chips = "".join(
             f'<div class="sup"><div class="sup-l">{ico} {esc(lbl)}</div>'
             f'<div class="sup-n">{esc(nm)}</div><div class="sup-v">{esc(v)}</div></div>'
             for ico, lbl, nm, v in sup)
     rows = ""
     for i, c in enumerate(cards, 1):
-        pill = (f'<span class="rf {"up" if c["rw"] >= c["rl"] else "dn"}">{c["rw"]}-{c["rl"]}</span>'
+        pill = (f'<span class="rf {"up" if c["rw"] >= c["rl"] else "dn"}">últimas {c["rw"]}V-{c["rl"]}D</span>'
                 if c.get("hasRecent") else "")
         rows += (
             f'<a class="prow2" href="{esc(c["slug"])}.html">'
             f'<div class="ppos">{i}</div>'
             f'<div class="pmain"><div class="pnm">{esc(c["name"])}</div>'
-            f'<div class="psub">{c["wr"]:.0f}% vitórias · KD {c["kd"]:.2f} · {esc(c["season"])} {pill}</div></div>'
+            f'<div class="psub">{c["wr"]:.0f}% vitórias · K/D {dec(c["kd"])} · {esc(c["season"])} {pill}</div></div>'
             f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div></a>')
     out = os.path.join(OUT_DIR, "index.html")
     with open(out, "w", encoding="utf-8") as fh:
@@ -190,7 +191,7 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
     <div class="sups">__CHIPS__</div>
     <h2>Ranking por RP</h2>
     __ROWS__
-    <div class="foot">Cada jogador abre o app completo — barra-resumo, mapas (quem pegar e por quê), operadores, forma recente e evolução.<br>Dados de r6.tracker.network.</div>
+    <div class="foot">Cada jogador abre o app completo: início, coach, mapas, operadores, squad e evolução.<br>Dados de r6.tracker.network.</div>
   </div>
 </body>
 </html>
@@ -309,7 +310,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* MAP CARDS */
   .maps{display:grid;grid-template-columns:1fr;gap:14px}
   .map{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
-  .map .head{display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  .map .head{display:flex;align-items:center;gap:7px;padding:12px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
   .map .head .mn{font-size:16px;font-weight:800}
   .verdict{font-size:9.5px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.6px}
   .verdict.play{background:rgba(52,211,153,.16);color:var(--play);border:1px solid rgba(52,211,153,.4)}
@@ -318,6 +319,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   .map .head .wr{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums}
   .map .head .wr b{font-size:15px}
   .map .head .wr small{display:block;font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  @media(max-width:370px){.map .head{flex-wrap:wrap;row-gap:6px}}   /* telas estreitas: o bloco de win% desce em vez de estourar o card */
   .ad{padding:11px 14px;display:flex;flex-direction:column;gap:7px;border-bottom:1px solid var(--line)}
   .adr{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:800}
   .adl{width:30px;letter-spacing:.5px} .adl.atk{color:var(--atk)} .adl.def{color:var(--def)}
@@ -374,7 +376,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   .goal{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px;padding:9px 14px;border:1px solid var(--line);
        border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(244,194,13,.06);font-size:12.5px;color:var(--muted)}
   .goal b{color:var(--txt);font-weight:700} .goal .gi{color:var(--gold);font-weight:800} .goal .gm{opacity:.8}
-  .rbadge{font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.3px;background:#1d2129;border:1px solid #2b303a}
+  .rbadge{font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.3px;background:#1d2129;border:1px solid #2b303a;white-space:nowrap}
   .rbadge.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rbadge.dn{color:var(--ban);border-color:rgba(240,81,63,.4)} .rbadge.eq{color:var(--muted)}
   .rnote{padding:8px 14px;font-size:11.5px;line-height:1.5;border-top:1px solid var(--line)}
   .rnote i{font-style:normal;font-weight:800;margin-right:3px}
@@ -561,6 +563,7 @@ const NAMES = __NAMES__;              // slug -> nome de quem é do squad
 
 /* ---------- base ---------- */
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fx=(v,d)=>Number(v).toFixed(d).replace(".",",");   // decimal com vírgula; o milhar vem do nf()
 const byName = l => Object.fromEntries((l||[]).map(x=>[x.name,x]));
 const wrClass = w => w>=55?"good":(w>=50?"mid":"low");
 const ROM=["","I","II","III","IV","V"];
@@ -606,10 +609,10 @@ function rankEmblem(color, div, champ, size){
 
 function delta(c,p,dec=0){
   if(c==null||p==null) return "";
-  const d=c-p, thr=dec?0.005:0.5, pv=p.toFixed(dec), cv=c.toFixed(dec);
+  const d=c-p, thr=dec?0.005:0.5, pv=fx(p,dec), cv=fx(c,dec);
   if(Math.abs(d)<thr) return `<span class="d eq" title="estável (${cv})">=</span>`;
   const up=d>0;
-  return `<span class="d ${up?'up':'dn'}" title="${up?'subiu':'caiu'}: antes ${pv} → agora ${cv}">${up?'▲':'▼'}${Math.abs(d).toFixed(dec)}</span>`;
+  return `<span class="d ${up?'up':'dn'}" title="${up?'subiu':'caiu'}: antes ${pv} → agora ${cv}">${up?'▲':'▼'}${fx(Math.abs(d),dec)}</span>`;
 }
 const tierOf = wr => wr>=55?"play":(wr<40?"ban":"neu");
 
@@ -622,7 +625,7 @@ function renderInicio(){
   const pbRP = base ? (base.kpis.latestRP!=null?base.kpis.latestRP:base.kpis.peakRP) : null;
   const wl = (k.wins!=null&&k.losses!=null) ? `${k.wins}-${k.losses}` : "—";
   const banner = base
-    ? `🔄 Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = variação entre as duas.`
+    ? `🔄 Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = quanto mudou; em porcentagem, conta em pontos (50% → 53% = ▲3).`
     : `📍 Season mais antiga carregada — sem comparação. Carregue outra season pra ver as variações.`;
 
   // o que mudou (mapas presentes nas duas)
@@ -632,8 +635,8 @@ function renderInicio(){
     const movers = cur.maps.filter(m=>pb[m.name]&&(m.matches>=4)&&(pb[m.name].matches>=4))
       .map(m=>({name:m.name, now:m.seasonWR, was:pb[m.name].seasonWR, d:m.seasonWR-pb[m.name].seasonWR}))
       .filter(m=>Math.abs(m.d)>=3);
-    const ups=movers.slice().sort((a,b)=>b.d-a.d).slice(0,3);
-    const dns=movers.slice().sort((a,b)=>a.d-b.d).slice(0,3);
+    const ups=movers.filter(m=>m.d>0).sort((a,b)=>b.d-a.d).slice(0,3);
+    const dns=movers.filter(m=>m.d<0).sort((a,b)=>a.d-b.d).slice(0,3);
     const rowsUp=ups.map(m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv">${m.was.toFixed(0)}→${m.now.toFixed(0)}% <span class="d up">▲${m.d.toFixed(0)}</span></span></div>`).join("")||`<div class="chrow"><span class="vv">—</span></div>`;
     const rowsDn=dns.map(m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv">${m.was.toFixed(0)}→${m.now.toFixed(0)}% <span class="d dn">▼${Math.abs(m.d).toFixed(0)}</span></span></div>`).join("")||`<div class="chrow"><span class="vv">—</span></div>`;
     changed = `<h2 class="sec">O que mudou desde ${esc(base.season)}<span class="hint">win% por mapa</span></h2>
@@ -656,14 +659,14 @@ function renderInicio(){
       </div>
       <div class="gstats">
         <div class="gst"><div class="l">RP</div><div class="v">${curRP.toLocaleString('pt-BR')}</div><div class="dd">${delta(curRP,pbRP,0)}</div></div>
-        <div class="gst"><div class="l">K/D</div><div class="v">${k.kd.toFixed(2)}</div><div class="dd">${delta(k.kd,pk.kd,2)}</div></div>
+        <div class="gst"><div class="l">K/D</div><div class="v">${fx(k.kd,2)}</div><div class="dd">${delta(k.kd,pk.kd,2)}</div></div>
         <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
       </div>
     </div>
     ${(()=>{const g=nextGoal(), p=rpPace();return g?`<div class="goal"><span class="gi">▲</span> Faltam <b>+${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +${p?Math.round(p.win):25} RP</span></div>`:"";})()}
     <div class="kgrid2">
       <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
-      <div class="ktile"><div class="v">${k.winRate.toFixed(1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
+      <div class="ktile"><div class="v">${fx(k.winRate,1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
     </div>
     ${formaRecente()}
     <div class="banner">${banner}</div>
@@ -672,9 +675,9 @@ function renderInicio(){
     <div class="plan">
       <div class="pi"><div class="ico ban">⛔</div><div><b>Bane ${esc(bans[0]?.name||"—")}.</b> <span>${bans.length>1?"Depois "+esc(bans.slice(1,3).map(m=>m.name).join(" / "))+". ":""}Seus piores mapas.</span></div></div>
       <div class="pi"><div class="ico play">✔</div><div><b>Force ${esc(plays.slice(0,4).map(m=>m.name).join(", ")||"—")}.</b> <span>Vote neles sempre.</span></div></div>
-      ${dM?`<div class="pi"><div class="ico def">🛡</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor${cur.operatorsDef[1]?" — "+esc(cur.operatorsDef[1].name)+" de apoio":""}.</span></div></div>`:""}
-      ${aM?`<div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>Pick certo por mapa na aba Mapas.</span></div></div>`:""}
-      ${cM?`<div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e negativo — corte ou reposicione.</span></div></div>`:""}
+      ${dM?`<div class="pi"><div class="ico def">🛡</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor.${cur.operatorsDef[1]?" Segunda opção: "+esc(cur.operatorsDef[1].name)+".":""}</span></div></div>`:""}
+      ${aM?`<div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>O pick de cada mapa está na aba Mapas.</span></div></div>`:""}
+      ${cM?`<div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e perde mais do que ganha — corte ou reposicione.</span></div></div>`:""}
     </div>`;
 }
 
@@ -690,8 +693,8 @@ function nextGoal(){
 function recencyNote(m, rr){
   if(!rr || (rr.w+rr.l)<2) return "";
   const t=tierOf(m.seasonWR);
-  if(t==="ban" && rr.w>rr.l) return `<div class="rnote up"><i>↗</i> Você vem <b>ganhando</b> aqui (${rr.w}-${rr.l} recente): o "banir" da season pode estar desatualizado — reavalie.</div>`;
-  if(t==="play" && rr.l>rr.w) return `<div class="rnote dn"><i>↘</i> <b>Esfriou</b> (${rr.w}-${rr.l} nas últimas) apesar de ser mapa forte — cuidado ao forçar.</div>`;
+  if(t==="ban" && rr.w>rr.l) return `<div class="rnote up"><i>↗</i> Você vem <b>ganhando</b> aqui (${rr.w}V-${rr.l}D nas últimas partidas): o "banir" da season pode estar desatualizado — reavalie.</div>`;
+  if(t==="play" && rr.l>rr.w) return `<div class="rnote dn"><i>↘</i> <b>Esfriou</b> (${rr.w}V-${rr.l}D nas últimas partidas) apesar de ser mapa forte — cuidado ao forçar.</div>`;
   return "";
 }
 
@@ -699,7 +702,7 @@ function recencyNote(m, rr){
 function tierChips(cur, base, tier){
   const pb = base?byName(base.maps):{};
   return cur.maps.filter(m=>tierOf(m.seasonWR)===tier)
-    .sort((a,b)=>b.seasonWR-a.seasonWR)
+    .sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR))
     .map(m=>`<span class="chipm">${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?"°":""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small></span>`).join("") || `<span class="chipm" style="opacity:.5">—</span>`;
 }
 function sideRows(list, pl){
@@ -723,15 +726,15 @@ function scoreOp(o, base){
   return {n, adjWR, adjKD, score:(adjWR-base.wr) + (adjKD-base.kd)*W_KD};
 }
 function whyData(o, sc){
-  const bits=[`${o.wr}% em ${o.rounds||0} rounds`];
-  if(o.kd!=null) bits.push(`K/D ${o.kd.toFixed(2)}`);
+  const bits=[];
+  if(o.kd!=null) bits.push(`K/D ${fx(o.kd,2)}`);
   let v;
-  if((o.rounds||0)<8) v="amostra curta — indício, confirme jogando";
+  if((o.rounds||0)<8) v="amostra curta, só indício";
   else if(sc.score>=10) v="bem acima da sua média";
   else if(sc.score>=3) v="acima da sua média";
   else if(sc.score<=-5) v="abaixo da sua média — cuidado";
   else v="na sua média";
-  return bits.join(" · ")+" — "+v;
+  return bits.length?bits.join(" · ")+" — "+v:v;
 }
 function candidates(m, side){
   if(m[side] && m[side].length && m[side].some(o=>o.rounds!=null))
@@ -765,8 +768,8 @@ function pickRows(m, side){
 }
 function mapTip(m){
   const a=m.atkWR||0, d=m.defWR||0, diff=a-d;
-  if(diff<=-8) return `Seu ataque aqui é o furo (${a.toFixed(0)}%). Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`;
-  if(diff>=8) return `Quem cede aqui é a sua defesa (${d.toFixed(0)}%). Não segure passivo: atrase com roam e jogue o retake.`;
+  if(diff<=-8) return `Seu ataque aqui é o ponto fraco: ${a.toFixed(0)}% contra ${d.toFixed(0)}% na defesa. Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`;
+  if(diff>=8) return `Sua defesa aqui é o ponto fraco: ${d.toFixed(0)}% contra ${a.toFixed(0)}% no ataque. Não segure passivo: atrase com roam e jogue o retake.`;
   return `Lados equilibrados (atk ${a.toFixed(0)}% / def ${d.toFixed(0)}%). O round se decide na primeira troca — entre junto.`;
 }
 function mineLine(m){
@@ -783,18 +786,18 @@ function formaRecente(){
   const n=ms.length, w=ms.filter(m=>m.w).length, l=n-w;
   const netRP=ms.reduce((s,m)=>s+(m.rp||0),0);
   const posKD=ms.filter(m=>(m.kd||0)>=1).length;
-  const pips=ms.slice().reverse().map(m=>`<span class="pip ${m.w?'w':'l'}" title="${esc(m.map)} · ${m.w?'V':'D'} · K/D ${(m.kd||0).toFixed(2)}"></span>`).join("");
+  const pips=ms.slice().reverse().map(m=>`<span class="pip ${m.w?'w':'l'}" title="${esc(m.map)} · ${m.w?'V':'D'} · K/D ${fx(m.kd||0,2)}"></span>`).join("");
   const byMap={};
   ms.forEach(m=>{byMap[m.map]=byMap[m.map]||{w:0,l:0}; m.w?byMap[m.map].w++:byMap[m.map].l++;});
-  const cold=Object.entries(byMap).filter(([,v])=>v.w===0&&v.l>=2).map(([k])=>k);
-  const hot=Object.entries(byMap).filter(([,v])=>v.l===0&&v.w>=2).map(([k])=>k);
+  const cold=Object.entries(byMap).filter(([,v])=>v.w===0&&v.l>=2).map(([k,v])=>`${esc(k)} (${v.w}V-${v.l}D)`);
+  const hot=Object.entries(byMap).filter(([,v])=>v.l===0&&v.w>=2).map(([k,v])=>`${esc(k)} (${v.w}V-${v.l}D)`);
   let streak=1; const sw=ms[0].w; for(let i=1;i<ms.length;i++){ if(ms[i].w===sw) streak++; else break; }
   const ins=[];
-  if(!sw && streak>=2) ins.push(`Você parou numa <b>maré de ${streak} derrotas</b>. A estatística é clara: tilt custa RP — descanse antes da próxima.`);
+  if(!sw && streak>=2) ins.push(`Você está numa <b>maré de ${streak} derrotas</b> — considere uma pausa antes da próxima.`);
   if(sw && streak>=3) ins.push(`<b>${streak} vitórias seguidas</b> — você está quente, aproveite enquanto dura.`);
-  if(posKD/n>=0.6 && Math.abs(w-l)<=2) ins.push(`Você fechou positivo no K/D em <b>${posKD} das ${n}</b>, mas o placar ficou <b>${w}-${l}</b>: a derrota vem do round, não da sua mira. Entre junto com o time em vez de fragar solo.`);
-  if(cold.length) ins.push(`Sem nenhuma vitória nas últimas em <b>${cold.join(", ")}</b> — bane no ranqueado.`);
-  if(hot.length) ins.push(`Embalado em <b>${hot.join(", ")}</b> — force esses mapas.`);
+  if(posKD/n>=0.6 && Math.abs(w-l)<=2) ins.push(`Em <b>${posKD} das ${n}</b> partidas seu K/D foi de 1,0 ou mais, mas o placar ficou <b>${w}V-${l}D</b>: o abate sozinho não está virando vitória. Jogue junto do time em vez de buscar frag solo.`);
+  if(cold.length) ins.push(`Sem vitória nas últimas ${n} partidas em <b>${cold.join(", ")}</b> — bane no ranqueado.`);
+  if(hot.length) ins.push(`Só vitórias nas últimas ${n} partidas em <b>${hot.join(", ")}</b> — vale votar ${hot.length>1?"nesses mapas":"nesse mapa"}.`);
   const rpCls=netRP>0?'up':(netRP<0?'dn':'eq');
   return `
     <h2 class="sec">Forma recente<span class="hint">últimas ${n} partidas</span></h2>
@@ -805,7 +808,7 @@ function formaRecente(){
       </div>
       <div class="fkpis">
         <div class="fk"><div class="fl">RP no período</div><div class="fv d ${rpCls}">${netRP>0?'+':''}${netRP}</div></div>
-        <div class="fk"><div class="fl">Jogos com K/D 1.0+</div><div class="fv">${posKD}/${n}</div></div>
+        <div class="fk"><div class="fl">Com K/D 1,0+</div><div class="fv">${posKD}/${n}</div></div>
       </div>
       ${ins.map(t=>`<div class="fins">${t}</div>`).join("")}
     </div>`;
@@ -813,32 +816,32 @@ function formaRecente(){
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};
   const rbm=recentByMap();
-  const cards = cur.maps.filter(m=>m.matches>=1).map(m=>{
+  const cards = cur.maps.filter(m=>m.matches>=1).sort((a,b)=>(a.matches<4)-(b.matches<4)).map(m=>{
     const t=tierOf(m.seasonWR), v={play:"PRIORIZE",neu:"NEUTRO",ban:"BANIR"}[t];
     const pm=pb[m.name]||{};
     const rr=rbm[m.name];
-    const rbadge=rr?`<span class="rbadge ${rr.w>rr.l?'up':(rr.l>rr.w?'dn':'eq')}" title="resultado nas partidas recentes">últ. ${rr.w}-${rr.l}</span>`:"";
+    const rbadge=rr?`<span class="rbadge ${rr.w>rr.l?'up':(rr.l>rr.w?'dn':'eq')}" title="resultado nas partidas recentes">últ. ${rr.w}V-${rr.l}D</span>`:"";
     const cD=candidates(m,"def"), cA=candidates(m,"atk");
     const opsHtml = `<div class="picks">
-        <div class="pside def"><div class="sh"><span class="ic"></span>Pegue na defesa<span class="src">${esc(srcLabel(cD.src))}</span></div>${pickRows(m,"def")}</div>
-        <div class="pside atk"><div class="sh"><span class="ic"></span>Pegue no ataque<span class="src">${esc(srcLabel(cA.src))}</span></div>${pickRows(m,"atk")}</div>
+        <div class="pside def"><div class="sh"><span class="ic"></span>${cD.src==="playbook"?"Pegue na defesa":"Seus melhores na defesa"}<span class="src">${esc(srcLabel(cD.src))}</span></div>${pickRows(m,"def")}</div>
+        <div class="pside atk"><div class="sh"><span class="ic"></span>${cA.src==="playbook"?"Pegue no ataque":"Seus melhores no ataque"}<span class="src">${esc(srcLabel(cA.src))}</span></div>${pickRows(m,"atk")}</div>
       </div>
       <div class="tip">${esc(mapTip(m))}</div>`;
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
     return `<div class="map">
       <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>${rbadge}
-        <span class="wr"><b>${m.seasonWR.toFixed(1)}%${delta(m.seasonWR,pm.seasonWR,1)}</b><small>${m.matches} PARTIDAS${m.matches<4?" °":""}</small></span></div>
+        <span class="wr"><b>${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</b><small>${m.matches} ${m.matches===1?"PARTIDA":"PARTIDAS"}${m.matches<4?" °":""}</small></span></div>
       <div class="ad">${adbar('atk',m.atkWR)}${adbar('def',m.defWR)}</div>
-      <div class="strong">${strongSide(m)} <span>KD ${(m.kd||0).toFixed(2)}${delta(m.kd,pm.kd,2)}</span></div>
+      <div class="strong">${strongSide(m)} <span>K/D ${fx(m.kd||0,2)}${delta(m.kd,pm.kd,2)}</span></div>
       ${opsHtml}
       ${recencyNote(m,rr)}
       ${m.note?`<div class="notew">⚠ ${esc(m.note)}</div>`:""}
       ${m.avoid?`<div class="avoid"><b>Evite:</b> ${esc(m.avoid)}</div>`:""}
     </div>`;
   }).join("");
-  const opsNote = `<div class="banner" style="margin-bottom:12px">🎯 Cada mapa mostra <b>quem pegar</b> e <b>por quê</b>, mais uma dica de estratégia tirada do seu próprio ataque×defesa. O selo <b>você X%</b> é o seu aproveitamento com aquele operador.</div>`;
+  const opsNote = `<div class="banner" style="margin-bottom:12px">🎯 Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds vencidos · rounds jogados. <b>°</b> = amostra pequena: indício, não veredito.</div>`;
   document.getElementById("scr-mapas").innerHTML = `
-    <h2 class="sec">Jogar vs banir<span class="hint">tier por win% da season</span></h2>
+    <h2 class="sec">Jogar vs banir<span class="hint">win% da season</span></h2>
     <div class="tier">
       <div class="tcol play"><div class="th"><span class="dot"></span>Priorize</div><div class="chips">${tierChips(cur,base,"play")}</div></div>
       <div class="tcol neu"><div class="th"><span class="dot"></span>Neutro</div><div class="chips">${tierChips(cur,base,"neu")}</div></div>
@@ -853,7 +856,7 @@ function renderMapas(){
 function opPanel(list, pl){
   const p=byName(pl);
   return (list||[]).map(o=>{
-    const kd=o.kd!=null?` · ${o.kd.toFixed(2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
+    const kd=o.kd!=null?` · ${fx(o.kd,2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
     return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?"°":""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
   }).join("");
 }
@@ -893,7 +896,7 @@ function renderOpsTable(){
       return opVal(b,opsSort)-opVal(a,opsSort)||b.r-a.r;
     })
     .map(o=>{
-      const kd=(o.k/Math.max(1,o.d)).toFixed(2);
+      const kd=fx(o.k/Math.max(1,o.d),2);
       const hs=o.k?Math.round(100*o.hs/o.k)+"%":"—";
       const fb=(o.fb+o.fd)?`${o.fb} de ${o.fb+o.fd}`:"—";
       return `<tr class="${o.r<8?"dim":""}" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)">
@@ -912,12 +915,12 @@ function hardBreachCard(cur){
   const rows=HARD_BREACH.map(n=>{
     const o=cur.opsAll.find(x=>x.n===n);
     if(!o) return `<div class="oprow"><span class="nm" style="color:var(--muted)">${n}</span><span class="st">sem rounds nesta season</span></div>`;
-    const kd=(o.k/Math.max(1,o.d)).toFixed(2);
-    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?"°":""} · ${o.w} de ${o.r} rds · KD ${kd}</span></div>`;
+    const kd=fx(o.k/Math.max(1,o.d),2);
+    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?"°":""} · ${o.w} de ${o.r} rds · K/D ${kd}</span></div>`;
   }).join("");
   const best=got.filter(o=>o.r>=15).sort((a,b)=>b.r-a.r)[0];
   const read=best
-    ? `Sua opção com amostra real: <b>${esc(best.n)}</b> (${best.w} de ${best.r}, K/D ${(best.k/Math.max(1,best.d)).toFixed(2)}). Os outros quase não têm rounds — treine um segundo pra semana de ban.`
+    ? `Sua opção com amostra real: <b>${esc(best.n)}</b> (${best.w} de ${best.r}, K/D ${fx(best.k/Math.max(1,best.d),2)}). Os outros quase não têm rounds — treine um segundo pra semana de ban.`
     : `Nenhum hard breach com amostra de verdade nesta season.`;
   return `<div class="opcard" style="margin-top:12px"><h3><span class="tag atk">ATAQUE</span> Hard breach — plano B</h3>${rows}
     <div class="fsrc" style="margin-top:8px">${read} O card do coach mostra o quanto rodar sem hard breach custa.</div></div>`;
@@ -925,22 +928,22 @@ function hardBreachCard(cur){
 function openOpSheet(name){
   const cur=active, o=(cur.opsAll||[]).find(x=>x.n===name);
   if(!o) return;
-  const kd=(o.k/Math.max(1,o.d)).toFixed(2);
+  const kd=fx(o.k/Math.max(1,o.d),2);
   const duel=(o.fb+o.fd)?`<b>${o.fb} de ${o.fb+o.fd}</b> (${pf(o.fb,o.fb+o.fd)}%)`:`— <small>não entra na 1ª troca</small>`;
   const stats=`<table class="ctable">
     <tr><td>Rounds</td><td><b>${o.r}</b> <small>em ${o.m} ${o.m===1?"partida":"partidas"}</small></td></tr>
     <tr><td>Rounds vencidos</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td></tr>
     <tr><td>Partidas vencidas</td><td><b>${pf(o.mw,o.m)}%</b> <small>${o.mw} de ${o.m}</small></td></tr>
     <tr><td>K/D</td><td><b>${kd}</b> <small>${o.k} × ${o.d} · ${o.a} assist.</small></td></tr>
-    <tr><td>Na cabeça</td><td><b>${o.k?pf(o.hs,o.k)+"%":"—"}</b> <small>${o.hs} de ${o.k}</small></td></tr>
+    <tr><td>Abates na cabeça</td><td><b>${o.k?pf(o.hs,o.k)+"%":"—"}</b> <small>${o.hs} de ${o.k}</small></td></tr>
     <tr><td>1º duelo do round</td><td>${duel}</td></tr>
     <tr><td>Clutch</td><td><b>${o.cw}</b> ganhos · ${o.cl} perdidos</td></tr></table>`;
   const evo=SEASONS.map(s=>({s,e:(s.opsAll||[]).find(x=>x.n===name)})).filter(x=>x.e&&x.e.r>0);
   const evoHtml=evo.length>1?`<h3 style="margin:14px 0 8px">Season a season</h3><table class="ctable">${
-    evo.map(({s,e})=>`<tr><td>${esc(s.season)}</td><td><b>${pf(e.w,e.r)}%</b> <small>${e.r} rds</small></td><td>KD ${(e.k/Math.max(1,e.d)).toFixed(2)}</td></tr>`).join("")}</table>`:"";
+    evo.map(({s,e})=>`<tr><td>${esc(s.season)}</td><td><b>${pf(e.w,e.r)}%</b> <small>${e.r} rds</small></td><td>K/D ${fx(e.k/Math.max(1,e.d),2)}</td></tr>`).join("")}</table>`:"";
   const mm=(cur.opsMaps||{})[name];
   const mapsHtml=mm&&mm.length?`<h3 style="margin:14px 0 8px">Por mapa</h3><table class="ctable">${
-    mm.slice().sort((a,b)=>b[1]-a[1]).slice(0,4).map(r=>`<tr><td>${esc(r[0])}</td><td><b>${pf(r[2],r[1])}%</b> <small>${r[2]} de ${r[1]}</small></td><td>KD ${(r[3]/Math.max(1,r[4])).toFixed(2)}</td></tr>`).join("")}</table>`:"";
+    mm.slice().sort((a,b)=>b[1]-a[1]).slice(0,4).map(r=>`<tr><td>${esc(r[0])}</td><td><b>${pf(r[2],r[1])}%</b> <small>${r[2]} de ${r[1]}</small></td><td>K/D ${fx(r[3]/Math.max(1,r[4]),2)}</td></tr>`).join("")}</table>`:"";
   const fr=((cur.coach||{}).opsRole||{})[name];
   const feedHtml=fr?`<h3 style="margin:14px 0 8px">O que o kill feed mostra</h3><table class="ctable">
     <tr><td>Vivo no fim do round</td><td><b>${pf(fr[2],fr[0])}%</b> <small>${fr[2]} de ${fr[0]}</small></td></tr>
@@ -973,14 +976,14 @@ function renderEvo(){
     const rk=rankInfo(s.kpis.peakRP);
     return `<div class="evrow"><span class="sn">${esc(s.season)}<small>${esc(s.seasonLabel||"")}</small></span>
       <span class="cell"><span class="rkb2" style="background:${rk.color}22;color:${rk.color}">${rk.name}</span></span>
-      <span class="cell"><b>${s.kpis.winRate.toFixed(1)}%</b>${delta(s.kpis.winRate,p.winRate,1)}</span>
-      <span class="cell"><b>${s.kpis.kd.toFixed(2)}</b>${delta(s.kpis.kd,p.kd,2)}</span>
+      <span class="cell"><b>${fx(s.kpis.winRate,1)}%</b>${delta(s.kpis.winRate,p.winRate,1)}</span>
+      <span class="cell"><b>${fx(s.kpis.kd,2)}</b>${delta(s.kpis.kd,p.kd,2)}</span>
       <span class="cell"><b>${s.kpis.matches}</b></span></div>`;
   }).join("");
   document.getElementById("scr-evo").innerHTML = `
     <h2 class="sec">Evolução<span class="hint">season a season</span></h2>
     <div class="evo"><h3>Win rate %</h3>${spark(wrVals,"#34d399",v=>v.toFixed(0)+"%")}</div>
-    <div class="evo"><h3>K/D</h3>${spark(kdVals,"#f4c20d",v=>v.toFixed(2))}</div>
+    <div class="evo"><h3>K/D</h3>${spark(kdVals,"#f4c20d",v=>fx(v,2))}</div>
     <div class="evo"><h3>Seasons</h3>
       <div class="evhead"><span class="sn">Season</span><span class="cell">Pico</span><span class="cell">Win</span><span class="cell">K/D</span><span class="cell">Partidas</span></div>
       ${rows}</div>`;
@@ -1023,7 +1026,7 @@ function goalCard(){
     body=`<div class="cg-s" style="margin-top:10px">Seu ritmo nesta season: <b>+${Math.round(p.win)}</b> por vitória e <b>${Math.round(p.loss)}</b> por derrota (${p.n} partidas). Com ${be}% de vitórias você já não perde RP.</div>
       <div class="cg-s" style="margin-top:6px">${janela}</div>
       <table class="ctable"><tr><th>Vitórias</th><th>RP por partida</th><th>Partidas até ${esc(g.label)}</th></tr>
-      ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${x>0?"+":""}${x.toFixed(1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
+      ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${x>0?"+":""}${fx(x,1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
       <div class="fsrc">Cenário, não promessa: supõe que cada vitória e cada derrota continuem valendo a média desta season.</div>`;
   }
   return `<div class="cgoal"><div class="cg-top">${rankEmblem(g.color,g.div,g.champ,44)}<div>
@@ -1058,7 +1061,7 @@ function deltaDir(c,p,dec,dir){        // a seta mostra o sentido; a cor diz se 
 }
 function styleTable(cur,base){
   const s=cur.style, b=base&&base.style;
-  const fmt=(v,u,d)=>v==null?"—":v.toFixed(d)+u;
+  const fmt=(v,u,d)=>v==null?"—":fx(v,d)+u;
   const rows=STYLE_ROWS.map(([k,l,u,d,dir])=>{
     const v=styleVal(s,k), pv=styleVal(b,k);
     return `<tr><td>${l}</td><td><b>${fmt(v,u,d)}</b>${deltaDir(v,pv,d,dir)}</td>${b?`<td>${fmt(pv,u,d)}</td>`:""}</tr>`;
@@ -1068,7 +1071,7 @@ function styleTable(cur,base){
 }
 
 function squadRows(q){
-  const r=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b> <small>${a[0]} de ${a[1]}</small></td><td>${a[3]?(a[2]/a[3]).toFixed(2):"—"}</td><td>${sg(a[4])}</td></tr>`:"";
+  const r=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b> <small>${a[0]} de ${a[1]}</small></td><td>${a[3]?fx(a[2]/a[3],2):"—"}</td><td>${sg(a[4])}</td></tr>`:"";
   return r("Sozinho",q.solo)+r("Com o squad",q.together);
 }
 function squadCard(cur,base){
@@ -1080,7 +1083,7 @@ function squadCard(cur,base){
     if(note||!x) return;
     const so=x.solo, tg=x.together;
     if(tg[1]>=10&&so[1]>=8&&so[3]&&tg[3]&&(tg[2]/tg[3])<(so[2]/so[3])-0.3)
-      note=`Com o squad o seu K/D cai (${(tg[2]/tg[3]).toFixed(2)} × ${(so[2]/so[3]).toFixed(2)} sozinho, na ${esc(sn.season)}). O provável: a partida sobe pro nível deles.`;
+      note=`Com o squad o seu K/D cai (${fx(tg[2]/tg[3],2)} × ${fx(so[2]/so[3],2)} sozinho, na ${esc(sn.season)}). O provável: a partida sobe pro nível deles.`;
   });
   const few=[q,bq].some(x=>x&&(x.solo[1]<15||x.together[1]<15));
   return `<div class="cbox"><table class="ctable"><tr><th></th><th>Vitórias</th><th>K/D</th><th>RP</th></tr>
@@ -1163,7 +1166,7 @@ function coachCards(cur){
     K.teams=(fcard("Seus times são mais fracos?",big,"seu time × time inimigo, no começo de cada partida",
       `<table class="ctable"><tr><th></th><th>Colegas</th><th>Inimigos</th></tr>
         <tr><td>RP médio</td><td><b>${nf(t.matesRP)}</b></td><td><b>${nf(t.enemiesRP)}</b></td></tr>
-        <tr><td>K/D</td><td><b>${t.matesKD.toFixed(2)}</b></td><td><b>${t.enemiesKD.toFixed(2)}</b></td></tr>
+        <tr><td>K/D</td><td><b>${fx(t.matesKD,2)}</b></td><td><b>${fx(t.enemiesKD,2)}</b></td></tr>
         <tr><td>Abates <small>(time todo)</small></td><td><b>${nf(t.teamKills)}</b></td><td><b>${nf(t.enemyKills)}</b></td></tr></table>`,
       `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do inimigo porque o seu entra na mesma conta: os dois times matam quase o mesmo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
       "Colegas = os outros 4 do seu time, sem você. RP de antes da partida."));
@@ -1289,7 +1292,7 @@ function coachRules(cur,base){
     if(hb.with[1]>=10&&hb.without[1]>=10&&a-b>=8){
       const mine=(cur.operatorsAtk||[]).concat(cur.operatorsCut||[]).filter(o=>HARD_BREACH.includes(o.name)).sort((x,y)=>(y.rounds||0)-(x.rounds||0))[0];
       R.push(rule("🧨","atk",`Sem hard breach no time? Pegue ${esc(mine?mine.name:"Thermite")}.`,
-        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+mine.kd.toFixed(2):""}.`:""}`));
+        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+fx(mine.kd,2):""}.`:""}`));
     }
   }
   const bans=(cur.maps||[]).filter(m=>m.matches>=4&&m.seasonWR<40).sort((x,y)=>x.seasonWR-y.seasonWR);
@@ -1375,7 +1378,7 @@ function openSeasons(){
     const rk=rankInfo(s.kpis.peakRP);
     return `<div class="srow ${s===active?'on':''}" data-so="${s.seasonOrder}">
       <div><div class="sname">${esc(s.season)} · ${esc(s.seasonLabel||"")}</div>
-      <div class="smeta">${s.kpis.winRate.toFixed(1)}% vitórias · KD ${s.kpis.kd.toFixed(2)} · ${s.kpis.matches} partidas</div></div>
+      <div class="smeta">${fx(s.kpis.winRate,1)}% vitórias · K/D ${fx(s.kpis.kd,2)} · ${s.kpis.matches} partidas</div></div>
       <span class="srk" style="background:${rk.color}22;color:${rk.color}">${rk.name}</span></div>`;
   }).join("");
   openSheet(`<h3>Escolher season</h3>${rows}`);
@@ -1385,12 +1388,13 @@ function openSeasons(){
 }
 function openHelp(){
   openSheet(`<h3>Como ler o SIEGE·LAB</h3>
-    <div class="legrow"><b style="color:var(--play)">▲</b> subiu vs a season anterior (toque na seta: antes → agora)</div>
+    <div class="legrow"><b style="color:var(--play)">▲</b> subiu vs a season anterior (no computador, passe o mouse na seta: antes → agora)</div>
     <div class="legrow"><b style="color:var(--ban)">▼</b> caiu vs a season anterior</div>
     <div class="legrow"><b style="color:#8b919c">=</b> estável</div>
     <div class="legrow"><b>°</b> amostra pequena — indicativo</div>
     <div class="legrow"><b style="color:var(--def)">■</b> defesa · <b style="color:var(--atk)">■</b> ataque</div>
     <div class="legrow"><b style="color:var(--gold)">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
+    <div class="legrow"><b>🗺</b> Mapas: priorize = win% ≥55 · neutro 40–54 · banir &lt;40 (conta só a season escolhida)</div>
     <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>
     <div class="legrow"><b style="color:#9aa3ad">▲</b> cinza no Coach: mudou o estilo, não o resultado (nem bom nem ruim)</div>
     <div class="legrow"><b>💡</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards de cima são os que valem olhar durante o jogo</div>
@@ -1407,7 +1411,7 @@ function openShare(){
     <div class="scrank" style="color:${rk.color}">${rk.name} · ${curRP.toLocaleString('pt-BR')} RP</div>
     <div class="scstats">
       <div><b>${k.winRate.toFixed(0)}%</b><span>vitórias</span></div>
-      <div><b>${k.kd.toFixed(2)}</b><span>K/D</span></div>
+      <div><b>${fx(k.kd,2)}</b><span>K/D</span></div>
       ${rm.length?`<div><b>${w}-${l}</b><span>últimas</span></div>`:""}
     </div>
     <div class="scfoot">${esc(active.season)} · thebsilva.github.io/siege-lab</div>
