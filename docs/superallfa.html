@@ -243,6 +243,8 @@
   .evo{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px;margin-bottom:12px}
   .evo h3{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
   .spark{width:100%;height:96px;overflow:visible}
+  .sparklbl{position:relative;height:16px;margin-top:8px}
+  .sparklbl span{position:absolute;top:0;transform:translateX(-50%);font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.3px;white-space:nowrap}
   .evhead,.evrow{display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
   .evhead{padding-bottom:7px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .evrow{padding:11px 0;border-top:1px solid #1f232b;font-size:13px}
@@ -251,6 +253,13 @@
   .evhead .sn{width:118px;flex:none}
   .cell{flex:1;text-align:right;color:var(--muted)} .cell b{color:var(--txt)}
   .rkb2{font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px}
+  @media(max-width:560px){            /* celular: a season ocupa uma linha e os 4 números ficam embaixo (antes a coluna Partidas saía da tela) */
+    .evhead .sn{display:none}
+    .evhead,.evrow{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;column-gap:6px;row-gap:7px}
+    .evrow .sn{grid-column:1/-1;width:auto;display:flex;align-items:baseline;gap:8px}
+    .evrow .sn small{display:inline}
+    .evrow .cell .d{display:block;margin-left:0}
+  }
 
   nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(13,14,18,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
   nav.bottom button{flex:1;background:none;border:none;color:var(--muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;letter-spacing:.3px}
@@ -759,18 +768,19 @@ function openOpSheet(name){
 }
 
 /* ---------- EVOLUÇÃO ---------- */
-function spark(vals, color, fmt){
+function spark(vals, color, fmt, labels){
   if(vals.length<2) return `<div style="color:var(--muted);font-size:13px">Só 1 season carregada — o gráfico aparece com 2+.</div>`;
   const w=560,h=96,pad=14;
   const mn=Math.min(...vals), mx=Math.max(...vals), rg=(mx-mn)||1;
   const X=i=>pad+i*(w-2*pad)/(vals.length-1), Y=v=>h-pad-(v-mn)/rg*(h-2*pad);
   const line=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
   const dots=vals.map((v,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3.5" fill="${color}"/><text x="${X(i).toFixed(1)}" y="${(Y(v)-9).toFixed(1)}" fill="${color}" font-size="12" font-weight="700" text-anchor="middle">${fmt(v)}</text>`).join("");
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}</svg>`;
+  const lbl=labels?`<div class="sparklbl">${labels.map((l,i)=>`<span style="left:${(X(i)/w*100).toFixed(1)}%">${esc(l)}</span>`).join("")}</div>`:"";
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}</svg>${lbl}`;
 }
 function renderEvo(){
   const chron = SEASONS.slice().sort((a,b)=>a.seasonOrder-b.seasonOrder); // antiga→nova
-  const wrVals=chron.map(s=>s.kpis.winRate), kdVals=chron.map(s=>s.kpis.kd);
+  const wrVals=chron.map(s=>s.kpis.winRate), kdVals=chron.map(s=>s.kpis.kd), seasonIds=chron.map(s=>s.season);
   const rows = chron.slice().reverse().map((s,idx,arr)=>{
     const older = chron[chron.indexOf(s)-1];
     const p=older?older.kpis:{};
@@ -783,8 +793,8 @@ function renderEvo(){
   }).join("");
   document.getElementById("scr-evo").innerHTML = `
     <h2 class="sec">Evolução<span class="hint">season a season</span></h2>
-    <div class="evo"><h3>Win rate %</h3>${spark(wrVals,"#34d399",v=>v.toFixed(0)+"%")}</div>
-    <div class="evo"><h3>K/D</h3>${spark(kdVals,"#f4c20d",v=>fx(v,2))}</div>
+    <div class="evo"><h3>Win rate %</h3>${spark(wrVals,"#34d399",v=>v.toFixed(0)+"%",seasonIds)}</div>
+    <div class="evo"><h3>K/D</h3>${spark(kdVals,"#f4c20d",v=>fx(v,2),seasonIds)}</div>
     <div class="evo"><h3>Seasons</h3>
       <div class="evhead"><span class="sn">Season</span><span class="cell">Pico</span><span class="cell">Win</span><span class="cell">K/D</span><span class="cell">Partidas</span></div>
       ${rows}</div>`;
