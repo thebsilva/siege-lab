@@ -873,7 +873,32 @@
       "seasonWR": 100.0,
       "kd": 4.5,
       "atkWR": 50.0,
-      "defWR": 75.0
+      "defWR": 75.0,
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 4.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Calypso Casino",
@@ -881,7 +906,52 @@
       "seasonWR": 80.0,
       "kd": 0.54,
       "atkWR": 50.0,
-      "defWR": 60.0
+      "defWR": 60.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 57,
+          "rounds": 14,
+          "kd": 0.67
+        },
+        {
+          "name": "Melusi",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Grim",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Lair",
@@ -889,7 +959,46 @@
       "seasonWR": 75.0,
       "kd": 0.23,
       "atkWR": 72.7,
-      "defWR": 57.1
+      "defWR": 57.1,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Melusi",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Grim",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Bank",
@@ -897,7 +1006,32 @@
       "seasonWR": 66.7,
       "kd": 1.86,
       "atkWR": 75.0,
-      "defWR": 60.0
+      "defWR": 60.0,
+      "def": [
+        {
+          "name": "Goyo",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Grim",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Skyscraper",
@@ -905,7 +1039,46 @@
       "seasonWR": 66.7,
       "kd": 0.67,
       "atkWR": 50.0,
-      "defWR": 60.0
+      "defWR": 60.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Melusi",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Grim",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Chalet",
@@ -913,7 +1086,39 @@
       "seasonWR": 66.7,
       "kd": 1.25,
       "atkWR": 50.0,
-      "defWR": 75.0
+      "defWR": 75.0,
+      "def": [
+        {
+          "name": "Castle",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thermite",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Lion",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Grim",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Kafe Dostoyevsky",
@@ -921,7 +1126,60 @@
       "seasonWR": 57.1,
       "kd": 1.08,
       "atkWR": 42.1,
-      "defWR": 73.7
+      "defWR": 73.7,
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 100,
+          "rounds": 4,
+          "kd": 3.5,
+          "small": true
+        },
+        {
+          "name": "Castle",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Grim",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Lion",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Villa",
@@ -929,7 +1187,61 @@
       "seasonWR": 50.0,
       "kd": 1.5,
       "atkWR": 38.1,
-      "defWR": 66.7
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Castle",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Melusi",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thermite",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 2.5,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "avoid": "Thermite no ataque (33% em 6 rounds)."
     },
     {
       "name": "Theme Park",
@@ -937,7 +1249,39 @@
       "seasonWR": 50.0,
       "kd": 0.22,
       "atkWR": 16.7,
-      "defWR": 75.0
+      "defWR": 75.0,
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Grim",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Clubhouse",
@@ -945,7 +1289,68 @@
       "seasonWR": 25.0,
       "kd": 0.53,
       "atkWR": 38.9,
-      "defWR": 37.5
+      "defWR": 37.5,
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 17,
+          "rounds": 6,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Castle",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Lion",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Melusi na defesa (17% em 6 rounds)."
     },
     {
       "name": "Coastline",
@@ -954,7 +1359,53 @@
       "kd": 0.61,
       "atkWR": 16.7,
       "defWR": 22.2,
-      "note": "Ataque: 2 de 12 rounds nesta season."
+      "note": "Ataque: 2 de 12 rounds nesta season.",
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Nomad",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Nighthaven Labs",
@@ -963,7 +1414,39 @@
       "kd": 0.77,
       "atkWR": 50.0,
       "defWR": 20.0,
-      "note": "Defesa: 2 de 10 rounds nesta season."
+      "note": "Defesa: 2 de 10 rounds nesta season.",
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Border",
@@ -971,7 +1454,39 @@
       "seasonWR": 0.0,
       "kd": 1.4,
       "atkWR": 0.0,
-      "defWR": 66.7
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Goyo",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Fortress",
@@ -979,7 +1494,32 @@
       "seasonWR": 0.0,
       "kd": 0.2,
       "atkWR": 0.0,
-      "defWR": 66.7
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Melusi",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Lion",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     }
   ],
   "recentMatches": [
@@ -1159,6 +1699,525 @@
       144
     ]
   },
+  "opsMaps": {
+    "Wamai": [
+      [
+        "Skyscraper",
+        4,
+        3,
+        0,
+        4
+      ],
+      [
+        "Calypso Casino",
+        14,
+        8,
+        6,
+        9
+      ],
+      [
+        "Clubhouse",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Villa",
+        2,
+        2,
+        3,
+        1
+      ],
+      [
+        "Lair",
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "Melusi": [
+      [
+        "Skyscraper",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Calypso Casino",
+        2,
+        2,
+        0,
+        1
+      ],
+      [
+        "Theme Park",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Consulate",
+        1,
+        0,
+        2,
+        1
+      ],
+      [
+        "Coastline",
+        2,
+        0,
+        2,
+        2
+      ],
+      [
+        "Clubhouse",
+        6,
+        1,
+        2,
+        5
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        1,
+        0,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        4,
+        7,
+        2
+      ],
+      [
+        "Lair",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Villa",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Fortress",
+        1,
+        1,
+        0,
+        1
+      ]
+    ],
+    "Thermite": [
+      [
+        "Nighthaven Labs",
+        1,
+        1,
+        2,
+        0
+      ],
+      [
+        "Theme Park",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Clubhouse",
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        "Skyscraper",
+        2,
+        1,
+        3,
+        1
+      ],
+      [
+        "Coastline",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Villa",
+        6,
+        2,
+        5,
+        2
+      ],
+      [
+        "Lair",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Calypso Casino",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Chalet",
+        3,
+        2,
+        2,
+        1
+      ]
+    ],
+    "Lion": [
+      [
+        "Border",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Coastline",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Fortress",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Calypso Casino",
+        6,
+        3,
+        4,
+        4
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        3,
+        2,
+        3
+      ],
+      [
+        "Chalet",
+        2,
+        1,
+        1,
+        2
+      ]
+    ],
+    "Grim": [
+      [
+        "Bank",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Lair",
+        3,
+        3,
+        0,
+        1
+      ],
+      [
+        "Theme Park",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Skyscraper",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Calypso Casino",
+        4,
+        1,
+        0,
+        4
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        3,
+        2,
+        2
+      ],
+      [
+        "Chalet",
+        1,
+        1,
+        0,
+        0
+      ]
+    ],
+    "Ash": [
+      [
+        "Fortress",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        "Border",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Theme Park",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Villa",
+        3,
+        1,
+        3,
+        2
+      ],
+      [
+        "Consulate",
+        2,
+        1,
+        4,
+        1
+      ],
+      [
+        "Bank",
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    "Nomad": [
+      [
+        "Coastline",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Villa",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Skyscraper",
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        "Calypso Casino",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Lair",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Clubhouse",
+        2,
+        1,
+        0,
+        1
+      ]
+    ],
+    "Zofia": [
+      [
+        "Villa",
+        6,
+        3,
+        6,
+        3
+      ],
+      [
+        "Consulate",
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        "Coastline",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Calypso Casino",
+        2,
+        2,
+        0,
+        2
+      ],
+      [
+        "Border",
+        1,
+        0,
+        1,
+        1
+      ]
+    ],
+    "Castle": [
+      [
+        "Villa",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Chalet",
+        4,
+        2,
+        1,
+        2
+      ],
+      [
+        "Clubhouse",
+        1,
+        1,
+        2,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        3,
+        2,
+        2
+      ]
+    ],
+    "Goyo": [
+      [
+        "Bank",
+        2,
+        0,
+        2,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        2,
+        3,
+        3
+      ],
+      [
+        "Clubhouse",
+        2,
+        1,
+        0,
+        1
+      ],
+      [
+        "Border",
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        "Coastline",
+        1,
+        1,
+        1,
+        0
+      ]
+    ]
+  },
   "rpRate": {
     "win": 30.4,
     "loss": -25.4,
@@ -1227,5 +2286,400 @@
       0,
       0
     ]
+  },
+  "coach": {
+    "matches": 51,
+    "rounds": 301,
+    "lastAlive": {
+      "atk": [
+        26,
+        92
+      ],
+      "def": [
+        16,
+        83
+      ]
+    },
+    "lastAliveRef": {
+      "atk": [
+        56,
+        237
+      ],
+      "def": [
+        66,
+        220
+      ]
+    },
+    "firstDeath": {
+      "atk": [
+        17,
+        156
+      ],
+      "def": [
+        25,
+        145
+      ]
+    },
+    "firstDeathRef": {
+      "atk": [
+        86,
+        504
+      ],
+      "def": [
+        75,
+        512
+      ]
+    },
+    "alone": {
+      "atk": [
+        1,
+        26,
+        3.1
+      ],
+      "def": [
+        6,
+        16,
+        2.8
+      ]
+    },
+    "sideRounds": {
+      "atk": [
+        67,
+        156
+      ],
+      "def": [
+        80,
+        145
+      ]
+    },
+    "hardBreach": {
+      "with": [
+        41,
+        90
+      ],
+      "without": [
+        26,
+        66
+      ],
+      "self": [
+        15,
+        36
+      ]
+    },
+    "opening": {
+      "kill": [
+        101,
+        159
+      ],
+      "death": [
+        46,
+        142
+      ]
+    },
+    "multi": {
+      "twoPlus": [
+        25,
+        33
+      ],
+      "oneOrLess": [
+        122,
+        268
+      ]
+    },
+    "kills": {
+      "total": 167,
+      "lostRounds": 61,
+      "alone": 26,
+      "aloneLost": 16
+    },
+    "trades": {
+      "mateDeaths": 857,
+      "byMe": 55,
+      "byOthers": 203,
+      "myDeaths": 197,
+      "meTraded": 58
+    },
+    "states": {
+      "5v4": [
+        101,
+        159
+      ],
+      "4v4": [
+        73,
+        152
+      ],
+      "4v5": [
+        46,
+        142
+      ],
+      "5v3": [
+        66,
+        79
+      ],
+      "3v5": [
+        8,
+        70
+      ],
+      "3v3": [
+        47,
+        105
+      ],
+      "2v2": [
+        41,
+        76
+      ]
+    },
+    "killTiming": {
+      "meEarly": [
+        45,
+        167
+      ],
+      "meLate": [
+        62,
+        167
+      ],
+      "refEarly": [
+        293,
+        1122
+      ],
+      "refLate": [
+        343,
+        1122
+      ]
+    },
+    "score": {
+      "led20": [
+        10,
+        14
+      ],
+      "trail02": [
+        6,
+        15
+      ],
+      "ot": [
+        7,
+        13
+      ],
+      "otRounds": [
+        16,
+        31
+      ]
+    },
+    "pressure": {
+      "mine": [
+        23,
+        37
+      ],
+      "theirs": [
+        21,
+        48
+      ]
+    },
+    "postClutch": {
+      "afterLost": [
+        12,
+        30
+      ],
+      "afterWon": [
+        3,
+        7
+      ],
+      "afterAnyLost": [
+        53,
+        128
+      ]
+    },
+    "noKill": {
+      "alive": [
+        36,
+        40
+      ],
+      "died": [
+        39,
+        137
+      ],
+      "diedWithKill": [
+        15,
+        60
+      ]
+    },
+    "rival": {
+      "with": [
+        6,
+        18
+      ],
+      "without": [
+        18,
+        33
+      ]
+    },
+    "teams": {
+      "meRP": 3460,
+      "matesRP": 3458,
+      "enemiesRP": 3411,
+      "matesKD": 1.03,
+      "enemiesKD": 1.0,
+      "teamKills": 1059,
+      "enemyKills": 1060
+    },
+    "clutchBy": [
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        2,
+        15
+      ],
+      [
+        0,
+        11
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "clutchByRef": [
+      [
+        15,
+        21
+      ],
+      [
+        15,
+        33
+      ],
+      [
+        1,
+        33
+      ],
+      [
+        1,
+        24
+      ],
+      [
+        0,
+        11
+      ]
+    ],
+    "refLabel": "outros jogadores com K/D 1,2+ nessas mesmas partidas",
+    "opsRole": {
+      "Zofia": [
+        13,
+        7,
+        6,
+        2,
+        1,
+        3,
+        10
+      ],
+      "Ash": [
+        14,
+        3,
+        4,
+        2,
+        1,
+        4,
+        8
+      ],
+      "Grim": [
+        16,
+        10,
+        6,
+        3,
+        0,
+        2,
+        3
+      ],
+      "Goyo": [
+        10,
+        5,
+        2,
+        1,
+        3,
+        1,
+        8
+      ],
+      "Castle": [
+        12,
+        7,
+        5,
+        1,
+        1,
+        1,
+        7
+      ],
+      "Wamai": [
+        23,
+        14,
+        6,
+        4,
+        3,
+        5,
+        11
+      ],
+      "Melusi": [
+        23,
+        11,
+        6,
+        5,
+        4,
+        3,
+        13
+      ],
+      "Nomad": [
+        13,
+        5,
+        4,
+        0,
+        1,
+        3,
+        6
+      ],
+      "Thermite": [
+        21,
+        7,
+        10,
+        0,
+        5,
+        5,
+        18
+      ],
+      "Lion": [
+        20,
+        8,
+        3,
+        3,
+        5,
+        1,
+        11
+      ]
+    },
+    "trend": {
+      "last": {
+        "w": 7,
+        "n": 15,
+        "kd": 0.85,
+        "esr": [
+          4,
+          8
+        ],
+        "rp": 2
+      },
+      "rest": {
+        "w": 17,
+        "n": 36,
+        "kd": 0.83,
+        "esr": [
+          19,
+          34
+        ],
+        "rp": -0.8
+      }
+    }
   }
 }

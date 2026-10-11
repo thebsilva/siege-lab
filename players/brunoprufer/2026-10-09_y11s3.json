@@ -855,7 +855,39 @@
       "seasonWR": 100.0,
       "kd": 1.0,
       "atkWR": 66.7,
-      "defWR": 66.7
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Thorn",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Fortress",
@@ -863,7 +895,53 @@
       "seasonWR": 83.3,
       "kd": 1.94,
       "atkWR": 64.3,
-      "defWR": 66.7
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Thorn",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 3.5,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Striker",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 4.0,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Bank",
@@ -871,7 +949,60 @@
       "seasonWR": 83.3,
       "kd": 1.79,
       "atkWR": 60.0,
-      "defWR": 75.0
+      "defWR": 75.0,
+      "def": [
+        {
+          "name": "Goyo",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 4.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Striker",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "IQ",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Chalet",
@@ -879,7 +1010,67 @@
       "seasonWR": 66.7,
       "kd": 1.2,
       "atkWR": 60.6,
-      "defWR": 62.1
+      "defWR": 62.1,
+      "def": [
+        {
+          "name": "Kaid",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "IQ",
+          "wr": 54,
+          "rounds": 13,
+          "kd": 1.22
+        },
+        {
+          "name": "Ash",
+          "wr": 80,
+          "rounds": 5,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Striker",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 2.5,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "avoid": "Kaid na defesa (33% em 6 rounds)."
     },
     {
       "name": "Nighthaven Labs",
@@ -887,7 +1078,66 @@
       "seasonWR": 55.6,
       "kd": 1.2,
       "atkWR": 60.9,
-      "defWR": 51.9
+      "defWR": 51.9,
+      "def": [
+        {
+          "name": "Thorn",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 88,
+          "rounds": 8,
+          "kd": 4.0
+        },
+        {
+          "name": "Striker",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 1.33,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Villa",
@@ -895,7 +1145,67 @@
       "seasonWR": 50.0,
       "kd": 1.29,
       "atkWR": 43.6,
-      "defWR": 59.5
+      "defWR": 59.5,
+      "def": [
+        {
+          "name": "Sentry",
+          "wr": 45,
+          "rounds": 11,
+          "kd": 2.0
+        },
+        {
+          "name": "Goyo",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 0.25,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 5.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 2.5,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 57,
+          "rounds": 7,
+          "kd": 1.75,
+          "small": true
+        },
+        {
+          "name": "IQ",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 1.2,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Striker",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "avoid": "IQ no ataque (33% em 6 rounds)."
     },
     {
       "name": "Skyscraper",
@@ -903,7 +1213,53 @@
       "seasonWR": 50.0,
       "kd": 1.29,
       "atkWR": 45.5,
-      "defWR": 47.6
+      "defWR": 47.6,
+      "def": [
+        {
+          "name": "Thorn",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Striker",
+          "wr": 80,
+          "rounds": 5,
+          "kd": 3.5,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 3.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Calypso Casino",
@@ -911,7 +1267,60 @@
       "seasonWR": 50.0,
       "kd": 0.89,
       "atkWR": 33.3,
-      "defWR": 53.8
+      "defWR": 53.8,
+      "def": [
+        {
+          "name": "Sentry",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 4.0,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Zofia",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Theme Park",
@@ -920,7 +1329,60 @@
       "kd": 1.67,
       "atkWR": 16.7,
       "defWR": 80.0,
-      "note": "Ataque: 2 de 12 rounds nesta season."
+      "note": "Ataque: 2 de 12 rounds nesta season.",
+      "def": [
+        {
+          "name": "Goyo",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 6.0,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "IQ",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 2.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Kafe Dostoyevsky",
@@ -928,7 +1390,59 @@
       "seasonWR": 45.5,
       "kd": 1.26,
       "atkWR": 46.2,
-      "defWR": 51.6
+      "defWR": 51.6,
+      "def": [
+        {
+          "name": "Sentry",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 1.67,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 6.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 2.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Twitch",
+          "wr": 62,
+          "rounds": 16,
+          "kd": 2.33
+        },
+        {
+          "name": "Ash",
+          "wr": 20,
+          "rounds": 5,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Lair",
@@ -936,7 +1450,68 @@
       "seasonWR": 37.5,
       "kd": 1.37,
       "atkWR": 54.2,
-      "defWR": 31.6
+      "defWR": 31.6,
+      "def": [
+        {
+          "name": "Kaid",
+          "wr": 29,
+          "rounds": 7,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Striker",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 2.33,
+          "small": true
+        },
+        {
+          "name": "IQ",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Ash",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 4.0,
+          "small": true
+        }
+      ],
+      "avoid": "Kaid na defesa (29% em 7 rounds)."
     },
     {
       "name": "Clubhouse",
@@ -944,7 +1519,65 @@
       "seasonWR": 33.3,
       "kd": 1.24,
       "atkWR": 44.1,
-      "defWR": 37.1
+      "defWR": 37.1,
+      "def": [
+        {
+          "name": "Thorn",
+          "wr": 50,
+          "rounds": 16,
+          "kd": 1.45
+        },
+        {
+          "name": "Sentry",
+          "wr": 22,
+          "rounds": 9,
+          "kd": 0.88
+        },
+        {
+          "name": "Kaid",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 25,
+          "rounds": 8,
+          "kd": 1.0
+        },
+        {
+          "name": "Striker",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Zofia",
+          "wr": 0,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Sentry na defesa (22% em 9 rounds)."
     },
     {
       "name": "Coastline",
@@ -952,7 +1585,53 @@
       "seasonWR": 33.3,
       "kd": 0.95,
       "atkWR": 53.8,
-      "defWR": 36.0
+      "defWR": 36.0,
+      "def": [
+        {
+          "name": "Kaid",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Goyo",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 43,
+          "rounds": 7,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Twitch",
+          "wr": 100,
+          "rounds": 7,
+          "kd": 3.67,
+          "small": true
+        }
+      ]
     },
     {
       "name": "Border",
@@ -960,7 +1639,53 @@
       "seasonWR": 33.3,
       "kd": 1.5,
       "atkWR": 70.0,
-      "defWR": 25.0
+      "defWR": 25.0,
+      "def": [
+        {
+          "name": "Goyo",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Sentry",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Kaid",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Twitch",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "IQ",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
     }
   ],
   "recentMatches": [
@@ -1140,6 +1865,756 @@
       301
     ]
   },
+  "opsMaps": {
+    "Ash": [
+      [
+        "Chalet",
+        5,
+        4,
+        3,
+        3
+      ],
+      [
+        "Coastline",
+        7,
+        3,
+        5,
+        5
+      ],
+      [
+        "Villa",
+        7,
+        4,
+        7,
+        4
+      ],
+      [
+        "Calypso Casino",
+        3,
+        0,
+        1,
+        3
+      ],
+      [
+        "Lair",
+        3,
+        2,
+        3,
+        2
+      ],
+      [
+        "Consulate",
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        "Bank",
+        4,
+        2,
+        4,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        5,
+        1,
+        2,
+        4
+      ],
+      [
+        "Clubhouse",
+        8,
+        2,
+        7,
+        7
+      ],
+      [
+        "Skyscraper",
+        3,
+        2,
+        1,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        8,
+        7,
+        8,
+        2
+      ],
+      [
+        "Theme Park",
+        3,
+        1,
+        6,
+        1
+      ]
+    ],
+    "Thorn": [
+      [
+        "Skyscraper",
+        1,
+        1,
+        2,
+        1
+      ],
+      [
+        "Fortress",
+        4,
+        3,
+        7,
+        2
+      ],
+      [
+        "Lair",
+        3,
+        2,
+        4,
+        2
+      ],
+      [
+        "Bank",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Consulate",
+        1,
+        1,
+        2,
+        0
+      ],
+      [
+        "Clubhouse",
+        16,
+        8,
+        16,
+        11
+      ],
+      [
+        "Villa",
+        4,
+        3,
+        5,
+        1
+      ],
+      [
+        "Chalet",
+        4,
+        3,
+        2,
+        3
+      ],
+      [
+        "Coastline",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Calypso Casino",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        3,
+        5,
+        3
+      ]
+    ],
+    "Twitch": [
+      [
+        "Border",
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        "Theme Park",
+        3,
+        0,
+        3,
+        3
+      ],
+      [
+        "Consulate",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Lair",
+        3,
+        2,
+        4,
+        1
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Fortress",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Chalet",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Coastline",
+        7,
+        7,
+        11,
+        3
+      ],
+      [
+        "Skyscraper",
+        4,
+        2,
+        3,
+        2
+      ],
+      [
+        "Calypso Casino",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Villa",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Nighthaven Labs",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        16,
+        10,
+        21,
+        9
+      ]
+    ],
+    "Sentry": [
+      [
+        "Coastline",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        2,
+        3,
+        1
+      ],
+      [
+        "Bank",
+        2,
+        2,
+        1,
+        1
+      ],
+      [
+        "Villa",
+        11,
+        5,
+        14,
+        7
+      ],
+      [
+        "Calypso Casino",
+        3,
+        2,
+        4,
+        1
+      ],
+      [
+        "Chalet",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        5,
+        3,
+        2,
+        3
+      ],
+      [
+        "Border",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Clubhouse",
+        9,
+        2,
+        7,
+        8
+      ],
+      [
+        "Theme Park",
+        1,
+        1,
+        0,
+        0
+      ]
+    ],
+    "Kaid": [
+      [
+        "Chalet",
+        6,
+        2,
+        4,
+        4
+      ],
+      [
+        "Clubhouse",
+        5,
+        3,
+        2,
+        3
+      ],
+      [
+        "Lair",
+        7,
+        2,
+        6,
+        6
+      ],
+      [
+        "Villa",
+        3,
+        3,
+        5,
+        2
+      ],
+      [
+        "Bank",
+        1,
+        1,
+        4,
+        0
+      ],
+      [
+        "Fortress",
+        3,
+        3,
+        2,
+        2
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Coastline",
+        4,
+        3,
+        3,
+        2
+      ],
+      [
+        "Border",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        3,
+        6,
+        1
+      ]
+    ],
+    "Striker": [
+      [
+        "Villa",
+        4,
+        1,
+        3,
+        3
+      ],
+      [
+        "Fortress",
+        3,
+        2,
+        4,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        5,
+        3,
+        4,
+        3
+      ],
+      [
+        "Skyscraper",
+        5,
+        4,
+        7,
+        2
+      ],
+      [
+        "Chalet",
+        3,
+        2,
+        5,
+        2
+      ],
+      [
+        "Bank",
+        4,
+        2,
+        2,
+        3
+      ],
+      [
+        "Clubhouse",
+        4,
+        2,
+        3,
+        2
+      ],
+      [
+        "Lair",
+        5,
+        2,
+        7,
+        3
+      ]
+    ],
+    "IQ": [
+      [
+        "Border",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Bank",
+        4,
+        2,
+        4,
+        4
+      ],
+      [
+        "Villa",
+        6,
+        2,
+        6,
+        5
+      ],
+      [
+        "Chalet",
+        13,
+        7,
+        11,
+        9
+      ],
+      [
+        "Theme Park",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Lair",
+        4,
+        2,
+        3,
+        1
+      ]
+    ],
+    "Goyo": [
+      [
+        "Border",
+        3,
+        1,
+        3,
+        2
+      ],
+      [
+        "Bank",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Nighthaven Labs",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        2,
+        1,
+        2,
+        1
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Lair",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Skyscraper",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Coastline",
+        3,
+        2,
+        0,
+        2
+      ],
+      [
+        "Theme Park",
+        3,
+        3,
+        3,
+        0
+      ],
+      [
+        "Villa",
+        5,
+        3,
+        1,
+        4
+      ],
+      [
+        "Calypso Casino",
+        1,
+        1,
+        2,
+        1
+      ]
+    ],
+    "Zofia": [
+      [
+        "Fortress",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Lair",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Chalet",
+        2,
+        2,
+        1,
+        0
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Clubhouse",
+        4,
+        0,
+        3,
+        3
+      ],
+      [
+        "Calypso Casino",
+        5,
+        3,
+        6,
+        4
+      ],
+      [
+        "Nighthaven Labs",
+        2,
+        1,
+        0,
+        2
+      ],
+      [
+        "Theme Park",
+        1,
+        0,
+        2,
+        1
+      ],
+      [
+        "Skyscraper",
+        1,
+        1,
+        3,
+        0
+      ],
+      [
+        "Villa",
+        5,
+        2,
+        6,
+        3
+      ]
+    ],
+    "Bandit": [
+      [
+        "Fortress",
+        1,
+        1,
+        2,
+        0
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        2,
+        3,
+        2
+      ],
+      [
+        "Border",
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        "Villa",
+        3,
+        3,
+        1,
+        2
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Calypso Casino",
+        2,
+        2,
+        1,
+        1
+      ],
+      [
+        "Theme Park",
+        2,
+        2,
+        1,
+        1
+      ],
+      [
+        "Lair",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Chalet",
+        2,
+        1,
+        1,
+        2
+      ],
+      [
+        "Coastline",
+        1,
+        1,
+        2,
+        0
+      ],
+      [
+        "Consulate",
+        1,
+        0,
+        0,
+        1
+      ]
+    ]
+  },
   "rpRate": {
     "win": 29.8,
     "loss": -27.1,
@@ -1209,5 +2684,490 @@
       0,
       0
     ]
+  },
+  "coach": {
+    "matches": 105,
+    "rounds": 600,
+    "lastAlive": {
+      "atk": [
+        29,
+        158
+      ],
+      "def": [
+        26,
+        167
+      ]
+    },
+    "lastAliveRef": {
+      "atk": [
+        103,
+        394
+      ],
+      "def": [
+        115,
+        420
+      ]
+    },
+    "firstDeath": {
+      "atk": [
+        54,
+        299
+      ],
+      "def": [
+        46,
+        301
+      ]
+    },
+    "firstDeathRef": {
+      "atk": [
+        139,
+        967
+      ],
+      "def": [
+        145,
+        961
+      ]
+    },
+    "alone": {
+      "atk": [
+        3,
+        29,
+        3.0
+      ],
+      "def": [
+        4,
+        26,
+        3.0
+      ]
+    },
+    "sideRounds": {
+      "atk": [
+        151,
+        299
+      ],
+      "def": [
+        155,
+        301
+      ]
+    },
+    "hardBreach": {
+      "with": [
+        96,
+        184
+      ],
+      "without": [
+        55,
+        115
+      ],
+      "self": [
+        24,
+        40
+      ]
+    },
+    "opening": {
+      "kill": [
+        200,
+        305
+      ],
+      "death": [
+        106,
+        295
+      ]
+    },
+    "multi": {
+      "twoPlus": [
+        103,
+        138
+      ],
+      "oneOrLess": [
+        203,
+        462
+      ]
+    },
+    "kills": {
+      "total": 514,
+      "lostRounds": 158,
+      "alone": 33,
+      "aloneLost": 25
+    },
+    "trades": {
+      "mateDeaths": 1684,
+      "byMe": 158,
+      "byOthers": 384,
+      "myDeaths": 398,
+      "meTraded": 105
+    },
+    "states": {
+      "5v4": [
+        200,
+        305
+      ],
+      "4v4": [
+        163,
+        301
+      ],
+      "4v5": [
+        106,
+        295
+      ],
+      "5v3": [
+        126,
+        164
+      ],
+      "3v5": [
+        17,
+        135
+      ],
+      "3v3": [
+        106,
+        221
+      ],
+      "2v2": [
+        87,
+        164
+      ]
+    },
+    "killTiming": {
+      "meEarly": [
+        153,
+        514
+      ],
+      "meLate": [
+        137,
+        514
+      ],
+      "refEarly": [
+        535,
+        2094
+      ],
+      "refLate": [
+        665,
+        2094
+      ]
+    },
+    "score": {
+      "led20": [
+        25,
+        31
+      ],
+      "trail02": [
+        7,
+        26
+      ],
+      "ot": [
+        12,
+        21
+      ],
+      "otRounds": [
+        29,
+        51
+      ]
+    },
+    "pressure": {
+      "mine": [
+        53,
+        96
+      ],
+      "theirs": [
+        28,
+        78
+      ]
+    },
+    "postClutch": {
+      "afterLost": [
+        19,
+        41
+      ],
+      "afterWon": [
+        3,
+        6
+      ],
+      "afterAnyLost": [
+        104,
+        245
+      ]
+    },
+    "noKill": {
+      "alive": [
+        32,
+        34
+      ],
+      "died": [
+        61,
+        239
+      ],
+      "diedWithKill": [
+        52,
+        160
+      ]
+    },
+    "rival": {
+      "with": [
+        6,
+        16
+      ],
+      "without": [
+        48,
+        89
+      ]
+    },
+    "teams": {
+      "meRP": 3440,
+      "matesRP": 3389,
+      "enemiesRP": 3373,
+      "matesKD": 0.97,
+      "enemiesKD": 0.97,
+      "teamKills": 2162,
+      "enemyKills": 2096
+    },
+    "clutchBy": [
+      [
+        4,
+        6
+      ],
+      [
+        3,
+        14
+      ],
+      [
+        0,
+        15
+      ],
+      [
+        0,
+        13
+      ],
+      [
+        0,
+        7
+      ]
+    ],
+    "clutchByRef": [
+      [
+        29,
+        39
+      ],
+      [
+        17,
+        59
+      ],
+      [
+        6,
+        58
+      ],
+      [
+        2,
+        39
+      ],
+      [
+        0,
+        23
+      ]
+    ],
+    "refLabel": "outros jogadores com K/D 1,2+ nessas mesmas partidas",
+    "opsRole": {
+      "Thorn": [
+        46,
+        28,
+        17,
+        8,
+        11,
+        14,
+        49
+      ],
+      "Sentry": [
+        38,
+        17,
+        13,
+        4,
+        10,
+        8,
+        31
+      ],
+      "Ash": [
+        58,
+        30,
+        23,
+        9,
+        15,
+        12,
+        49
+      ],
+      "IQ": [
+        29,
+        14,
+        8,
+        6,
+        11,
+        4,
+        25
+      ],
+      "Goyo": [
+        26,
+        12,
+        8,
+        2,
+        3,
+        5,
+        15
+      ],
+      "Ace": [
+        12,
+        6,
+        5,
+        2,
+        2,
+        1,
+        8
+      ],
+      "Dokkaebi": [
+        13,
+        4,
+        4,
+        2,
+        2,
+        2,
+        6
+      ],
+      "Twitch": [
+        45,
+        23,
+        16,
+        10,
+        12,
+        11,
+        46
+      ],
+      "Nomad": [
+        19,
+        8,
+        4,
+        5,
+        3,
+        5,
+        15
+      ],
+      "Flores": [
+        16,
+        10,
+        2,
+        3,
+        4,
+        4,
+        13
+      ],
+      "Striker": [
+        33,
+        18,
+        14,
+        4,
+        9,
+        10,
+        35
+      ],
+      "Bandit": [
+        20,
+        13,
+        8,
+        4,
+        1,
+        5,
+        14
+      ],
+      "Kaid": [
+        35,
+        21,
+        13,
+        4,
+        10,
+        5,
+        33
+      ],
+      "Warden": [
+        11,
+        6,
+        1,
+        3,
+        1,
+        0,
+        5
+      ],
+      "Zofia": [
+        26,
+        10,
+        8,
+        4,
+        7,
+        4,
+        21
+      ],
+      "Hibana": [
+        14,
+        10,
+        9,
+        2,
+        1,
+        7,
+        15
+      ],
+      "Mute": [
+        18,
+        3,
+        3,
+        1,
+        4,
+        2,
+        15
+      ],
+      "Melusi": [
+        12,
+        6,
+        4,
+        0,
+        3,
+        0,
+        6
+      ],
+      "Valkyrie": [
+        16,
+        9,
+        5,
+        2,
+        5,
+        3,
+        17
+      ],
+      "Thermite": [
+        14,
+        8,
+        6,
+        4,
+        4,
+        2,
+        9
+      ]
+    },
+    "trend": {
+      "last": {
+        "w": 7,
+        "n": 15,
+        "kd": 1.19,
+        "esr": [
+          13,
+          20
+        ],
+        "rp": 0.4
+      },
+      "rest": {
+        "w": 47,
+        "n": 90,
+        "kd": 1.3,
+        "esr": [
+          51,
+          88
+        ],
+        "rp": 1.1
+      }
+    }
   }
 }

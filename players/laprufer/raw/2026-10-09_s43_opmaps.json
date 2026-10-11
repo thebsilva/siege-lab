@@ -1,0 +1,11 @@
+{"season":43,"keys":["map","roundsPlayed","roundsWon","kills","deaths"],"ops":{
+"Wamai":[["Skyscraper",4,3,0,4],["Calypso Casino",14,8,6,9],["Clubhouse",2,0,1,2],["Villa",2,2,3,1],["Lair",1,1,1,1]],
+"Melusi":[["Skyscraper",1,0,0,1],["Calypso Casino",2,2,0,1],["Theme Park",1,1,0,1],["Consulate",1,0,2,1],["Coastline",2,0,2,2],["Clubhouse",6,1,2,5],["Nighthaven Labs",3,1,0,2],["Kafe Dostoyevsky",4,4,7,2],["Lair",1,0,0,1],["Villa",1,1,0,1],["Fortress",1,1,0,1]],
+"Thermite":[["Nighthaven Labs",1,1,2,0],["Theme Park",1,0,1,1],["Clubhouse",2,0,3,1],["Skyscraper",2,1,3,1],["Coastline",1,0,0,1],["Villa",6,2,5,2],["Lair",2,1,1,1],["Kafe Dostoyevsky",2,0,1,2],["Calypso Casino",1,0,0,1],["Chalet",3,2,2,1]],
+"Lion":[["Border",1,0,1,1],["Nighthaven Labs",3,1,2,2],["Clubhouse",1,0,0,1],["Coastline",3,0,0,3],["Fortress",1,0,1,1],["Calypso Casino",6,3,4,4],["Kafe Dostoyevsky",3,3,2,3],["Chalet",2,1,1,2]],
+"Grim":[["Bank",1,1,0,1],["Lair",3,3,0,1],["Theme Park",2,1,1,1],["Skyscraper",1,0,0,1],["Calypso Casino",4,1,0,4],["Kafe Dostoyevsky",4,3,2,2],["Chalet",1,1,0,0]],
+"Ash":[["Fortress",1,0,0,1],["Nighthaven Labs",1,1,1,0],["Border",1,0,0,1],["Clubhouse",1,0,0,1],["Theme Park",1,0,0,1],["Kafe Dostoyevsky",3,0,0,3],["Villa",3,1,3,2],["Consulate",2,1,4,1],["Bank",1,0,0,0]],
+"Nomad":[["Coastline",3,0,0,3],["Villa",3,1,2,2],["Skyscraper",1,1,1,0],["Calypso Casino",3,1,2,2],["Lair",1,1,1,1],["Clubhouse",2,1,0,1]],
+"Zofia":[["Villa",6,3,6,3],["Consulate",2,1,3,0],["Coastline",1,0,0,1],["Kafe Dostoyevsky",1,1,0,0],["Calypso Casino",2,2,0,2],["Border",1,0,1,1]],
+"Castle":[["Villa",3,1,2,2],["Chalet",4,2,1,2],["Clubhouse",1,1,2,1],["Kafe Dostoyevsky",4,3,2,2]],
+"Goyo":[["Bank",2,0,2,2],["Kafe Dostoyevsky",3,2,3,3],["Clubhouse",2,1,0,1],["Border",2,1,2,2],["Coastline",1,1,1,0]]}}

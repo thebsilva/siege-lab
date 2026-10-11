@@ -47,10 +47,12 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 - Mapa sem entrada no playbook cai no `default`.
 - **Pendente/upgrade:** callouts específicos por site exigem uma rodada de pesquisa por mapa antes de entrar.
 
-## Jogadores carregados (coleta de 09/10/2026)
-- **superallfa** — Y11S3 (em andamento, Ouro III, 2.702 RP, com diagnóstico round a round) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
+## Jogadores carregados (coleta de 09/10/2026; kill feed e mapas por operador dos amigos coletados em 11/10)
+- **superallfa** — Y11S3 (em andamento, Ouro III, 2.702 RP) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
 - **laprufer** — Y11S3 (em andamento, Platina I) · Y11S2 (fechada) · Y11S1.
 - **brunoprufer** — Y11S3 (em andamento, Esmeralda V) · Y11S2 (fechada) · Y11S1.
+- Os três têm, na Y11S3, o kill feed das partidas (diagnóstico round a round no Coach) e o mapa de cada um dos
+  10 operadores mais jogados (card do mapa com o histórico real do jogador). Season fechada segue só com os números do tracker.
 
 ## Telas / features
 Início (KPIs + rank + deltas, falta pro próximo rank, forma recente, "o que mudou desde {season}", plano de jogo) ·
@@ -136,6 +138,13 @@ botão com alvo de toque ≥ 40 px; texto de leitura ≥ 11 px (10 px só em ró
    ```
    O formato de cada arquivo está no topo do `ingest.py`. opmaps e rounds são opcionais (sem eles, o card do
    mapa usa os dados da season e a aba Coach mostra só estilo, fila e tilt).
+   Conferir antes do ingest: 10 jogadores por partida, um só `is_me`, K/D/A da página = K/D/A da lista, e a soma dos
+   mapas de cada operador = total do operador. Round final sem evento (partida que acaba por desistência) é normal:
+   fica fora dos cards por evento, mas ainda conta no placar por lado.
+   A página do tracker não consegue `fetch` pra `127.0.0.1`: o dado volta por fragmento de URL
+   (`location.href = http://127.0.0.1:PORTA/recv.html#name=<arquivo>&d=<dado>`), numa página local que faz POST pra um
+   mini-servidor que grava o arquivo. Depois do ingest, `git diff` nos snapshots das seasons fechadas deve vir vazio;
+   se mudou, a lista de partidas ganhou ou perdeu datas.
 2. `python3 ingest.py AAAA-MM-DD` (gera os snapshots; season nova = acrescentar em `SEASONS`/`CURRENT`/`SEASON_START`).
 3. `python3 build.py` (refaz `docs/*.html`, a landing e os dois PNG de `docs/`)
 4. Commit + push → o Pages publica sozinho.
@@ -147,4 +156,3 @@ Preview local: o macOS bloqueia o servidor de preview dentro de `~/Documents`; c
   Opções: API paga tracker.gg (USD), coletor headless próprio, login Ubisoft do usuário. → gargalo #1 do SaaS.
 - Rodar o Fable pra achar pontos fracos do produto.
 - Escada de produto: briefing avulso ↔ assinatura (deep per-map e coach round a round = tier pago).
-- Coletar rounds dos amigos pra ligar o diagnóstico completo do Coach neles.
