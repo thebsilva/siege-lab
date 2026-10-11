@@ -302,34 +302,67 @@
   .ops{display:grid;grid-template-columns:1fr;gap:12px}
   .opcard{padding:15px}
   .opcard.gap{margin-top:12px}
-  .opcard h3{font-size:var(--fs-3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-  .tag{font-size:var(--fs-1);font-weight:800;padding:3px 8px;border-radius:var(--r-1);letter-spacing:.5px}
+  .opcard h3{font-size:var(--fs-3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .tag{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-1);font-weight:800;padding:3px 8px;border-radius:var(--r-1);letter-spacing:.5px}
+  .tag .ic{width:12px;height:12px}
   .tag.def{background:rgba(249,115,22,.15);color:var(--def);border:1px solid rgba(249,115,22,.35)}
   .tag.atk{background:rgba(59,130,246,.15);color:var(--atk-t);border:1px solid rgba(59,130,246,.35)}
   .tag.cut{background:rgba(240,81,63,.13);color:var(--ban-t);border:1px solid rgba(240,81,63,.35)}
-  .oprow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--hair)}
-  .oprow:first-of-type{border-top:none}
-  .oprow .nm{font-weight:600;font-size:var(--fs-4)}
-  .oprow .st{font-size:var(--fs-3);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
-  .oprow .st b{color:var(--txt)} .star{color:var(--gold)}
-  .oprow.clk{cursor:pointer}
-  .fchips{display:flex;gap:7px;margin-bottom:10px}
-  .fchip{font-size:var(--fs-3);padding:5px 11px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);font-weight:600;color:var(--muted);cursor:pointer}
+  .tag.sm{font-size:var(--fs-1);padding:1px 6px;margin-left:6px;vertical-align:1px}
+  .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  /* tabela dos cards: nome à esquerda, três colunas de número à direita */
+  .ot{table-layout:fixed;margin-top:0}
+  .ot th{vertical-align:bottom;white-space:normal;line-height:1.2;padding:0 0 6px 4px}
+  .ot td{height:44px;padding:6px 0 6px 4px;vertical-align:middle}
+  .ot th:first-child,.ot td:first-child{padding-left:0}
+  .ot td b{font-size:var(--fs-4)}
+  .ot td small{display:block;line-height:1.25}
+  .ot td.kd{color:var(--txt-2)}
+  .ot td.nodata{font-size:var(--fs-2);white-space:normal}
+  .ot tr.clk{cursor:pointer}
+  .ot tr.clk:active td,.optable tr.clk:active td{background:var(--panel2)}
+  .ot col.c-w{width:88px} .ot col.c-k{width:44px} .ot col.c-r{width:52px}
+  .opcell{display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-width:0}
+  .opn{font-weight:600;font-size:var(--fs-4);color:var(--txt);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  tr.clk:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .sortb:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;border-radius:var(--r-1)}
+  .star{color:var(--gold);font-size:var(--fs-3);line-height:1}
+  .chipx{font-size:var(--fs-1);font-weight:700;letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted);background:var(--chip);border:1px solid var(--chipline);border-radius:var(--r-1);padding:1px 5px;white-space:nowrap}
+  .otag{flex:1 0 100%;font-size:var(--fs-2);color:var(--muted);line-height:1.25}
+  .fchips{display:flex;gap:7px;margin-bottom:6px}
+  .fchip{font-size:var(--fs-3);min-height:40px;padding:0 14px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);font-weight:600;color:var(--muted);cursor:pointer}
   .fchip.on{color:var(--txt);border-color:var(--gold);background:rgba(244,194,13,.08)}
-  .optable tr{cursor:pointer}
-  .optable th{cursor:pointer}
+  /* tabela geral: colunas de largura fixa, cabeçalho é botão de ordenar */
+  .optable{table-layout:fixed;margin-top:4px}
+  .optable td:last-child{white-space:normal}
+  .optable tr.clk{cursor:pointer}
   .optable tr.dim{color:var(--muted)}
-  .optable th.on{color:var(--gold)}
-  .tag.sm{font-size:var(--fs-1);padding:1px 5px;margin-left:6px;vertical-align:1px}
+  .optable th{padding:0;white-space:normal;vertical-align:bottom;line-height:1.15}
+  .optable th:first-child{padding:0 0 4px 4px}
+  .optable td{padding:6px 4px}
+  .optable td:first-child{padding-left:2px}
+  .optable col.c-r{width:11%} .optable col.c-w{width:24%} .optable col.c-k{width:12%} .optable col.c-h{width:12%} .optable col.c-f{width:16%}
+  .sortb{display:flex;align-items:flex-end;justify-content:flex-end;width:100%;min-height:40px;padding:0 4px 4px;font:inherit;font-weight:700;letter-spacing:inherit;text-transform:inherit;line-height:1.15;text-align:right;color:inherit;background:none;border:0;border-bottom:2px solid transparent;cursor:pointer}
+  .optable th.on .sortb{color:var(--gold);border-bottom-color:var(--gold)}
+  .sd{display:inline-flex;flex:none;line-height:0}
+  .sd .ic{width:14px;height:14px;stroke-width:2.1}
+  .sd.def{color:var(--def)} .sd.atk{color:var(--atk-t)}
   .otwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .optable th{white-space:nowrap}
   @media(max-width:560px){
-    #allops{padding-left:8px;padding-right:8px}
-    .ctable.optable .ar{display:none}
-    .ctable.optable th{font-size:var(--fs-1);letter-spacing:.2px;padding:0 3px 6px}
-    .ctable.optable td{font-size:var(--fs-3);padding:7px 3px}
-    .ctable.optable td small{display:none}
-    .ctable.optable .tag.sm{font-size:var(--fs-1);padding:1px 3px;margin-left:4px}
+    #allops{margin-left:-16px;margin-right:-16px;border-radius:0;border-left:0;border-right:0;padding-left:6px;padding-right:6px}   /* tabela densa: encosta na borda da tela */
+    .optable{min-width:346px}
+    .optable col.c-r{width:52px} .optable col.c-w{width:54px} .optable col.c-k{width:40px} .optable col.c-h{width:42px} .optable col.c-f{width:66px}
+    .optable th{font-size:var(--fs-1);letter-spacing:.2px}
+    .sortb{padding:0 2px 4px 0}
+    .optable td{font-size:var(--fs-3)}
+    .optable td small{display:none}
+    .optable .opn{font-size:var(--fs-3)}
+    .opcell{gap:3px 4px}
+  }
+  @media(max-width:359px),(min-width:900px) and (max-width:1049px){      /* card estreito: celular pequeno ou 3 colunas em tela média */
+    .opcard{padding:12px}
+    .ot col.c-w{width:78px} .ot col.c-k{width:36px} .ot col.c-r{width:54px}
+    .opn{font-size:var(--fs-3)}
   }
 
   /* EVOLUÇÃO */
@@ -455,6 +488,9 @@
     .picks{display:grid;grid-template-columns:1fr 1fr}
     .pside+.pside{border-top:0;border-left:1px solid var(--line)}
     .ops{grid-template-columns:repeat(3,1fr)}
+    .opcard.gap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:32px;align-items:start}
+    .opcard.gap h3{grid-column:1/-1}
+    .opcard.gap .fsrc{margin-top:10px;font-size:var(--fs-3);line-height:1.5}
   }
 </style>
 </head>
@@ -822,29 +858,45 @@ function renderMapas(){
 }
 
 /* ---------- OPERADORES ---------- */
+function rowKey(ev,el){               // Enter/Espaço na linha abre a ficha (seta e ° dentro da linha cuidam do próprio teclado)
+  if(ev.target!==el) return;
+  if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openOpSheet(el.dataset.op); }
+}
+function opTag(tag){                  // "main · 128 rds — fragga e perde" → main + nota; o "N rds" já tem coluna própria
+  const p=String(tag||"").split(/\s+[·—]\s+/).map(x=>x.trim()).filter(Boolean);
+  return {main:p.includes("main"), notes:p.filter(x=>x!=="main"&&!/^\d+ rds$/.test(x))};
+}
 function opPanel(list, pl){
   const p=byName(pl);
-  return (list||[]).map(o=>{
-    const kd=o.kd!=null?` · K/D ${fx(o.kd,2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
-    return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?smp("o"):""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
+  if(!(list||[]).length) return `<div class="empty">—</div>`;
+  const rows=list.map(o=>{
+    const t=opTag(o.tag);
+    return `<tr class="clk" tabindex="0" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)" onkeydown="rowKey(event,this)">
+      <td><div class="opcell"><span class="opn">${esc(o.name)}</span>${o.star?'<span class="star" aria-hidden="true">★</span><span class="sr">destaque</span>':""}${t.main?'<span class="chipx">main</span>':""}${t.notes.length?`<span class="otag">${esc(t.notes.join(" · "))}</span>`:""}</div></td>
+      <td><b>${o.wr}%</b>${o.small?smp("o"):""}${delta(o.wr,(p[o.name]||{}).wr,0)}</td>
+      <td class="kd">${o.kd!=null?fx(o.kd,2):"—"}</td>
+      <td>${o.rounds!=null?o.rounds:"—"}</td></tr>`;
   }).join("");
+  return `<table class="ctable ot"><colgroup><col><col class="c-w"><col class="c-k"><col class="c-r"></colgroup>
+    <tr><th>Operador</th><th>Rounds ganhos</th><th>K/D</th><th>Rounds</th></tr>${rows}</table>`;
 }
 function renderOps(){
   const cur=active, base=baselineOf(cur)||{};
   document.getElementById("scr-ops").innerHTML = `
-    <h2 class="sec">Onde investir<span class="hint">vs ${esc((baselineOf(active)||{}).season||"—")}</span></h2>
+    <h2 class="sec">Onde investir<span class="hint">${base.season?`vs ${esc(base.season)}`:"sem season anterior pra comparar"}</span></h2>
     <div class="ops">
-      <div class="opcard"><h3><span class="tag def">DEFESA</span> Suas mains</h3>${opPanel(cur.operatorsDef,base.operatorsDef)}</div>
-      <div class="opcard"><h3><span class="tag atk">ATAQUE</span> Suas mains</h3>${opPanel(cur.operatorsAtk,base.operatorsAtk)}</div>
-      <div class="opcard"><h3><span class="tag cut">CORTE / REPENSE</span></h3>${opPanel(cur.operatorsCut,base.operatorsCut)}</div>
+      <div class="opcard"><h3><span class="tag def">${ic("shield")}DEFESA</span> Suas mains</h3>${opPanel(cur.operatorsDef,base.operatorsDef)}</div>
+      <div class="opcard"><h3><span class="tag atk">${ic("sword")}ATAQUE</span> Suas mains</h3>${opPanel(cur.operatorsAtk,base.operatorsAtk)}</div>
+      <div class="opcard"><h3><span class="tag cut">${ic("x")}CORTE / REPENSE</span></h3>${opPanel(cur.operatorsCut,base.operatorsCut)}</div>
     </div>
+    <div class="fsrc">Rounds ganhos = % dos rounds que o time venceu com o operador. ★ = destaque do lado (1º da lista, 55%+ e 15+ rounds). main = o mais jogado do lado. Quem tem menos de 15 rounds vem depois na lista. Toque num operador pra abrir a ficha.</div>
     ${hardBreachCard(cur)}
     ${cur.opsAll?`<h2 class="sec">Todos os operadores<span class="hint">${cur.opsAll.length} jogados nesta season</span></h2>
     <div class="cbox" id="allops"></div>`:""}`;
   renderOpsTable();
 }
 let opsFilter="all", opsSort="r";
-const OPS_COLS=[["r","Rounds"],["wr","Vitórias"],["kd","K/D"],["hs","HS%"],["fb","1º duelo"]];
+const OPS_COLS=[["r","Rounds"],["wr","Rounds ganhos"],["kd","K/D"],["hs","HS%"],["fb","1º duelo"]];
 function opVal(o,k){
   if(k==="wr") return o.r?o.w/o.r:-1;
   if(k==="kd") return o.k/Math.max(1,o.d);
@@ -856,8 +908,8 @@ function renderOpsTable(){
   const cur=active, el=document.getElementById("allops");
   if(!el||!cur.opsAll) return;
   const chips=[["all","Tudo"],["d","Defesa"],["a","Ataque"]]
-    .map(([v,l])=>`<button class="fchip ${opsFilter===v?"on":""}" onclick="opsFilter='${v}';renderOpsTable()">${l}</button>`).join("");
-  const th=OPS_COLS.map(([k,l])=>`<th class="${opsSort===k?"on":""}" onclick="opsSort='${k}';renderOpsTable()">${l}${opsSort===k?'<span class="ar"> ↓</span>':""}</th>`).join("");
+    .map(([v,l])=>`<button type="button" class="fchip ${opsFilter===v?"on":""}" aria-pressed="${opsFilter===v}" onclick="opsFilter='${v}';renderOpsTable()">${l}</button>`).join("");
+  const th=OPS_COLS.map(([k,l])=>`<th class="${opsSort===k?"on":""}" aria-sort="${opsSort===k?"descending":"none"}"><button type="button" class="sortb" onclick="opsSort='${k}';renderOpsTable()">${l}</button></th>`).join("");
   const rows=cur.opsAll
     .filter(o=>opsFilter==="all"||o.s===opsFilter)
     .slice().sort((a,b)=>{
@@ -868,14 +920,14 @@ function renderOpsTable(){
       const kd=fx(o.k/Math.max(1,o.d),2);
       const hs=o.k?Math.round(100*o.hs/o.k)+"%":"—";
       const fb=(o.fb+o.fd)?`${o.fb} de ${o.fb+o.fd}`:"—";
-      return `<tr class="${o.r<8?"dim":""}" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)">
-        <td>${esc(o.n)}${o.r<8?" "+smp("o"):""}<span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEF":"ATK"}</span></td>
+      return `<tr class="clk${o.r<8?" dim":""}" tabindex="0" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)" onkeydown="rowKey(event,this)">
+        <td><div class="opcell"><span class="sd ${o.s==="d"?"def":"atk"}">${ic(o.s==="d"?"shield":"sword")}<span class="sr">${o.s==="d"?"Defesa":"Ataque"}</span></span><span class="opn">${esc(o.n)}</span>${o.r<8?smp("o"):""}</div></td>
         <td>${o.r}</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td>
         <td>${kd}</td><td>${hs}</td><td>${fb}</td></tr>`;
     }).join("");
   el.innerHTML=`<div class="fchips">${chips}</div>
-    <div class="otwrap"><table class="ctable optable"><tr><th>Operador</th>${th}</tr>${rows}</table></div>
-    <div class="fsrc">° abaixo de 8 rounds: indicativo, não veredito (nas ordenações por vitória, K/D, HS% e 1º duelo, esses ficam no fim). 1º duelo = first bloods × first deaths do tracker. Toque num operador pra abrir a ficha.</div>`;
+    <div class="otwrap"><table class="ctable optable"><colgroup><col class="c-n"><col class="c-r"><col class="c-w"><col class="c-k"><col class="c-h"><col class="c-f"></colgroup><tr><th>Operador</th>${th}</tr>${rows}</table></div>
+    <div class="fsrc">${ic("shield","cdef")} defesa · ${ic("sword","catk")} ataque. ° abaixo de 8 rounds: indicativo, não veredito (nas ordenações por rounds ganhos, K/D, HS% e 1º duelo, esses ficam no fim). 1º duelo = first bloods × first deaths do tracker. Toque num operador pra abrir a ficha.</div>`;
 }
 function hardBreachCard(cur){
   if(!cur.opsAll) return "";
@@ -883,15 +935,20 @@ function hardBreachCard(cur){
   if(!got.length) return "";
   const rows=HARD_BREACH.map(n=>{
     const o=cur.opsAll.find(x=>x.n===n);
-    if(!o) return `<div class="oprow"><span class="nm cmut">${n}</span><span class="st">sem rounds nesta season</span></div>`;
+    if(!o) return `<tr><td><div class="opcell"><span class="opn cmut">${esc(n)}</span></div></td><td class="nodata" colspan="2">sem rounds nesta season</td></tr>`;
     const kd=fx(o.k/Math.max(1,o.d),2);
-    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?smp("o"):""} · ${o.w} de ${o.r} rds · K/D ${kd}</span></div>`;
+    return `<tr class="clk" tabindex="0" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)" onkeydown="rowKey(event,this)">
+      <td><div class="opcell"><span class="opn">${esc(o.n)}</span></div></td>
+      <td><b>${pf(o.w,o.r)}%</b>${o.r<8?smp("o"):""}<small>${o.w} de ${o.r}</small></td>
+      <td class="kd">${kd}</td></tr>`;
   }).join("");
   const best=got.filter(o=>o.r>=15).sort((a,b)=>b.r-a.r)[0];
   const read=best
     ? `Sua opção com amostra real: <b>${esc(best.n)}</b> (${best.w} de ${best.r}, K/D ${fx(best.k/Math.max(1,best.d),2)}). Os outros quase não têm rounds — treine um segundo pra semana de ban.`
     : `Nenhum hard breach com amostra de verdade nesta season.`;
-  return `<div class="opcard gap"><h3><span class="tag atk">ATAQUE</span> Hard breach — plano B</h3>${rows}
+  return `<div class="opcard gap"><h3><span class="tag atk">${ic("sword")}ATAQUE</span> Hard breach — plano B</h3>
+    <table class="ctable ot"><colgroup><col><col class="c-w"><col class="c-k"></colgroup>
+    <tr><th>Operador</th><th>Rounds ganhos</th><th>K/D</th></tr>${rows}</table>
     <div class="fsrc">${read} O card do coach mostra o quanto rodar sem hard breach custa.</div></div>`;
 }
 function openOpSheet(name){
@@ -901,8 +958,8 @@ function openOpSheet(name){
   const duel=(o.fb+o.fd)?`<b>${o.fb} de ${o.fb+o.fd}</b> (${pf(o.fb,o.fb+o.fd)}%)`:`— <small>não entra na 1ª troca</small>`;
   const stats=`<table class="ctable">
     <tr><td>Rounds</td><td><b>${o.r}</b> <small>em ${o.m} ${o.m===1?"partida":"partidas"}</small></td></tr>
-    <tr><td>Rounds vencidos</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td></tr>
-    <tr><td>Partidas vencidas</td><td><b>${pf(o.mw,o.m)}%</b> <small>${o.mw} de ${o.m}</small></td></tr>
+    <tr><td>Rounds ganhos</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td></tr>
+    <tr><td>Partidas ganhas</td><td><b>${pf(o.mw,o.m)}%</b> <small>${o.mw} de ${o.m}</small></td></tr>
     <tr><td>K/D</td><td><b>${kd}</b> <small>${o.k} × ${o.d} · ${o.a} assist.</small></td></tr>
     <tr><td>Abates na cabeça</td><td><b>${o.k?pf(o.hs,o.k)+"%":"—"}</b> <small>${o.hs} de ${o.k}</small></td></tr>
     <tr><td>1º duelo do round</td><td>${duel}</td></tr>
@@ -921,7 +978,7 @@ function openOpSheet(name){
     <tr><td>Kill sua no fim do round</td><td><b>${pf(fr[5],fr[0])}%</b> <small>${fr[5]} de ${fr[0]}</small></td></tr></table>
     <div class="fsrc">Kill feed desta season (${fr[0]} rounds); pode divergir 1–2% do tracker.</div>`:"";
   const why=((PLAYBOOK.operators||{})[name]||{}).why;
-  openSheet(`<h3>${esc(name)} <span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEFESA":"ATAQUE"}</span></h3>
+  openSheet(`<h3>${esc(name)} <span class="tag sm ${o.s==="d"?"def":"atk"}">${ic(o.s==="d"?"shield":"sword")}${o.s==="d"?"DEFESA":"ATAQUE"}</span></h3>
     ${o.r<8?`<div class="fsrc mb">° amostra curta (${o.r} ${o.r===1?"round":"rounds"}) — leia como indicativo, não veredito.</div>`:""}
     ${stats}${evoHtml}${mapsHtml}${feedHtml}
     ${why?`<div class="fsrc">Função: ${esc(why)}</div>`:""}`);
