@@ -436,6 +436,13 @@ __HEAD__
   .plan .ico .ic{width:16px;height:16px}
   .plan .ico.atk{background:rgba(59,130,246,.14);color:var(--atk-t)}
   .plan b{color:var(--txt)} .plan .pi span{color:var(--muted)}
+  .plan.coach .pi>div:last-child{min-width:0;flex:1}
+  .plan.coach .pi b{display:block;margin-bottom:2px}
+  .plan a.pi{color:inherit;text-decoration:none;border-radius:var(--r-2)}
+  .plan a.pi:active{background:var(--panel2)}
+  .plan a.pi:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .plan .see{display:flex;align-items:center;gap:3px;margin-top:6px;color:var(--gold);font-size:var(--fs-2);font-weight:700}
+  .plan .see .ic{width:12px;height:12px;transform:rotate(-90deg)}
 
   /* TIER */
   .tier{display:grid;grid-template-columns:1fr;gap:10px}
@@ -652,6 +659,9 @@ __HEAD__
   .cg-v{font-size:var(--fs-4);margin-top:2px} .cg-v b{font-weight:800}
   .cg-s{font-size:var(--fs-3);color:var(--muted);margin-top:3px} .cg-s b{color:var(--txt)}
   .cg-s.gap{margin-top:10px} .cg-s.gap2{margin-top:6px}
+  .cg-bar{height:8px;margin:14px 0 6px;border-radius:var(--r-pill);background:var(--track);overflow:hidden}
+  .cg-bar i{display:block;height:100%;min-width:4px;border-radius:inherit;background:var(--gold)}
+  .cg-ends{display:flex;justify-content:space-between;font-size:var(--fs-1);font-weight:700;letter-spacing:var(--ls-caps);color:var(--muted);font-variant-numeric:tabular-nums}
   .ctable{width:100%;border-collapse:collapse;font-size:var(--fs-3);font-variant-numeric:tabular-nums;margin-top:10px}
   .ctable th{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;text-align:right;padding:0 4px 6px}
   .ctable td{padding:7px 4px;border-top:1px solid var(--hair);text-align:right;color:var(--muted);white-space:nowrap}
@@ -661,6 +671,12 @@ __HEAD__
   .ctable td.csub{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding-top:12px;text-align:left}
   .cbox{padding:4px 16px 12px}
   .fcards{display:grid;grid-template-columns:1fr;gap:12px}
+  .grp{display:flex;align-items:baseline;flex-wrap:wrap;gap:1px 10px;margin:24px 2px 10px;font-size:var(--fs-4);font-weight:800;color:var(--txt)}
+  .grp small{font-size:var(--fs-2);font-weight:500;color:var(--muted)}
+  .fc{scroll-margin-top:72px}
+  .fc.flash{animation:flash 1.4s ease-out}
+  @keyframes flash{0%{box-shadow:0 0 0 3px rgba(244,194,13,.9)}100%{box-shadow:0 0 0 3px rgba(244,194,13,0)}}
+  @media(prefers-reduced-motion:reduce){.fc.flash{animation:none}}
 
   /* CARD: uma anatomia só — título · manchete · legenda · tabela ou barras · leitura · nota */
   .fc>summary{display:block;position:relative;list-style:none;cursor:pointer;min-height:44px;padding:14px 44px 14px 16px;border-radius:var(--r-3)}
@@ -1239,10 +1255,14 @@ function goalCard(){
       ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${sx(x,1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
       <div class="fsrc">Cenário, não promessa: supõe que cada vitória e cada derrota continuem valendo a média desta season.</div>`;
   }
+  const start=[1000,1500,2000,2500,3000,3500,4000,4500].filter(t=>t<=g.rp).pop()||0;     // início da faixa em que você está
+  const pct=Math.max(0,Math.min(100,Math.round(100*(g.rp-start)/(g.target-start))));
   return `<div class="cgoal"><div class="cg-top">${rankEmblem(g.color,g.div,g.champ,44)}<div>
       <div class="cg-l">${g.mine?"Sua meta":"Próximo rank"}</div>
       <div class="cg-v"><b style="color:${g.color}">${esc(g.label)}</b> · faltam <b>${nf(g.need)} RP</b></div>
-      <div class="cg-s">${nf(g.rp)} → ${nf(g.target)} RP</div></div></div>${body}</div>`;
+      <div class="cg-s">${nf(g.rp)} → ${nf(g.target)} RP</div></div></div>
+      <div class="cg-bar" role="img" aria-label="${pct}% do caminho até ${esc(g.label)}"><i style="width:${pct}%"></i></div>
+      <div class="cg-ends"><span>${nf(start)}</span><span>${nf(g.target)}</span></div>${body}</div>`;
 }
 
 /* chave, rótulo, unidade, casas, direção (1 = subir é bom · -1 = subir é ruim · 0 = estilo) */
@@ -1252,7 +1272,7 @@ const STYLE_ROWS=[
   ["defRoundWR","Rounds vencidos na defesa","%",0,1],
   ["esr","1º duelo que você vence","%",0,1],
   ["openPct","Rounds em que você entra no 1º duelo","%",0,0],
-  ["fdPct","Rounds em que a 1ª morte do round é a sua","%",0,0],
+  ["fdPct","Rounds em que a 1ª morte do round (dos 10) é a sua","%",0,0],
   ["clutchPct","Rounds em que você sobra sozinho","%",0,-1],
   ["clutchWin","Vence quando sobra sozinho","%",0,1],
   ["hs","Abates na cabeça","%",0,1],
@@ -1314,14 +1334,20 @@ function bars(rows,unit){              // [rótulo, %, "N de M", é você?]: a b
 /* manchete: "A × B" com o rótulo de cada lado dentro dela, ou um valor só */
 const pair=(a,b)=>`<div class="hl"><div class="hs"><b>${a[0]}</b><span>${a[1]}</span></div><i class="x" aria-hidden="true">×</i><div class="hs"><b>${b[0]}</b><span>${b[1]}</span></div></div>`;
 const solo=(v,txt)=>`<div class="hl${txt?" txt":""}"><div class="hs"><b>${v}</b></div></div>`;
-let PLAN={};                           // chaves dos cards que sustentam uma regra do plano (preenchido em renderCoach)
+let PLAN={}, PLAN_OPEN="";             // chaves dos cards que sustentam uma regra do plano; PLAN_OPEN = o do 1º achado (abre sozinho)
 const WIDE=()=>!!(window.matchMedia&&matchMedia("(min-width:900px)").matches);
 function card(o){                      // título · manchete · legenda · tabela/barras · leitura · nota
   const plan=!!(o.k&&PLAN[o.k]);
   const body=`${o.cap?`<div class="cap">${o.cap}</div>`:""}${o.body||""}${o.read?`<div class="read">${o.read}</div>`:""}${o.note?`<div class="note">${o.note}</div>`:""}`;
-  return `<details class="card fc${plan?" in-plan":""}"${o.k?` id="c-${o.k}"`:""}${(o.open||plan||WIDE())?" open":""}><summary><span class="ct">${o.title}${plan?`<span class="mark">no plano</span>`:""}</span>${o.head||""}${ic("chev","chev")}</summary><div class="cb">${body}</div></details>`;
+  return `<details class="card fc${plan?" in-plan":""}"${o.k?` id="c-${o.k}"`:""}${(o.open||(o.k&&o.k===PLAN_OPEN)||WIDE())?" open":""}><summary><span class="ct">${o.title}${plan?`<span class="mark">no plano</span>`:""}</span>${o.head||""}${ic("chev","chev")}</summary><div class="cb">${body}</div></details>`;
 }
 const fcard=(title,head,cap,body,read,note,k)=>card({title,head,cap,body,read,note,k});
+function seeCard(k){                   // do plano pro dado: abre o card, leva até ele e pisca
+  const el=document.getElementById("c-"+k); if(!el) return;
+  el.open=true;
+  el.scrollIntoView({behavior:(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)?"auto":"smooth",block:"start"});
+  el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+}
 function coachCards(cur){
   const c=cur.coach, s=cur.style, K={};
   if(c&&c.lastAlive){
@@ -1329,7 +1355,7 @@ function coachCards(cur){
     const fd=pf(c.firstDeath.atk[0],c.firstDeath.atk[1]), fdr=pf(c.firstDeathRef.atk[0],c.firstDeathRef.atk[1]);
     const md=pf(la.def[0],la.def[1]), rd=pf(lr.def[0],lr.def[1]), al=c.alone.atk, k=c.kills;
     let read = me-ref>=10
-      ? `No ataque você fica pra trás: é o 1º do time a morrer em só <b>${fd}%</b> dos rounds (eles, ${fdr}%) e, quando sobra, encara <b>${String(al[2]).replace(".",",")} inimigos</b> em média. Sozinho no ataque, venceu <b>${al[0]} de ${al[1]}</b>.`
+      ? `No ataque você fica pra trás: é o 1º do seu time a morrer em só <b>${fd}%</b> dos rounds (eles, ${fdr}%) e, quando sobra, encara <b>${String(al[2]).replace(".",",")} inimigos</b> em média. Sozinho no ataque, venceu <b>${al[0]} de ${al[1]}</b>.`
       : `No ataque você sobra sozinho perto do que acontece com eles.`;
     read += ` Na defesa, quando sobra 1 do time, é você em <b>${md}%</b> das vezes (eles, ${rd}%)${Math.abs(md-rd)<8?" — normal":""}.`;
     if(k&&k.alone) read += ` Dos seus ${nf(k.total)} abates, ${k.alone} saíram com você já sozinho; ${k.aloneLost} desses, em round perdido.`;
@@ -1446,7 +1472,11 @@ function coachCards(cur){
   }
   return K;
 }
-const CARD_ORDER=["states","pressure","lastAlive","hardBreach","trades","killTiming","postClutch","noKill","clutch","rival","score","teams"];   // o que se decide DURANTE o jogo primeiro; contexto e perfil depois
+const COACH_GRUPOS=[                   // por momento do jogo: dentro do round → na partida → entre partidas
+  ["No round","o que acontece dentro de cada round",["states","trades","lastAlive","hardBreach","killTiming","noKill","clutch","postClutch"]],
+  ["Na partida","placar, pressão e o mesmo inimigo",["pressure","score","rival"]],
+  ["Entre partidas","sequência, tendência, fila, times e seu estilo",["tilt","trend","squad","teams","style"]]
+];
 function trendBlock(cur){
   const t=cur.coach&&cur.coach.trend;
   if(!t||t.last.n<10) return "";
@@ -1536,7 +1566,11 @@ function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach 
 }
 function coachRules(cur,base){
   const R=coachRuleItems(cur,base);
-  return R.length?`<div class="plan">${R.map(r=>`<div class="pi"><div class="ico ${r.cls}">${ic(r.ico)}</div><div><b>${r.b}</b> <span>${r.t}</span></div></div>`).join("")}</div>`
+  const row=r=>{
+    const inner=`<div class="ico ${r.cls}">${ic(r.ico)}</div><div><b>${r.b}</b><span>${r.t}</span>${r.k?`<div class="see">ver o dado ${ic("chev")}</div>`:""}</div>`;
+    return r.k?`<a class="pi" href="#c-${r.k}" onclick="seeCard('${r.k}');return false">${inner}</a>`:`<div class="pi">${inner}</div>`;
+  };
+  return R.length?`<div class="plan coach">${R.map(row).join("")}</div>`
     :bnr("info","Nenhuma regra passou no corte dos seus números ainda. Mapas e operadores estão no Plano de jogo do Início.","flat");
 }
 function renderCoach(){
@@ -1546,15 +1580,18 @@ function renderCoach(){
     el.innerHTML=bnr("compass","O coach usa dados que só existem a partir da Y11S2. Troque a season no seletor do topo.");
     return;
   }
-  PLAN={}; if(latest) coachRuleItems(cur,base).forEach(r=>{ if(r.k) PLAN[r.k]=1; });
+  PLAN={}; PLAN_OPEN="";
+  if(latest) coachRuleItems(cur,base).forEach(r=>{ if(r.k){ PLAN[r.k]=1; if(!PLAN_OPEN) PLAN_OPEN=r.k; } });
   const K=coachCards(cur);
+  K.trend=trendBlock(cur); K.squad=cur.squad?squadCard(cur,base):""; K.style=styleTable(cur,base); K.tilt=cur.tilt?tiltCard(cur):"";
+  const grupos=COACH_GRUPOS.map(([t,sub,ks])=>{const h=ks.map(k=>K[k]||"").join(""); return h?`<h3 class="grp">${t}<small>${sub}</small></h3><div class="fcards">${h}</div>`:"";}).join("");
   el.innerHTML=`
-    ${latest?`<h2 class="sec first">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}
+    ${latest?`<h2 class="sec first">Plano pra próxima sessão<span class="hint">como jogar, tirado dos seus números</span></h2>${coachRules(cur,base)}
       <h2 class="sec">Meta</h2>${goalCard()}`
       :bnr("calendar",`Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.`,"tight")}
     <h2 class="sec">O que os rounds mostram<span class="hint">${esc(cur.season)}</span></h2>
     ${cur.coach?"":bnr("search",`O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.`,"gap")}
-    <div class="fcards">${CARD_ORDER.map(k=>K[k]||"").join("")}${trendBlock(cur)}${cur.squad?squadCard(cur,base):""}${styleTable(cur,base)}${cur.tilt?tiltCard(cur):""}</div>`;
+    ${grupos}`;
 }
 
 /* ---------- SQUAD ---------- */
