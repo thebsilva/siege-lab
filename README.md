@@ -59,12 +59,39 @@ meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) 
 (placar de vivos · sob pressão · último vivo no ataque · hard breach · trocas · quando suas kills acontecem ·
 round depois do clutch · round sem abate · clutch por 1vX · duelo repetido *(experimental)* · placar da
 partida · nível dos times) → tendência (últimas 15 × o resto da season) → fila → estilo em números → tilt ·
-Mapas (tier auto + card por mapa com barras atk/def e top-3 de operador) ·
+Mapas (busca pelo nome + ordem A–Z / Vitórias / Partidas, tier auto + card por mapa com barras atk/def e top-3 de operador) ·
 Operadores (mains def/atk + corte, card de hard breach "plano B", tabela completa ordenável com HS% e 1º duelo, e ficha por operador: stats, season a season, por mapa, kill feed e função do playbook) · **Squad** (vitórias sozinho × com cada amigo, uma tabela por season) ·
 Evolução (sparklines season a season) · seletor de season no topo · botão ? (legenda) · card de compartilhar.
 
 Na aba Coach as setas têm cor por direção: verde melhorou, vermelho piorou, **cinza = estilo** (nem bom nem ruim).
 Meta e plano só aparecem na season mais nova; season antiga mostra só o diagnóstico daquela época.
+
+## Design (revisão de 11/10/2026)
+Tudo sai do `build.py`: um HTML estático por jogador, sem biblioteca e sem requisição externa (funciona offline).
+Orçamento: ≲ 250 KB por página de jogador, ≲ 20 KB a landing. Larguras de 320 a 1100 px sem rolagem lateral na página;
+botão com alvo de toque ≥ 40 px; texto de leitura ≥ 11 px (10 px só em rótulo curto em caixa-alta); contraste ≥ 4,5:1.
+
+- **Tokens** (`TOKENS_CSS`, compartilhado entre player e landing): superfícies `--bg/--panel/--chip/--line…`, texto
+  `--txt/--txt-2/--muted`, escala `--fs-1…7` (10 · 11,5 · 13 · 15 · 18 · 24 · 32 px), raios `--r-1…3`, `--nav-h`.
+- **Cor é significado, não enfeite:** verde `--play` = bom · amarelo `--neu` = neutro · vermelho `--ban` = ruim ·
+  azul `--atk` = ataque · laranja `--def` = defesa · dourado `--gold` = marca e seleção. Seta de contagem (nº de
+  partidas, rounds) não é verde nem vermelha.
+- **Tipografia:** pilha de sistema (nada de fonte externa). Fonte embutida (subset em base64, ~18 KB) fica pra
+  decisão do Bruno: exige baixar o arquivo da fonte.
+- **Logo e imagens:** `brand.py` é a única fonte da geometria (símbolo, emblema de rank, favicon). O `build.py` gera
+  `docs/apple-touch-icon.png` e `docs/og.png` com ele (precisa do Pillow; sem Pillow só esses dois PNG não são refeitos).
+- **Card de compartilhar:** SVG 1080×1350 (4:5) desenhado no navegador e convertido em PNG por `canvas`;
+  "Compartilhar imagem" usa a folha de compartilhar do celular (`navigator.share` com arquivo) e, onde não houver,
+  baixa o PNG.
+- **Mapas — achar rápido:** campo "Buscar mapa" no topo (ignora acento e maiúscula, qualquer pedaço do nome; também
+  filtra os chips de "Jogar vs banir"; sobrando um só, o card abre sozinho) + "Ordenar por" A–Z (padrão) · Vitórias
+  (com o grupo "Poucas partidas") · Partidas. A ordem escolhida fica em `localStorage["siegelab.mapsort"]`
+  (com `try/catch`: sem armazenamento a página funciona do mesmo jeito).
+- **Convenções de texto:** vírgula decimal (`1,31`) · "K/D" · "N de M" (`4 de 10 rounds`) · `10V-10D` · `°` = amostra
+  pequena (mapa < 4 partidas, operador < 8 rounds) · "cenário, não promessa" · ▲▼ pra variação.
+- **Não renomear:** `#scr-inicio|coach|mapas|ops|squad|evo`, `go('id')`, `renderAll()`, `openSheet/closeSheet/openHelp/
+  openSeasons/openShare/openOpSheet`, `SEASONS`, `active`, `TABS`, nem as funções de corte (`tierOf`, `wrClass`).
+  Cortes e fórmulas são regra de negócio: mexer em visual não muda número.
 
 ## Modelo de dados (snapshot)
 ```
@@ -110,7 +137,7 @@ Meta e plano só aparecem na season mais nova; season antiga mostra só o diagn�
    O formato de cada arquivo está no topo do `ingest.py`. opmaps e rounds são opcionais (sem eles, o card do
    mapa usa os dados da season e a aba Coach mostra só estilo, fila e tilt).
 2. `python3 ingest.py AAAA-MM-DD` (gera os snapshots; season nova = acrescentar em `SEASONS`/`CURRENT`/`SEASON_START`).
-3. `python3 build.py`
+3. `python3 build.py` (refaz `docs/*.html`, a landing e os dois PNG de `docs/`)
 4. Commit + push → o Pages publica sozinho.
 
 Preview local: o macOS bloqueia o servidor de preview dentro de `~/Documents`; copiar `docs/` pra uma pasta temporária e servir de lá.
