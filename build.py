@@ -378,17 +378,18 @@ __HEAD__
   .poptip{position:fixed;z-index:120;max-width:min(260px,calc(100vw - 24px));padding:8px 11px;border-radius:var(--r-2);background:#0b0d11;border:1px solid var(--gold);
           color:var(--txt);font-size:var(--fs-3);line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
   .poptip.on{opacity:1;transform:none}
-  .cdef{color:var(--def)} .catk{color:var(--atk-t)} .cgold{color:var(--gold)} .cup{color:var(--play)} .cdn{color:var(--ban)} .cnt{color:#9aa3ad} .cmut{color:var(--muted)}
+  .cdef{color:var(--def)} .catk{color:var(--atk-t)} .cgold{color:var(--gold)} .cup{color:var(--play)} .cdn{color:var(--ban)} .cnt{color:#9aa3ad} .cmut{color:var(--muted)} .cneu{color:var(--neu)}
 
   /* INÍCIO */
   .kgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
   .kgrid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px}
   .glance{display:flex;align-items:stretch;gap:12px;border:1px solid var(--line);border-radius:var(--r-3);
        background:linear-gradient(105deg,#181b23,#0d0f13);padding:12px 14px;margin-bottom:12px}
-  .glance .emb{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:82px}
+  .glance .emb{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:64px}
   .glance .emb .remb{filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
-  .glance .emb .rn{font-size:var(--fs-2);font-weight:800;text-align:center;line-height:1.05;letter-spacing:.2px}
-  .glance .emb .pk{font-size:var(--fs-2);color:var(--muted);text-align:center;line-height:1}
+  .glance .emb .rn{font-size:var(--fs-3);font-weight:800;text-align:center;line-height:1.05;letter-spacing:.2px;white-space:nowrap}
+  .glance .emb .pk{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:var(--fs-2);color:var(--muted);line-height:1.1;white-space:nowrap}
+  .glance .emb .pk i{font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase}
   .glance .gstats{flex:1;display:flex;align-items:center;min-width:0}
   .glance .gst{flex:1;text-align:center;padding:0 4px;min-width:0}
   .glance .gst+.gst{border-left:1px solid var(--line)}
@@ -398,7 +399,7 @@ __HEAD__
   .glance .gst .dd .d{font-size:var(--fs-2);margin-left:0}
   @media(max-width:400px){
     .glance{gap:7px;padding:11px 9px}
-    .glance .emb{width:60px}
+    .glance .emb{min-width:56px}
     .glance .emb .rn{font-size:var(--fs-2)}
     .glance .gst{padding:0 2px}
     .glance .gst .v{font-size:var(--fs-5)}
@@ -408,21 +409,23 @@ __HEAD__
   .ktile{padding:14px 16px}
   .ktile .v{font-size:var(--fs-6);font-weight:800;font-variant-numeric:tabular-nums}
   .ktile .l{font-size:var(--fs-2);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+  .ktile .kn{font-size:var(--fs-2);color:var(--muted);margin-top:4px}
   .ktile .rkb{display:inline-block;font-size:var(--fs-2);font-weight:800;padding:2px 8px;border-radius:var(--r-1);margin-top:6px}
   .banner{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:10px 14px;border-radius:var(--r-2);font-size:var(--fs-3);line-height:1.45;color:var(--muted);background:var(--inset);border:1px solid var(--line)}
   .banner>.ic{width:16px;height:16px;margin-top:2px;color:var(--muted)}
   .banner p{min-width:0;flex:1}
   .banner b{color:var(--txt)}
+  .banner .bsub{display:block;margin-top:3px;font-size:var(--fs-2)}
   .banner.flat{margin-top:0} .banner.tight{margin:0 0 6px} .banner.gap{margin:0 0 12px}
   .changed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}   /* 2 colunas quando cabe; empilha em 320 */
   .chcol{border:1px solid var(--line);border-radius:var(--r-2);background:var(--panel);padding:13px 15px}
   .chcol h4{font-size:var(--fs-2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
   .chcol h4 .ic{width:14px;height:14px}
   .chcol.up h4{color:var(--play)} .chcol.dn h4{color:var(--ban)}
-  .chrow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:var(--fs-3);border-top:1px solid var(--hair)}
-  .chrow:first-of-type{border-top:none}
-  .chrow .nm{font-weight:600}
-  .chrow .vv{font-variant-numeric:tabular-nums;color:var(--muted)}
+  .chrow{padding:8px 0;font-size:var(--fs-3);border-top:1px solid var(--hair)}
+  .chrow:first-of-type{border-top:none;padding-top:0}
+  .chrow .nm{display:block;font-weight:700}
+  .chrow .vv{display:flex;justify-content:space-between;align-items:center;font-variant-numeric:tabular-nums;color:var(--muted)}
   .plan{padding:6px 16px}
   .plan .pi{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--hair);font-size:var(--fs-3);align-items:flex-start}
   .plan .pi:first-child{border-top:none}
@@ -500,22 +503,32 @@ __HEAD__
   .pside .sh .src{margin-left:auto;font-size:var(--fs-2);font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted)}
   .tip{padding:9px 14px;font-size:var(--fs-3);color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
   .mine{padding:8px 14px;font-size:var(--fs-2);color:var(--muted);border-top:1px solid var(--line);background:var(--inset);line-height:1.5}
-  .forma{padding:14px 16px}
-  .fhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
-  .frec{font-size:var(--fs-4);color:var(--muted);font-weight:600;white-space:nowrap}
-  .frec b{color:var(--txt);font-size:var(--fs-5);font-weight:800} .frec span{font-size:var(--fs-2);margin-left:1px}
-  .fpips{display:flex;gap:4px;flex-wrap:wrap}
-  .pip{width:16px;height:16px;border-radius:var(--r-1);flex:none}
+  .forma{padding:14px 16px 6px}
+  .frec{font-size:var(--fs-4);color:var(--muted);font-weight:600;white-space:nowrap;margin-bottom:12px}
+  .frec b{color:var(--txt);font-size:var(--fs-6);font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .frec span{font-size:var(--fs-4);margin:0 1px 0 2px}
+  .fpips{display:flex;gap:3px}
+  .pip{flex:1 1 0;min-width:5px;max-width:16px;height:20px;border-radius:var(--r-1);cursor:pointer}
   .pip.w{background:var(--play)} .pip.l{background:var(--ban);opacity:.85}
-  .fkpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-  .fk{background:var(--inset);border:1px solid var(--line);border-radius:var(--r-2);padding:9px 12px}
-  .fk .fl{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
-  .fk .fv{font-size:var(--fs-5);font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;margin-left:0}
-  .fins{font-size:var(--fs-3);color:var(--muted);line-height:1.5;padding:9px 0;border-top:1px solid var(--hair)}
-  .fins b{color:var(--txt);font-weight:600}
-  .goal{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px;padding:9px 14px;border:1px solid var(--line);
-       border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(244,194,13,.06);font-size:var(--fs-3);color:var(--muted)}
-  .goal b{color:var(--txt);font-weight:700} .goal .gi{color:var(--gold);font-weight:800} .goal .gm{}
+  .faxis{display:flex;justify-content:space-between;margin-top:6px;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted)}
+  .fstats{display:grid;grid-template-columns:1fr 1fr;margin-top:12px;border-top:1px solid var(--hair)}
+  .fk{padding:11px 0 10px;min-width:0}
+  .fk+.fk{padding-left:14px;border-left:1px solid var(--hair)}
+  .fk .fl{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:var(--ls-caps);font-weight:700}
+  .fk .fv{font-size:var(--fs-5);font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+  .fins{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--hair);font-size:var(--fs-3);line-height:1.5;color:var(--txt-2)}
+  .fins>i{flex:none;margin-top:1px;line-height:0}
+  .fins>i .ic{width:18px;height:18px}
+  .fins p{min-width:0;flex:1}
+  .fins b{color:var(--txt);font-weight:700}
+  .fins .act{display:block;color:var(--muted)}
+  .goal{margin-bottom:12px;padding:11px 14px 12px;border:1px solid var(--line);border-left:3px solid var(--gold);
+       border-radius:0 var(--r-2) var(--r-2) 0;background:rgba(244,194,13,.06);font-size:var(--fs-3);color:var(--muted)}
+  .goal .gtop{display:flex;align-items:center;gap:8px}
+  .goal b{color:var(--txt);font-weight:700} .goal .gi{color:var(--gold);line-height:0} .goal .gi .ic{width:18px;height:18px}
+  .goal .gbar{height:6px;margin:10px 0 8px;border-radius:var(--r-pill);background:var(--track);overflow:hidden}
+  .goal .gbar i{display:block;height:100%;min-width:4px;border-radius:inherit;background:var(--gold)}
+  .goal .gsub{font-size:var(--fs-2)}
   .rbadge{font-size:var(--fs-2);font-weight:800;padding:3px 7px;border-radius:var(--r-1);letter-spacing:.3px;background:var(--chip);border:1px solid var(--chipline);white-space:nowrap}
   .rbadge.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rbadge.dn{color:var(--ban-t);border-color:rgba(240,81,63,.4)} .rbadge.eq{color:var(--muted)}
   .rnote{padding:8px 14px;font-size:var(--fs-2);line-height:1.5;border-top:1px solid var(--line)}
@@ -810,9 +823,11 @@ function renderInicio(){
   const curRP = (k.latestRP!=null?k.latestRP:k.peakRP);
   const rk=rankInfo(curRP), peak=rankInfo(k.peakRP);
   const pbRP = base ? (base.kpis.latestRP!=null?base.kpis.latestRP:base.kpis.peakRP) : null;
-  const wl = (k.wins!=null&&k.losses!=null) ? `${k.wins}-${k.losses}` : "—";
+  const hasWL = k.wins!=null&&k.losses!=null;
+  const wl = hasWL ? `${k.wins}-${k.losses}` : "—";
+  const noRes = hasWL ? k.matches-(k.wins+k.losses) : 0;      // partida contada que não saiu como vitória nem derrota
   const banner = base
-    ? bnr("compare", `Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = quanto mudou; em porcentagem, conta em pontos (50% → 53% = ▲3).`)
+    ? bnr("compare", `Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}).<span class="bsub">Setas ▲▼ = quanto mudou; toque numa pra ver o antes → agora. Em porcentagem, conta em pontos (50% → 53% = ▲3).</span>`)
     : bnr("pin", `Season mais antiga carregada — sem comparação. Carregue outra season pra ver as variações.`);
 
   // o que mudou (mapas presentes nas duas)
@@ -824,25 +839,29 @@ function renderInicio(){
       .filter(m=>Math.abs(m.d)>=3);
     const ups=movers.filter(m=>m.d>0).sort((a,b)=>b.d-a.d).slice(0,3);
     const dns=movers.filter(m=>m.d<0).sort((a,b)=>a.d-b.d).slice(0,3);
-    const rowsUp=ups.map(m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv">${m.was.toFixed(0)}→${m.now.toFixed(0)}% <span class="d up">▲${m.d.toFixed(0)}</span></span></div>`).join("")||`<div class="chrow"><span class="vv">—</span></div>`;
-    const rowsDn=dns.map(m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv">${m.was.toFixed(0)}→${m.now.toFixed(0)}% <span class="d dn">▼${Math.abs(m.d).toFixed(0)}</span></span></div>`).join("")||`<div class="chrow"><span class="vv">—</span></div>`;
+    const row=m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv"><span>${m.was.toFixed(0)}→${m.now.toFixed(0)}%</span>${delta(m.now,m.was,0)}</span></div>`;
+    const none=`<div class="chrow"><span class="vv">—</span></div>`;
     changed = `<h2 class="sec">O que mudou desde ${esc(base.season)}<span class="hint">win% por mapa</span></h2>
       <div class="changed">
-        <div class="chcol up"><h4>${ic("up-right")} Subiram</h4>${rowsUp}</div>
-        <div class="chcol dn"><h4>${ic("down-right")} Caíram</h4>${rowsDn}</div>
+        <div class="chcol up"><h4>${ic("up-right")} Subiram</h4>${ups.map(row).join("")||none}</div>
+        <div class="chcol dn"><h4>${ic("down-right")} Caíram</h4>${dns.map(row).join("")||none}</div>
       </div>`;
   }
 
   const bans=cur.maps.filter(m=>tierOf(m.seasonWR)==="ban"&&m.matches>=4).sort((a,b)=>a.seasonWR-b.seasonWR);
   const plays=cur.maps.filter(m=>tierOf(m.seasonWR)==="play"&&m.matches>=6).sort((a,b)=>b.seasonWR-a.seasonWR);
   const dM=cur.operatorsDef[0], aM=cur.operatorsAtk[0], cM=cur.operatorsCut[0];
+  const g=nextGoal(), pace=rpPace();
+  const goal = g ? `<div class="goal"><div class="gtop"><span class="gi">${ic("up-right")}</span><span>Faltam <b>${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b></span></div>
+      <div class="gbar" role="img" aria-label="${100-g.need}% da divisão"><i style="width:${100-g.need}%"></i></div>
+      <div class="gsub">Cada vitória ≈ +${Math.round(pace?pace.win:25)} RP</div></div>` : "";
 
   document.getElementById("scr-inicio").innerHTML = `
     <div class="glance">
       <div class="emb">
         ${rankEmblem(rk.color, rk.div, rk.champ, 56)}
         <div class="rn" style="color:${rk.color}">${rk.name}</div>
-        <div class="pk">pico ${peak.name}</div>
+        <div class="pk"><i>pico</i>${peak.name}</div>
       </div>
       <div class="gstats">
         <div class="gst"><div class="l">RP</div><div class="v">${curRP.toLocaleString('pt-BR')}</div><div class="dd">${delta(curRP,pbRP,0)}</div></div>
@@ -850,22 +869,23 @@ function renderInicio(){
         <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
       </div>
     </div>
-    ${(()=>{const g=nextGoal(), p=rpPace();return g?`<div class="goal"><span class="gi">${ic("up-right")}</span> Faltam <b>${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +${p?Math.round(p.win):25} RP</span></div>`:"";})()}
-    <div class="kgrid2">
-      <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0,true)}</div><div class="l">Partidas</div></div>
-      <div class="ktile"><div class="v">${fx(k.winRate,1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
-    </div>
-    ${formaRecente()}
-    ${banner}
-    ${changed}
-    <h2 class="sec">Plano de jogo</h2>
+    ${goal}
+    <h2 class="sec">Plano de jogo<span class="hint">mapas e operadores</span></h2>
     <div class="plan">
       <div class="pi"><div class="ico ban">${ic("ban")}</div><div><b>Bane ${esc(bans[0]?.name||"—")}.</b> <span>${bans.length>1?"Depois "+esc(bans.slice(1,3).map(m=>m.name).join(" / "))+". ":""}Seus piores mapas.</span></div></div>
       <div class="pi"><div class="ico play">${ic("check")}</div><div><b>Force ${esc(plays.slice(0,4).map(m=>m.name).join(", ")||"—")}.</b> <span>Vote neles sempre.</span></div></div>
       ${dM?`<div class="pi"><div class="ico def">${ic("shield")}</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor.${cur.operatorsDef[1]?" Segunda opção: "+esc(cur.operatorsDef[1].name)+".":""}</span></div></div>`:""}
       ${aM?`<div class="pi"><div class="ico atk">${ic("sword")}</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>O pick de cada mapa está na aba Mapas.</span></div></div>`:""}
       ${cM?`<div class="pi"><div class="ico ban">${ic("x")}</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e perde mais do que ganha — corte ou reposicione.</span></div></div>`:""}
-    </div>`;
+    </div>
+    <h2 class="sec">Números da season</h2>
+    <div class="kgrid2">
+      <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0,true)}</div><div class="l">Partidas</div>${noRes>0?`<div class="kn">${noRes} sem resultado</div>`:""}</div>
+      <div class="ktile"><div class="v">${fx(k.winRate,1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
+    </div>
+    ${banner}
+    ${formaRecente()}
+    ${changed}`;
 }
 
 function recentByMap(){
@@ -973,31 +993,31 @@ function formaRecente(){
   const n=ms.length, w=ms.filter(m=>m.w).length, l=n-w;
   const netRP=ms.reduce((s,m)=>s+(m.rp||0),0);
   const posKD=ms.filter(m=>(m.kd||0)>=1).length;
-  const pips=ms.slice().reverse().map(m=>`<span class="pip ${m.w?'w':'l'}" title="${esc(m.map)} · ${m.w?'V':'D'} · K/D ${fx(m.kd||0,2)}"></span>`).join("");
+  const tip=m=>esc(`${m.map} · ${m.w?'V':'D'} · K/D ${fx(m.kd||0,2)}`);
+  const pips=ms.slice().reverse().map(m=>`<span class="pip ${m.w?'w':'l'}" data-tip="${tip(m)}" title="${tip(m)}"></span>`).join("");
   const byMap={};
   ms.forEach(m=>{byMap[m.map]=byMap[m.map]||{w:0,l:0}; m.w?byMap[m.map].w++:byMap[m.map].l++;});
   const cold=Object.entries(byMap).filter(([,v])=>v.w===0&&v.l>=2).map(([k,v])=>`${esc(k)} (${v.w}V-${v.l}D)`);
   const hot=Object.entries(byMap).filter(([,v])=>v.l===0&&v.w>=2).map(([k,v])=>`${esc(k)} (${v.w}V-${v.l}D)`);
   let streak=1; const sw=ms[0].w; for(let i=1;i<ms.length;i++){ if(ms[i].w===sw) streak++; else break; }
-  const ins=[];
-  if(!sw && streak>=2) ins.push(`Você está numa <b>maré de ${streak} derrotas</b> — considere uma pausa antes da próxima.`);
-  if(sw && streak>=3) ins.push(`<b>${streak} vitórias seguidas</b> — você está quente, aproveite enquanto dura.`);
-  if(posKD/n>=0.6 && Math.abs(w-l)<=2) ins.push(`Em <b>${posKD} das ${n}</b> partidas seu K/D foi de 1,0 ou mais, mas o placar ficou <b>${w}V-${l}D</b>: o abate sozinho não está virando vitória. Jogue junto do time em vez de buscar frag solo.`);
-  if(cold.length) ins.push(`Sem vitória nas últimas ${n} partidas em <b>${cold.join(", ")}</b> — bane no ranqueado.`);
-  if(hot.length) ins.push(`Só vitórias nas últimas ${n} partidas em <b>${hot.join(", ")}</b> — vale votar ${hot.length>1?"nesses mapas":"nesse mapa"}.`);
-  const rpCls=netRP>0?'up':(netRP<0?'dn':'eq');
+  const ins=[];                         // cada leitura: o fato (em cima) e o que fazer com ele (embaixo)
+  if(!sw && streak>=2) ins.push({i:"pause",c:"cdn",f:`Você está numa <b>maré de ${streak} derrotas</b>`,a:`Considere uma pausa antes da próxima.`});
+  if(sw && streak>=3) ins.push({i:"flame",c:"cup",f:`<b>${streak} vitórias seguidas</b>`,a:`Você está quente, aproveite enquanto dura.`});
+  if(posKD/n>=0.6 && Math.abs(w-l)<=2) ins.push({i:"target",c:"cneu",f:`Em <b>${posKD} das ${n}</b> partidas seu K/D foi de 1,0 ou mais, mas o placar ficou <b>${w}V-${l}D</b>`,a:`O abate sozinho não está virando vitória. Jogue junto do time em vez de buscar frag solo.`});
+  if(cold.length) ins.push({i:"snow",c:"cdn",f:`Sem vitória em <b>${cold.join(", ")}</b>`,a:`Bane no ranqueado.`});
+  if(hot.length) ins.push({i:"flame",c:"cup",f:`Só vitórias em <b>${hot.join(", ")}</b>`,a:`Vale votar ${hot.length>1?"nesses mapas":"nesse mapa"}.`});
+  const rpCls=netRP>0?'cup':(netRP<0?'cdn':'cmut');
   return `
     <h2 class="sec">Forma recente<span class="hint">últimas ${n} partidas</span></h2>
     <div class="forma">
-      <div class="fhead">
-        <div class="frec"><b>${w}</b><span>V</span> · <b>${l}</b><span>D</span></div>
-        <div class="fpips">${pips}</div>
-      </div>
-      <div class="fkpis">
-        <div class="fk"><div class="fl">RP no período</div><div class="fv d ${rpCls}">${sg(netRP)}</div></div>
+      <div class="frec"><b>${w}</b><span>V</span> · <b>${l}</b><span>D</span></div>
+      <div class="fpips">${pips}</div>
+      <div class="faxis"><span>mais antiga</span><span>mais recente</span></div>
+      <div class="fstats">
+        <div class="fk"><div class="fl">RP no período</div><div class="fv ${rpCls}">${sg(netRP)}</div></div>
         <div class="fk"><div class="fl">Com K/D 1,0+</div><div class="fv">${posKD}/${n}</div></div>
       </div>
-      ${ins.map(t=>`<div class="fins">${t}</div>`).join("")}
+      ${ins.map(x=>`<div class="fins"><i class="${x.c}">${ic(x.i)}</i><p>${x.f}<span class="act">${x.a}</span></p></div>`).join("")}
     </div>`;
 }
 function renderMapas(){
