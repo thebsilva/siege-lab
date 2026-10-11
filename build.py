@@ -23,10 +23,52 @@ SITE_URL = "https://thebsilva.github.io/siege-lab/"
 LOGO_SVG = brand.symbol()         # <symbol id="sl-logo">: header, landing e card de compartilhar usam <use href="#sl-logo">
 
 
-def sprite():
-    """Sprite SVG inline (invisível): gradiente da marca + símbolos. Sem requisição externa."""
+# Ícones de traço (grade 24×24, traço 1,8, pontas redondas): o mesmo desenho da navegação, no lugar dos emojis
+# (que mudam de cara a cada sistema). Uma definição, vários usos: <svg class="ic"><use href="#i-nome"/></svg>.
+ICONS = {
+    # navegação
+    "home": '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+    "coach": '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+    "map": '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>',
+    "ops": '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
+    "squad": '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.6"/><path d="M14.8 14.6c.7-.4 1.4-.6 2.2-.6 2.3 0 4.1 1.5 4.6 4.3"/>',
+    "evo": '<path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-8"/>',
+    # ações e controles
+    "share": '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+    "chev": '<path d="M6 9l6 6 6-6"/>',
+    "check": '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    "x": '<path d="M6 6l12 12M18 6L6 18"/>',
+    "link": '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    "image": '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.7"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',
+    # sentido do dado
+    "ban": '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+    "shield": '<path d="M12 3l7 3v5.5c0 4.4-2.9 8-7 9.5-4.1-1.5-7-5.1-7-9.5V6l7-3z"/>',
+    "sword": '<path d="M20 4L10 14"/><path d="M8 12l4 4"/><path d="M10 14l-5 5"/>',
+    "target": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".9" fill="currentColor"/>',
+    "burst": '<circle cx="12" cy="12" r="2.6"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/>',
+    "pause": '<circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>',
+    "flame": '<path d="M12 3c.8 3.2 5 5.4 5 10a5 5 0 0 1-10 0c0-2 1-3.4 2.2-4.4.2 1.4.9 2.1 1.9 2.4C10.6 8.6 10.8 5.6 12 3z"/>',
+    "snow": '<path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/>',
+    "compare": '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/>',
+    "pin": '<path d="M12 21s6-5.4 6-10a6 6 0 0 0-12 0c0 4.6 6 10 6 10z"/><circle cx="12" cy="11" r="2.2"/>',
+    "up-right": '<path d="M7 17L17 7"/><path d="M9 7h8v8"/>',
+    "down-right": '<path d="M7 7l10 10"/><path d="M17 9v8H9"/>',
+    "warn": '<path d="M12 3.5L2.8 19.5h18.4L12 3.5z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.2" r=".9" fill="currentColor"/>',
+    "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor"/>',
+    "swap": '<path d="M8 4v16M4.5 7.5L8 4l3.5 3.5"/><path d="M16 20V4M12.5 16.5L16 20l3.5-3.5"/>',
+    "medal": '<circle cx="12" cy="9" r="5"/><path d="M8.5 13.5L7 21l5-3 5 3-1.5-7.5"/>',
+    "compass": '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    "calendar": '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    "search": '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+}
+
+
+def sprite(only=None):
+    """Sprite SVG inline (invisível): gradiente da marca, logo e ícones. Sem requisição externa."""
+    icons = "".join(f'<symbol id="i-{k}" viewBox="0 0 24 24">{v}</symbol>'
+                    for k, v in ICONS.items() if only is None or k in only)
     return ('<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>'
-            + brand.GRAD + '</defs>' + LOGO_SVG + brand.symbol_mono() + '</svg>')
+            + brand.GRAD + '</defs>' + LOGO_SVG + brand.symbol_mono() + icons + '</svg>')
 
 
 def head_meta(title, desc, url):
@@ -266,7 +308,7 @@ __HEAD__
     --bg:#0a0b0e; --panel:#14161c; --panel2:#1a1d24; --inset:#101218; --chip:#1d2129; --chipline:#2b303a; --track:#20242c;
     --line:#262a33; --hair:#1f232b;
     /* texto: todos ≥ 4,5:1 sobre as superfícies acima */
-    --txt:#e7e9ec; --muted:#8b919c;
+    --txt:#e7e9ec; --txt-2:#cfd3d8; --muted:#8b919c;
     /* marca e semântica: verde = bom · amarelo = neutro · vermelho = ruim · azul = ataque · laranja = defesa · dourado = marca */
     --gold:#f4c20d; --atk:#3b82f6; --def:#f97316; --play:#34d399; --neu:#facc15; --ban:#f0513f;
     --atk-t:#6ea8fe; --ban-t:#ff6b5a; --neutral:#6b727e;   /* -t = versão clara pra TEXTO pequeno sobre fundo tingido; neutral = preenchimento de barra */
@@ -304,7 +346,7 @@ __HEAD__
   .seasonsel .rk{display:none;font-size:var(--fs-2);font-weight:700;padding:2px 8px;border-radius:var(--r-pill)}
   .seasonsel .cv{width:10px;height:10px;color:var(--muted);flex:none}
   .qbtn{flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--muted);font:inherit;font-weight:800;font-size:var(--fs-4);cursor:pointer}
-  .qbtn svg{width:18px;height:18px}
+  .qbtn .ic{width:18px;height:18px}
   .qbtn:active{transform:scale(.94)}
   .desktabs{display:none;gap:4px;margin-left:14px}
   .desktabs button{background:none;border:none;color:var(--muted);font-weight:700;font-size:var(--fs-3);padding:0 14px;min-height:40px;border-radius:var(--r-2);cursor:pointer}
@@ -321,9 +363,22 @@ __HEAD__
   h2.sec{font-size:var(--fs-3);letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;display:flex;align-items:center;gap:9px}
   h2.sec::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:var(--r-1)}
   h2.sec .hint{margin-left:auto;font-size:var(--fs-2);letter-spacing:.4px;color:var(--muted);text-transform:none}
+  h2.sec.first{margin-top:4px}
+  @media(max-width:439px){ h2.sec{flex-wrap:wrap;row-gap:2px} h2.sec .hint{flex:1 0 100%;margin-left:13px} }
 
-  .d{font-size:var(--fs-2);font-weight:800;margin-left:5px;font-variant-numeric:tabular-nums;cursor:help}
+  .ic{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em}
+
+  /* setas ▲▼ e °: tocar mostra a explicação ("antes → agora", a regra da amostra); o title só serve ao mouse */
+  .d,.smp{cursor:pointer;border-radius:var(--r-1)}
+  .d:focus-visible,.smp:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+  .d{font-size:var(--fs-2);font-weight:800;margin-left:5px;padding:4px 3px;font-variant-numeric:tabular-nums}
   .d.up{color:var(--play)} .d.dn{color:var(--ban)} .d.eq{color:var(--muted);font-weight:600}
+  .d.nt{color:#9aa3ad}                        /* contagem (partidas) ou estilo: a seta mostra o sentido, não bom nem ruim */
+  .smp{color:var(--neu);font-weight:800;font-size:1.25em;line-height:0;padding:4px 2px;margin-left:1px}
+  .poptip{position:fixed;z-index:120;max-width:min(260px,calc(100vw - 24px));padding:8px 11px;border-radius:var(--r-2);background:#0b0d11;border:1px solid var(--gold);
+          color:var(--txt);font-size:var(--fs-3);line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+  .poptip.on{opacity:1;transform:none}
+  .cdef{color:var(--def)} .catk{color:var(--atk-t)} .cgold{color:var(--gold)} .cup{color:var(--play)} .cdn{color:var(--ban)} .cnt{color:#9aa3ad} .cmut{color:var(--muted)}
 
   /* INÍCIO */
   .kgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -349,27 +404,33 @@ __HEAD__
     .glance .gst .v{font-size:var(--fs-5)}
     .glance .gst .l{font-size:var(--fs-1);letter-spacing:.4px}
   }
-  .ktile{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:14px 16px}
+  .card,.cgoal,.cbox,.opcard,.evo,.forma,.plan,.map,.ktile{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel)}
+  .ktile{padding:14px 16px}
   .ktile .v{font-size:var(--fs-6);font-weight:800;font-variant-numeric:tabular-nums}
   .ktile .l{font-size:var(--fs-2);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
   .ktile .rkb{display:inline-block;font-size:var(--fs-2);font-weight:800;padding:2px 8px;border-radius:var(--r-1);margin-top:6px}
-  .banner{margin-top:12px;padding:10px 14px;border-radius:var(--r-2);font-size:var(--fs-3);color:var(--muted);background:var(--inset);border:1px solid var(--line)}
+  .banner{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:10px 14px;border-radius:var(--r-2);font-size:var(--fs-3);line-height:1.45;color:var(--muted);background:var(--inset);border:1px solid var(--line)}
+  .banner>.ic{width:16px;height:16px;margin-top:2px;color:var(--muted)}
+  .banner p{min-width:0;flex:1}
   .banner b{color:var(--txt)}
+  .banner.flat{margin-top:0} .banner.tight{margin:0 0 6px} .banner.gap{margin:0 0 12px}
   .changed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}   /* 2 colunas quando cabe; empilha em 320 */
   .chcol{border:1px solid var(--line);border-radius:var(--r-2);background:var(--panel);padding:13px 15px}
   .chcol h4{font-size:var(--fs-2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .chcol h4 .ic{width:14px;height:14px}
   .chcol.up h4{color:var(--play)} .chcol.dn h4{color:var(--ban)}
   .chrow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:var(--fs-3);border-top:1px solid var(--hair)}
   .chrow:first-of-type{border-top:none}
   .chrow .nm{font-weight:600}
   .chrow .vv{font-variant-numeric:tabular-nums;color:var(--muted)}
-  .plan{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:6px 16px}
+  .plan{padding:6px 16px}
   .plan .pi{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--hair);font-size:var(--fs-3);align-items:flex-start}
   .plan .pi:first-child{border-top:none}
   .plan .ico{width:26px;height:26px;border-radius:var(--r-1);display:grid;place-items:center;font-size:var(--fs-3);flex:none;margin-top:1px}
   .plan .ico.ban{background:rgba(240,81,63,.14);color:var(--ban)}
   .plan .ico.play{background:rgba(52,211,153,.14);color:var(--play)}
   .plan .ico.def{background:rgba(249,115,22,.14);color:var(--def)}
+  .plan .ico .ic{width:16px;height:16px}
   .plan .ico.atk{background:rgba(59,130,246,.14);color:var(--atk-t)}
   .plan b{color:var(--txt)} .plan .pi span{color:var(--muted)}
 
@@ -384,10 +445,11 @@ __HEAD__
   .chips{display:flex;flex-wrap:wrap;gap:7px}
   .chipm{font-size:var(--fs-3);padding:5px 10px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);font-weight:600}
   .chipm small{color:var(--muted);font-weight:500;margin-left:4px}
+  .chipm.none{opacity:.6}
 
   /* MAP CARDS */
   .maps{display:grid;grid-template-columns:1fr;gap:14px}
-  .map{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);overflow:hidden}
+  .map{overflow:hidden}
   .map .head{display:flex;align-items:center;gap:7px;padding:12px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
   .map .head .mn{font-size:var(--fs-4);font-weight:800}
   .verdict{font-size:var(--fs-1);font-weight:800;padding:4px 8px;border-radius:var(--r-1);letter-spacing:.6px}
@@ -438,7 +500,7 @@ __HEAD__
   .pside .sh .src{margin-left:auto;font-size:var(--fs-2);font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted)}
   .tip{padding:9px 14px;font-size:var(--fs-3);color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
   .mine{padding:8px 14px;font-size:var(--fs-2);color:var(--muted);border-top:1px solid var(--line);background:var(--inset);line-height:1.5}
-  .forma{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:14px 16px}
+  .forma{padding:14px 16px}
   .fhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
   .frec{font-size:var(--fs-4);color:var(--muted);font-weight:600;white-space:nowrap}
   .frec b{color:var(--txt);font-size:var(--fs-5);font-weight:800} .frec span{font-size:var(--fs-2);margin-left:1px}
@@ -458,6 +520,7 @@ __HEAD__
   .rbadge.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rbadge.dn{color:var(--ban-t);border-color:rgba(240,81,63,.4)} .rbadge.eq{color:var(--muted)}
   .rnote{padding:8px 14px;font-size:var(--fs-2);line-height:1.5;border-top:1px solid var(--line)}
   .rnote i{font-style:normal;font-weight:800;margin-right:3px}
+  .rnote i .ic{width:13px;height:13px}
   .rnote.up{color:#a6e8c9;background:rgba(52,211,153,.07)} .rnote.up i{color:var(--play)}
   .rnote.dn{color:#f3a99f;background:rgba(240,81,63,.07)} .rnote.dn i{color:var(--ban)}
   .rnote b{color:var(--txt);font-weight:600}
@@ -484,11 +547,13 @@ __HEAD__
   .pc.good{color:var(--play)} .pc.mid{color:var(--neu)} .pc.low{color:var(--ban)}
   .avoid{padding:8px 14px;font-size:var(--fs-2);color:#f3a99f;background:rgba(240,81,63,.07);border-top:1px solid var(--line)}
   .avoid b{color:var(--ban)}
-  .notew{padding:8px 14px;font-size:var(--fs-2);color:#d9c98a;background:rgba(250,204,21,.06);border-top:1px solid var(--line)}
+  .notew{display:flex;gap:8px;align-items:flex-start;padding:8px 14px;font-size:var(--fs-2);color:#d9c98a;background:rgba(250,204,21,.06);border-top:1px solid var(--line)}
+  .notew .ic{width:14px;height:14px;margin-top:1px;color:var(--neu)}
 
   /* OPERADORES */
   .ops{display:grid;grid-template-columns:1fr;gap:12px}
-  .opcard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:15px}
+  .opcard{padding:15px}
+  .opcard.gap{margin-top:12px}
   .opcard h3{font-size:var(--fs-3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
   .tag{font-size:var(--fs-1);font-weight:800;padding:3px 8px;border-radius:var(--r-1);letter-spacing:.5px}
   .tag.def{background:rgba(249,115,22,.15);color:var(--def);border:1px solid rgba(249,115,22,.35)}
@@ -504,6 +569,7 @@ __HEAD__
   .fchip{font-size:var(--fs-3);padding:5px 11px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);font-weight:600;color:var(--muted);cursor:pointer}
   .fchip.on{color:var(--txt);border-color:var(--gold);background:rgba(244,194,13,.08)}
   .optable tr{cursor:pointer}
+  .optable th{cursor:pointer}
   .optable tr.dim{color:var(--muted)}
   .optable th.on{color:var(--gold)}
   .tag.sm{font-size:var(--fs-1);padding:1px 5px;margin-left:6px;vertical-align:1px}
@@ -519,7 +585,7 @@ __HEAD__
   }
 
   /* EVOLUÇÃO */
-  .evo{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:16px;margin-bottom:12px}
+  .evo{padding:16px;margin-bottom:12px}
   .evo h3{font-size:var(--fs-3);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
   .spark{width:100%;height:96px;overflow:visible}
   .sparklbl{position:relative;height:16px;margin-top:8px}
@@ -543,7 +609,7 @@ __HEAD__
   nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(13,14,18,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
   nav.bottom button{position:relative;flex:1 1 auto;min-width:0;padding:0 2px;background:none;border:none;color:var(--muted);font:inherit;font-size:var(--fs-1);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;letter-spacing:.02em}
   nav.bottom button.on::before{content:"";position:absolute;top:-1px;left:50%;width:26px;height:3px;margin-left:-13px;border-radius:0 0 var(--r-1) var(--r-1);background:var(--gold)}
-  nav.bottom button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  nav.bottom button .ic{width:22px;height:22px}
   nav.bottom button.on{color:var(--gold)}
 
   .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;display:none}
@@ -551,6 +617,8 @@ __HEAD__
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--panel2);border-top-left-radius:18px;border-top-right-radius:18px;border:1px solid var(--line);padding:18px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .22s ease;max-width:560px;margin:0 auto;max-height:80vh;overflow:auto}
   .sheet.open{transform:none}
   .sheet h3{font-size:var(--fs-4);margin-bottom:12px}
+  .sheet h3.h3s{margin:14px 0 8px}
+  .fsrc.mb{margin:0 0 10px}
   .grab{width:38px;height:4px;border-radius:var(--r-1);background:#333a46;margin:0 auto 14px}
   .srow{display:flex;align-items:center;gap:11px;padding:12px 12px;border-radius:var(--r-2);border:1px solid var(--line);background:var(--panel);margin-bottom:9px;cursor:pointer}
   .srow.on{border-color:var(--gold);background:rgba(244,194,13,.06)}
@@ -560,44 +628,63 @@ __HEAD__
   .legrow{display:flex;gap:10px;align-items:baseline;padding:7px 0;font-size:var(--fs-3);color:var(--muted);border-top:1px solid #232833}
   .legrow:first-of-type{border-top:none}
   .legrow b{font-size:var(--fs-4);width:30px;flex:none;text-align:center}
+  .legrow b .ic{width:18px;height:18px;vertical-align:-.25em}
 
   .foot{margin:26px 0 10px;color:var(--muted);font-size:var(--fs-2);text-align:center}
 
   /* COACH */
-  .cgoal{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--r-3);background:var(--panel);padding:14px 16px}
+  .cgoal{padding:14px 16px;border-left:3px solid var(--gold)}
   .cg-top{display:flex;gap:12px;align-items:center}
   .cg-l{font-size:var(--fs-2);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-weight:700}
   .cg-v{font-size:var(--fs-4);margin-top:2px} .cg-v b{font-weight:800}
   .cg-s{font-size:var(--fs-3);color:var(--muted);margin-top:3px} .cg-s b{color:var(--txt)}
+  .cg-s.gap{margin-top:10px} .cg-s.gap2{margin-top:6px}
   .ctable{width:100%;border-collapse:collapse;font-size:var(--fs-3);font-variant-numeric:tabular-nums;margin-top:10px}
   .ctable th{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;text-align:right;padding:0 4px 6px}
   .ctable td{padding:7px 4px;border-top:1px solid var(--hair);text-align:right;color:var(--muted);white-space:nowrap}
   .ctable td b{color:var(--txt)}
   .ctable th:first-child,.ctable td:first-child{text-align:left;color:var(--txt);white-space:normal}
   .ctable small{color:var(--muted);font-size:var(--fs-2)}
-  .cbox{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 16px 12px}
-  .fcards{display:grid;grid-template-columns:1fr;gap:12px}
-  .fcard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:14px 16px}
-  .fcard h4{font-size:var(--fs-2);text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
-  .fbig{font-size:var(--fs-7);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
-  .fsub{font-size:var(--fs-3);color:var(--muted);margin-top:3px;line-height:1.4}
-  .cmp{display:flex;flex-direction:column;gap:7px;margin:12px 0 10px}
-  .cmpr{display:flex;align-items:center;gap:9px;font-size:var(--fs-2)}
-  .cmpr .cl{width:118px;flex:none;color:var(--muted);line-height:1.2}
-  .cmpr .cb{flex:1;height:8px;border-radius:var(--r-1);background:var(--track);overflow:hidden}
-  .cmpr .cb i{display:block;height:100%;border-radius:var(--r-1);background:var(--neutral)}
-  .cmpr.me .cl{color:var(--txt);font-weight:700}
-  .cmpr.me .cb i{background:var(--gold)}
-  .cmpr .cv{width:84px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
-  .cmpr .cv small{font-size:var(--fs-2)}
-  .cmpr.me .cv{color:var(--txt);font-weight:700}
-  .fread{font-size:var(--fs-3);line-height:1.55;color:#cfd3d8}
-  .fread b{color:var(--txt)}
-  .fsrc{font-size:var(--fs-2);color:var(--muted);margin-top:8px;line-height:1.4}
   .ctable td.csub{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding-top:12px;text-align:left}
-  .d.nt{color:#9aa3ad}
-  .fcard h4 .exp{margin-left:6px;padding:1px 6px;border-radius:var(--r-1);background:rgba(244,194,13,.14);color:var(--gold);font-size:var(--fs-1);letter-spacing:.6px;vertical-align:1px}
-  @media(max-width:400px){ .cmpr .cl{width:92px} .cmpr .cv{width:76px} }
+  .cbox{padding:4px 16px 12px}
+  .fcards{display:grid;grid-template-columns:1fr;gap:12px}
+
+  /* CARD: uma anatomia só — título · manchete · legenda · tabela ou barras · leitura · nota */
+  .fc>summary{display:block;position:relative;list-style:none;cursor:pointer;min-height:44px;padding:14px 44px 14px 16px;border-radius:var(--r-3)}
+  .fc>summary::-webkit-details-marker{display:none}
+  .fc>summary:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .fc .chev{position:absolute;right:14px;top:13px;width:20px;height:20px;color:var(--muted);transition:transform .15s}
+  .fc[open] .chev{transform:rotate(180deg)}
+  .fc.in-plan{border-left:3px solid var(--gold)}
+  .fc .cb{padding:0 16px 14px}
+  .ct{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:var(--fs-2);font-weight:700;text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--muted)}
+  .ct .sub{text-transform:none;letter-spacing:0;font-weight:500}
+  .mark,.exp{padding:1px 7px;border-radius:var(--r-pill);background:rgba(244,194,13,.14);color:var(--gold);font-size:var(--fs-1);letter-spacing:.06em}
+  .hl{display:flex;align-items:flex-start;gap:10px;margin-top:10px}
+  .hl .hs{flex:1 1 0;min-width:0}
+  .hl .hs b{display:block;font-size:var(--fs-7);font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
+  .hl .hs span{display:block;margin-top:4px;font-size:var(--fs-2);color:var(--muted);line-height:1.25}
+  .hl .x{flex:none;margin-top:8px;font-style:normal;font-size:var(--fs-5);font-weight:600;color:var(--muted)}
+  .hl.txt .hs b{font-size:var(--fs-6)}
+  .cap{font-size:var(--fs-3);color:var(--muted);line-height:1.4}
+  .sub2{margin-top:14px;font-size:var(--fs-3);font-weight:700;color:var(--txt)}
+  .empty{color:var(--muted);font-size:var(--fs-3)}
+  .read,.fread{margin-top:10px;font-size:var(--fs-3);line-height:1.55;color:var(--txt-2)}
+  .read b,.fread b{color:var(--txt)}
+  .note,.fsrc{margin-top:8px;font-size:var(--fs-2);color:var(--muted);line-height:1.4}
+
+  /* barras: a barra desenha o %, escrito ao lado; "N de M" é o apoio */
+  .bars{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
+  .bu{font-size:var(--fs-1);font-weight:700;text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--muted)}
+  .br .bt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:var(--fs-3)}
+  .br .bl{min-width:0;color:var(--muted)}
+  .br.me .bl{color:var(--txt);font-weight:700}
+  .br .bv{flex:none;display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums}
+  .br .bv b{font-size:var(--fs-4);color:var(--txt)}
+  .br .bv small{font-size:var(--fs-2);color:var(--muted)}
+  .br .bb{height:8px;margin-top:5px;border-radius:var(--r-1);background:var(--track);overflow:hidden}
+  .br .bb i{display:block;height:100%;border-radius:var(--r-1);background:var(--neutral)}
+  .br.me .bb i{background:var(--gold)}
 
   @media(min-width:900px){
     .fcards{grid-template-columns:repeat(2,1fr)}
@@ -626,7 +713,7 @@ __SPRITE__
       <span class="rk" id="ss-rank"></span>
       <svg class="cv" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <button class="qbtn" id="sharebtn" type="button" aria-label="Compartilhar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+    <button class="qbtn" id="sharebtn" type="button" aria-label="Compartilhar"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg></button>
     <button class="qbtn" id="helpbtn" type="button" aria-label="Como ler">?</button>
   </div>
 </header>
@@ -645,6 +732,7 @@ __SPRITE__
 
 <div class="sheetbg" id="sheetbg"></div>
 <div class="sheet" id="sheet"></div>
+<div class="poptip" id="poptip" role="status" aria-live="polite"></div>
 
 <script>
 const SNAPSHOTS = __DATA__;
@@ -658,6 +746,14 @@ const fx=(v,d)=>Number(v).toFixed(d).replace(".",",");   // decimal com vírgula
 const byName = l => Object.fromEntries((l||[]).map(x=>[x.name,x]));
 const wrClass = w => w>=55?"good":(w>=50?"mid":"low");
 const ROM=["","I","II","III","IV","V"];
+
+/* ícone do sprite (mesmo traço da navegação) */
+const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+/* ° = amostra curta; a regra aparece no toque (e no title, pro mouse) */
+const SMP={m:"Menos de 4 partidas: amostra curta, indício e não veredito.",o:"Menos de 8 rounds: amostra curta, indício e não veredito."};
+const smp=k=>`<span class="smp" tabindex="0" role="button" data-tip="${SMP[k]}" title="${SMP[k]}">°</span>`;
+/* faixa informativa com ícone */
+const bnr=(i,t,c)=>`<div class="banner${c?" "+c:""}">${ic(i)}<p>${t}</p></div>`;
 
 // ordena por season e depois por data
 const ALL = SNAPSHOTS.slice().sort((a,b)=>(a.seasonOrder-b.seasonOrder)||String(a.date).localeCompare(String(b.date)));
@@ -698,12 +794,12 @@ function rankEmblem(color, div, champ, size){
   </svg>`;
 }
 
-function delta(c,p,dec=0){
+function delta(c,p,dec=0,cnt=false){     // seta = quanto mudou; toque mostra "antes → agora". cnt = contagem (partidas): cinza, nem bom nem ruim
   if(c==null||p==null) return "";
   const d=c-p, thr=dec?0.005:0.5, pv=fx(p,dec), cv=fx(c,dec);
-  if(Math.abs(d)<thr) return `<span class="d eq" title="estável (${cv})">=</span>`;
-  const up=d>0;
-  return `<span class="d ${up?'up':'dn'}" title="${up?'subiu':'caiu'}: antes ${pv} → agora ${cv}">${up?'▲':'▼'}${fx(Math.abs(d),dec)}</span>`;
+  if(Math.abs(d)<thr){ const t=`estável (${cv})`; return `<span class="d eq" tabindex="0" role="button" data-tip="${t}" title="${t}">=</span>`; }
+  const up=d>0, t=`${up?'subiu':'caiu'}: antes ${pv} → agora ${cv}`;
+  return `<span class="d ${cnt?'nt':(up?'up':'dn')}" tabindex="0" role="button" data-tip="${t}" title="${t}">${up?'▲':'▼'}${fx(Math.abs(d),dec)}</span>`;
 }
 const tierOf = wr => wr>=55?"play":(wr<40?"ban":"neu");
 
@@ -716,8 +812,8 @@ function renderInicio(){
   const pbRP = base ? (base.kpis.latestRP!=null?base.kpis.latestRP:base.kpis.peakRP) : null;
   const wl = (k.wins!=null&&k.losses!=null) ? `${k.wins}-${k.losses}` : "—";
   const banner = base
-    ? `🔄 Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = quanto mudou; em porcentagem, conta em pontos (50% → 53% = ▲3).`
-    : `📍 Season mais antiga carregada — sem comparação. Carregue outra season pra ver as variações.`;
+    ? bnr("compare", `Comparando <b>${esc(cur.season)}</b> com <b>${esc(base.season)}</b> (${esc(base.seasonLabel||"")}). Setas ▲▼ = quanto mudou; em porcentagem, conta em pontos (50% → 53% = ▲3).`)
+    : bnr("pin", `Season mais antiga carregada — sem comparação. Carregue outra season pra ver as variações.`);
 
   // o que mudou (mapas presentes nas duas)
   let changed = "";
@@ -732,8 +828,8 @@ function renderInicio(){
     const rowsDn=dns.map(m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv">${m.was.toFixed(0)}→${m.now.toFixed(0)}% <span class="d dn">▼${Math.abs(m.d).toFixed(0)}</span></span></div>`).join("")||`<div class="chrow"><span class="vv">—</span></div>`;
     changed = `<h2 class="sec">O que mudou desde ${esc(base.season)}<span class="hint">win% por mapa</span></h2>
       <div class="changed">
-        <div class="chcol up"><h4>⬈ Subiram</h4>${rowsUp}</div>
-        <div class="chcol dn"><h4>⬊ Caíram</h4>${rowsDn}</div>
+        <div class="chcol up"><h4>${ic("up-right")} Subiram</h4>${rowsUp}</div>
+        <div class="chcol dn"><h4>${ic("down-right")} Caíram</h4>${rowsDn}</div>
       </div>`;
   }
 
@@ -754,21 +850,21 @@ function renderInicio(){
         <div class="gst"><div class="l">V / D</div><div class="v">${wl}</div><div class="dd"></div></div>
       </div>
     </div>
-    ${(()=>{const g=nextGoal(), p=rpPace();return g?`<div class="goal"><span class="gi">▲</span> Faltam <b>${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +${p?Math.round(p.win):25} RP</span></div>`:"";})()}
+    ${(()=>{const g=nextGoal(), p=rpPace();return g?`<div class="goal"><span class="gi">${ic("up-right")}</span> Faltam <b>${g.need} RP</b> pra <b style="color:${g.color}">${g.name}</b><span class="gm"> · cada vitória ≈ +${p?Math.round(p.win):25} RP</span></div>`:"";})()}
     <div class="kgrid2">
-      <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0)}</div><div class="l">Partidas</div></div>
+      <div class="ktile"><div class="v">${k.matches}${delta(k.matches,pk.matches,0,true)}</div><div class="l">Partidas</div></div>
       <div class="ktile"><div class="v">${fx(k.winRate,1)}%${delta(k.winRate,pk.winRate,1)}</div><div class="l">Vitórias</div></div>
     </div>
     ${formaRecente()}
-    <div class="banner">${banner}</div>
+    ${banner}
     ${changed}
     <h2 class="sec">Plano de jogo</h2>
     <div class="plan">
-      <div class="pi"><div class="ico ban">⛔</div><div><b>Bane ${esc(bans[0]?.name||"—")}.</b> <span>${bans.length>1?"Depois "+esc(bans.slice(1,3).map(m=>m.name).join(" / "))+". ":""}Seus piores mapas.</span></div></div>
-      <div class="pi"><div class="ico play">✔</div><div><b>Force ${esc(plays.slice(0,4).map(m=>m.name).join(", ")||"—")}.</b> <span>Vote neles sempre.</span></div></div>
-      ${dM?`<div class="pi"><div class="ico def">🛡</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor.${cur.operatorsDef[1]?" Segunda opção: "+esc(cur.operatorsDef[1].name)+".":""}</span></div></div>`:""}
-      ${aM?`<div class="pi"><div class="ico atk">⚔</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>O pick de cada mapa está na aba Mapas.</span></div></div>`:""}
-      ${cM?`<div class="pi"><div class="ico ban">✕</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e perde mais do que ganha — corte ou reposicione.</span></div></div>`:""}
+      <div class="pi"><div class="ico ban">${ic("ban")}</div><div><b>Bane ${esc(bans[0]?.name||"—")}.</b> <span>${bans.length>1?"Depois "+esc(bans.slice(1,3).map(m=>m.name).join(" / "))+". ":""}Seus piores mapas.</span></div></div>
+      <div class="pi"><div class="ico play">${ic("check")}</div><div><b>Force ${esc(plays.slice(0,4).map(m=>m.name).join(", ")||"—")}.</b> <span>Vote neles sempre.</span></div></div>
+      ${dM?`<div class="pi"><div class="ico def">${ic("shield")}</div><div><b>Defesa: ${esc(dM.name)} (${dM.wr}%).</b> <span>Seu melhor defensor.${cur.operatorsDef[1]?" Segunda opção: "+esc(cur.operatorsDef[1].name)+".":""}</span></div></div>`:""}
+      ${aM?`<div class="pi"><div class="ico atk">${ic("sword")}</div><div><b>Ataque: ${esc(aM.name)} (${aM.wr}%).</b> <span>O pick de cada mapa está na aba Mapas.</span></div></div>`:""}
+      ${cM?`<div class="pi"><div class="ico ban">${ic("x")}</div><div><b>Repense ${esc(cM.name)} (${cM.wr}%).</b> <span>Muito jogado e perde mais do que ganha — corte ou reposicione.</span></div></div>`:""}
     </div>`;
 }
 
@@ -784,8 +880,8 @@ function nextGoal(){
 function recencyNote(m, rr){
   if(!rr || (rr.w+rr.l)<2) return "";
   const t=tierOf(m.seasonWR);
-  if(t==="ban" && rr.w>rr.l) return `<div class="rnote up"><i>↗</i> Você vem <b>ganhando</b> aqui (${rr.w}V-${rr.l}D nas últimas partidas): o "banir" da season pode estar desatualizado — reavalie.</div>`;
-  if(t==="play" && rr.l>rr.w) return `<div class="rnote dn"><i>↘</i> <b>Esfriou</b> (${rr.w}V-${rr.l}D nas últimas partidas) apesar de ser mapa forte — cuidado ao forçar.</div>`;
+  if(t==="ban" && rr.w>rr.l) return `<div class="rnote up"><i>${ic("up-right")}</i> Você vem <b>ganhando</b> aqui (${rr.w}V-${rr.l}D nas últimas partidas): o "banir" da season pode estar desatualizado — reavalie.</div>`;
+  if(t==="play" && rr.l>rr.w) return `<div class="rnote dn"><i>${ic("down-right")}</i> <b>Esfriou</b> (${rr.w}V-${rr.l}D nas últimas partidas) apesar de ser mapa forte — cuidado ao forçar.</div>`;
   return "";
 }
 
@@ -794,11 +890,11 @@ function tierChips(cur, base, tier){
   const pb = base?byName(base.maps):{};
   return cur.maps.filter(m=>tierOf(m.seasonWR)===tier)
     .sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR))
-    .map(m=>`<span class="chipm">${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?"°":""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small></span>`).join("") || `<span class="chipm" style="opacity:.5">—</span>`;
+    .map(m=>`<span class="chipm">${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?smp("m"):""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small></span>`).join("") || `<span class="chipm none">—</span>`;
 }
 function sideRows(list, pl){
   const p=byName(pl);
-  return (list||[]).map((o,i)=>`<div class="pl"><span class="rk">${i+1}</span><span class="nm">${esc(o.name)}${o.small?"°":""}</span><span class="pc ${wrClass(o.wr)}">${o.wr}%${delta(o.wr,(p[o.name]||{}).wr,0)}</span></div>`).join("");
+  return (list||[]).map((o,i)=>`<div class="pl"><span class="rk">${i+1}</span><span class="nm">${esc(o.name)}${o.small?smp("o"):""}</span><span class="pc ${wrClass(o.wr)}">${o.wr}%${delta(o.wr,(p[o.name]||{}).wr,0)}</span></div>`).join("");
 }
 function strongSide(m){
   const dd=(m.atkWR||0)-(m.defWR||0);
@@ -867,8 +963,8 @@ function mineLine(m){
   if(!m.def && !m.atk) return "";
   const f=l=>(l||[]).map(o=>`${esc(o.name)} ${o.wr}%`).join(" · ");
   const parts=[];
-  if(m.def) parts.push(`<b style="color:var(--def)">def</b> ${f(m.def)}`);
-  if(m.atk) parts.push(`<b style="color:var(--atk)">atk</b> ${f(m.atk)}`);
+  if(m.def) parts.push(`<b class="cdef">def</b> ${f(m.def)}`);
+  if(m.atk) parts.push(`<b class="catk">atk</b> ${f(m.atk)}`);
   return `<div class="mine">Seus melhores aqui — ${parts.join(" &nbsp;·&nbsp; ")}</div>`;
 }
 function formaRecente(){
@@ -921,16 +1017,16 @@ function renderMapas(){
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
     return `<div class="map">
       <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>${rbadge}
-        <span class="wr"><b>${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</b><small>${m.matches} ${m.matches===1?"PARTIDA":"PARTIDAS"}${m.matches<4?" °":""}</small></span></div>
+        <span class="wr"><b>${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</b><small>${m.matches} ${m.matches===1?"PARTIDA":"PARTIDAS"}${m.matches<4?" "+smp("m"):""}</small></span></div>
       <div class="ad">${adbar('atk',m.atkWR)}${adbar('def',m.defWR)}</div>
       <div class="strong">${strongSide(m)} <span>K/D ${fx(m.kd||0,2)}${delta(m.kd,pm.kd,2)}</span></div>
       ${opsHtml}
       ${recencyNote(m,rr)}
-      ${m.note?`<div class="notew">⚠ ${esc(m.note)}</div>`:""}
+      ${m.note?`<div class="notew">${ic("warn")}<span>${esc(m.note)}</span></div>`:""}
       ${m.avoid?`<div class="avoid"><b>Evite:</b> ${esc(m.avoid)}</div>`:""}
     </div>`;
   }).join("");
-  const opsNote = `<div class="banner" style="margin-bottom:12px">🎯 Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds vencidos · rounds jogados. <b>°</b> = amostra pequena: indício, não veredito.</div>`;
+  const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds vencidos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
   document.getElementById("scr-mapas").innerHTML = `
     <h2 class="sec">Jogar vs banir<span class="hint">win% da season</span></h2>
     <div class="tier">
@@ -948,7 +1044,7 @@ function opPanel(list, pl){
   const p=byName(pl);
   return (list||[]).map(o=>{
     const kd=o.kd!=null?` · K/D ${fx(o.kd,2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
-    return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?"°":""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
+    return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?smp("o"):""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
   }).join("");
 }
 function renderOps(){
@@ -979,7 +1075,7 @@ function renderOpsTable(){
   if(!el||!cur.opsAll) return;
   const chips=[["all","Tudo"],["d","Defesa"],["a","Ataque"]]
     .map(([v,l])=>`<button class="fchip ${opsFilter===v?"on":""}" onclick="opsFilter='${v}';renderOpsTable()">${l}</button>`).join("");
-  const th=OPS_COLS.map(([k,l])=>`<th class="${opsSort===k?"on":""}" style="cursor:pointer" onclick="opsSort='${k}';renderOpsTable()">${l}${opsSort===k?'<span class="ar"> ↓</span>':""}</th>`).join("");
+  const th=OPS_COLS.map(([k,l])=>`<th class="${opsSort===k?"on":""}" onclick="opsSort='${k}';renderOpsTable()">${l}${opsSort===k?'<span class="ar"> ↓</span>':""}</th>`).join("");
   const rows=cur.opsAll
     .filter(o=>opsFilter==="all"||o.s===opsFilter)
     .slice().sort((a,b)=>{
@@ -991,7 +1087,7 @@ function renderOpsTable(){
       const hs=o.k?Math.round(100*o.hs/o.k)+"%":"—";
       const fb=(o.fb+o.fd)?`${o.fb} de ${o.fb+o.fd}`:"—";
       return `<tr class="${o.r<8?"dim":""}" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)">
-        <td>${esc(o.n)}${o.r<8?" °":""}<span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEF":"ATK"}</span></td>
+        <td>${esc(o.n)}${o.r<8?" "+smp("o"):""}<span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEF":"ATK"}</span></td>
         <td>${o.r}</td><td><b>${pf(o.w,o.r)}%</b> <small>${o.w} de ${o.r}</small></td>
         <td>${kd}</td><td>${hs}</td><td>${fb}</td></tr>`;
     }).join("");
@@ -1005,16 +1101,16 @@ function hardBreachCard(cur){
   if(!got.length) return "";
   const rows=HARD_BREACH.map(n=>{
     const o=cur.opsAll.find(x=>x.n===n);
-    if(!o) return `<div class="oprow"><span class="nm" style="color:var(--muted)">${n}</span><span class="st">sem rounds nesta season</span></div>`;
+    if(!o) return `<div class="oprow"><span class="nm cmut">${n}</span><span class="st">sem rounds nesta season</span></div>`;
     const kd=fx(o.k/Math.max(1,o.d),2);
-    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?"°":""} · ${o.w} de ${o.r} rds · K/D ${kd}</span></div>`;
+    return `<div class="oprow clk" data-op="${esc(o.n)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.n)}</span><span class="st"><b>${pf(o.w,o.r)}%</b>${o.r<8?smp("o"):""} · ${o.w} de ${o.r} rds · K/D ${kd}</span></div>`;
   }).join("");
   const best=got.filter(o=>o.r>=15).sort((a,b)=>b.r-a.r)[0];
   const read=best
     ? `Sua opção com amostra real: <b>${esc(best.n)}</b> (${best.w} de ${best.r}, K/D ${fx(best.k/Math.max(1,best.d),2)}). Os outros quase não têm rounds — treine um segundo pra semana de ban.`
     : `Nenhum hard breach com amostra de verdade nesta season.`;
-  return `<div class="opcard" style="margin-top:12px"><h3><span class="tag atk">ATAQUE</span> Hard breach — plano B</h3>${rows}
-    <div class="fsrc" style="margin-top:8px">${read} O card do coach mostra o quanto rodar sem hard breach custa.</div></div>`;
+  return `<div class="opcard gap"><h3><span class="tag atk">ATAQUE</span> Hard breach — plano B</h3>${rows}
+    <div class="fsrc">${read} O card do coach mostra o quanto rodar sem hard breach custa.</div></div>`;
 }
 function openOpSheet(name){
   const cur=active, o=(cur.opsAll||[]).find(x=>x.n===name);
@@ -1030,13 +1126,13 @@ function openOpSheet(name){
     <tr><td>1º duelo do round</td><td>${duel}</td></tr>
     <tr><td>Clutch</td><td><b>${o.cw}</b> ganhos · ${o.cl} perdidos</td></tr></table>`;
   const evo=SEASONS.map(s=>({s,e:(s.opsAll||[]).find(x=>x.n===name)})).filter(x=>x.e&&x.e.r>0);
-  const evoHtml=evo.length>1?`<h3 style="margin:14px 0 8px">Season a season</h3><table class="ctable">${
+  const evoHtml=evo.length>1?`<h3 class="h3s">Season a season</h3><table class="ctable"><tr><th>Season</th><th>Rounds ganhos</th><th>K/D</th></tr>${
     evo.map(({s,e})=>`<tr><td>${esc(s.season)}</td><td><b>${pf(e.w,e.r)}%</b> <small>${e.r} rds</small></td><td>K/D ${fx(e.k/Math.max(1,e.d),2)}</td></tr>`).join("")}</table>`:"";
   const mm=(cur.opsMaps||{})[name];
-  const mapsHtml=mm&&mm.length?`<h3 style="margin:14px 0 8px">Por mapa</h3><table class="ctable">${
+  const mapsHtml=mm&&mm.length?`<h3 class="h3s">Por mapa</h3><table class="ctable"><tr><th>Mapa</th><th>Rounds ganhos</th><th>K/D</th></tr>${
     mm.slice().sort((a,b)=>b[1]-a[1]).slice(0,4).map(r=>`<tr><td>${esc(r[0])}</td><td><b>${pf(r[2],r[1])}%</b> <small>${r[2]} de ${r[1]}</small></td><td>K/D ${fx(r[3]/Math.max(1,r[4]),2)}</td></tr>`).join("")}</table>`:"";
   const fr=((cur.coach||{}).opsRole||{})[name];
-  const feedHtml=fr?`<h3 style="margin:14px 0 8px">O que o kill feed mostra</h3><table class="ctable">
+  const feedHtml=fr?`<h3 class="h3s">O que o kill feed mostra</h3><table class="ctable">
     <tr><td>Vivo no fim do round</td><td><b>${pf(fr[2],fr[0])}%</b> <small>${fr[2]} de ${fr[0]}</small></td></tr>
     <tr><td>1ª morte do time é você</td><td><b>${pf(fr[3],fr[0])}%</b></td></tr>
     <tr><td>Kill sua na abertura do round</td><td><b>${pf(fr[4],fr[0])}%</b> <small>${fr[4]} de ${fr[0]}</small></td></tr>
@@ -1044,14 +1140,14 @@ function openOpSheet(name){
     <div class="fsrc">Kill feed desta season (${fr[0]} rounds); pode divergir 1–2% do tracker.</div>`:"";
   const why=((PLAYBOOK.operators||{})[name]||{}).why;
   openSheet(`<h3>${esc(name)} <span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEFESA":"ATAQUE"}</span></h3>
-    ${o.r<8?`<div class="fsrc" style="margin-bottom:10px">° amostra curta (${o.r} ${o.r===1?"round":"rounds"}) — leia como indicativo, não veredito.</div>`:""}
+    ${o.r<8?`<div class="fsrc mb">° amostra curta (${o.r} ${o.r===1?"round":"rounds"}) — leia como indicativo, não veredito.</div>`:""}
     ${stats}${evoHtml}${mapsHtml}${feedHtml}
-    ${why?`<div class="fsrc" style="margin-top:10px">Função: ${esc(why)}</div>`:""}`);
+    ${why?`<div class="fsrc">Função: ${esc(why)}</div>`:""}`);
 }
 
 /* ---------- EVOLUÇÃO ---------- */
 function spark(vals, color, fmt, labels){
-  if(vals.length<2) return `<div style="color:var(--muted);font-size:13px">Só 1 season carregada — o gráfico aparece com 2+.</div>`;
+  if(vals.length<2) return `<div class="empty">Só 1 season carregada — o gráfico aparece com 2+.</div>`;
   const w=560,h=96,pad=14;
   const mn=Math.min(...vals), mx=Math.max(...vals), rg=(mx-mn)||1;
   const X=i=>pad+i*(w-2*pad)/(vals.length-1), Y=v=>h-pad-(v-mn)/rg*(h-2*pad);
@@ -1117,8 +1213,8 @@ function goalCard(){
     const kmax=n=>{let m=0; for(let i=0;i<=n;i++) if((n-i)*Wp-i*Lp>0) m=i; return m;};
     const rpf=v=>sg(rnd(v));
     const janela=`A cada 5 partidas você pode perder até <b>${kmax(5)}</b> e ainda subir: 2V-3D dá ${rpf(2*Wp-3*Lp)} RP e 3V-2D, ${rpf(3*Wp-2*Lp)} RP (em 4 partidas: até ${kmax(4)}).`;
-    body=`<div class="cg-s" style="margin-top:10px">Seu ritmo nesta season: <b>${sg(Math.round(p.win))}</b> por vitória e <b>${sg(Math.round(p.loss))}</b> por derrota (${p.n} partidas). Com ${be}% de vitórias você já não perde RP.</div>
-      <div class="cg-s" style="margin-top:6px">${janela}</div>
+    body=`<div class="cg-s gap">Seu ritmo nesta season: <b>${sg(Math.round(p.win))}</b> por vitória e <b>${sg(Math.round(p.loss))}</b> por derrota (${p.n} partidas). Com ${be}% de vitórias você já não perde RP.</div>
+      <div class="cg-s gap2">${janela}</div>
       <table class="ctable"><tr><th>Vitórias</th><th>RP por partida</th><th>Partidas até ${esc(g.label)}</th></tr>
       ${sc.map(([w,l])=>{const x=per(w);return `<tr><td>${l}</td><td>${sx(x,1)}</td><td><b>${x>0.05?"~"+Math.ceil(g.need/x):"não sobe"}</b></td></tr>`;}).join("")}</table>
       <div class="fsrc">Cenário, não promessa: supõe que cada vitória e cada derrota continuem valendo a média desta season.</div>`;
@@ -1160,8 +1256,9 @@ function styleTable(cur,base){
     const v=styleVal(s,k), pv=styleVal(b,k);
     return `<tr><td>${l}</td><td><b>${fmt(v,u,d)}</b>${deltaDir(v,pv,d,dir)}</td>${b?`<td>${fmt(pv,u,d)}</td>`:""}</tr>`;
   }).join("");
-  return `<div class="cbox"><table class="ctable"><tr><th></th><th>${esc(cur.season)}</th>${b?`<th>${esc(base.season)}</th>`:""}</tr>${rows}</table>
-    <div class="fsrc">${nf(s.rounds)} rounds${b?` (${esc(base.season)}: ${nf(b.rounds)})`:""}. Verde = melhorou, vermelho = piorou, cinza = muda o estilo, não o resultado.</div></div>`;
+  return card({k:"style",title:`Seu estilo em números <span class="sub">${b?"vs "+esc(base.season):esc(cur.season)}</span>`,
+    body:`<table class="ctable"><tr><th>Medida</th><th>${esc(cur.season)}</th>${b?`<th>${esc(base.season)}</th>`:""}</tr>${rows}</table>`,
+    note:`${nf(s.rounds)} rounds${b?` (${esc(base.season)}: ${nf(b.rounds)})`:""}. Verde = melhorou, vermelho = piorou, cinza = muda o estilo, não o resultado.`});
 }
 
 function squadRows(q){
@@ -1180,20 +1277,31 @@ function squadCard(cur,base){
       note=`Com o squad o seu K/D cai (${fx(tg[2]/tg[3],2)} × ${fx(so[2]/so[3],2)} sozinho, na ${esc(sn.season)}). O provável: a partida sobe pro nível deles.`;
   });
   const few=[q,bq].some(x=>x&&(x.solo[1]<15||x.together[1]<15));
-  return `<div class="cbox"><table class="ctable"><tr><th></th><th>Vitórias</th><th>K/D</th><th>RP</th></tr>
+  const so=q.solo, tg=q.together;
+  const head=(so&&so[1]&&tg&&tg[1])?pair([`${pf(so[0],so[1])}%`,"sozinho"],[`${pf(tg[0],tg[1])}%`,"com o squad"]):"";
+  return card({k:"squad",title:"Fila",head,cap:"sozinho × com o squad",
+    body:`<table class="ctable"><tr><th>Fila</th><th>Vitórias</th><th>K/D</th><th>RP</th></tr>
       <tr><td colspan="4" class="csub">${esc(cur.season)} · ${q.n} partidas</td></tr>${squadRows(q)}
       ${bq?`<tr><td colspan="4" class="csub">${esc(base.season)} · últimas ${bq.n} partidas</td></tr>${squadRows(bq)}`:""}
-    </table>
-    ${note?`<div class="fread" style="margin-top:10px">${note}</div>`:""}
-    <div class="fsrc">Squad = partida no mesmo minuto e no mesmo mapa de outro perfil daqui${who?` (nesta season: ${who})`:""}.${few?" Fila com menos de 15 partidas é indício, não prova.":""} Detalhe por amigo na aba Squad.</div></div>`;
+    </table>`,
+    read:note,
+    note:`Squad = partida no mesmo minuto e no mesmo mapa de outro perfil daqui${who?` (nesta season: ${who})`:""}.${few?" Fila com menos de 15 partidas é indício, não prova.":""} Detalhe por amigo na aba Squad.`});
 }
 
-function bars(rows){                   // [rótulo, %, texto, é você?]
-  return `<div class="cmp">${rows.map(([l,v,t,me])=>`<div class="cmpr${me?" me":""}"><span class="cl">${l}</span><span class="cb"><i style="width:${Math.max(2,Math.min(100,v))}%"></i></span><span class="cv">${t}</span></div>`).join("")}</div>`;
+function bars(rows,unit){              // [rótulo, %, "N de M", é você?]: a barra desenha o %, escrito ao lado; "N de M" é o apoio
+  return `<div class="bars">${unit?`<div class="bu">${unit}</div>`:""}${rows.map(([l,v,t,me])=>`<div class="br${me?" me":""}"><div class="bt"><span class="bl">${l}</span><span class="bv"><b>${v}%</b>${t&&t.slice(-1)!=="%"?`<small>${t}</small>`:""}</span></div><div class="bb"><i style="width:${Math.max(2,Math.min(100,v))}%"></i></div></div>`).join("")}</div>`;
 }
-function fcard(title,big,sub,inner,read,src){
-  return `<div class="fcard"><h4>${title}</h4><div class="fbig">${big}</div><div class="fsub">${sub}</div>${inner||""}${read?`<div class="fread">${read}</div>`:""}${src?`<div class="fsrc">${src}</div>`:""}</div>`;
+/* manchete: "A × B" com o rótulo de cada lado dentro dela, ou um valor só */
+const pair=(a,b)=>`<div class="hl"><div class="hs"><b>${a[0]}</b><span>${a[1]}</span></div><i class="x" aria-hidden="true">×</i><div class="hs"><b>${b[0]}</b><span>${b[1]}</span></div></div>`;
+const solo=(v,txt)=>`<div class="hl${txt?" txt":""}"><div class="hs"><b>${v}</b></div></div>`;
+let PLAN={};                           // chaves dos cards que sustentam uma regra do plano (preenchido em renderCoach)
+const WIDE=()=>!!(window.matchMedia&&matchMedia("(min-width:900px)").matches);
+function card(o){                      // título · manchete · legenda · tabela/barras · leitura · nota
+  const plan=!!(o.k&&PLAN[o.k]);
+  const body=`${o.cap?`<div class="cap">${o.cap}</div>`:""}${o.body||""}${o.read?`<div class="read">${o.read}</div>`:""}${o.note?`<div class="note">${o.note}</div>`:""}`;
+  return `<details class="card fc${plan?" in-plan":""}"${o.k?` id="c-${o.k}"`:""}${(o.open||plan||WIDE())?" open":""}><summary><span class="ct">${o.title}${plan?`<span class="mark">no plano</span>`:""}</span>${o.head||""}${ic("chev","chev")}</summary><div class="cb">${body}</div></details>`;
 }
+const fcard=(title,head,cap,body,read,note,k)=>card({title,head,cap,body,read,note,k});
 function coachCards(cur){
   const c=cur.coach, s=cur.style, K={};
   if(c&&c.lastAlive){
@@ -1205,9 +1313,9 @@ function coachCards(cur){
       : `No ataque você sobra sozinho perto do que acontece com eles.`;
     read += ` Na defesa, quando sobra 1 do time, é você em <b>${md}%</b> das vezes (eles, ${rd}%)${Math.abs(md-rd)<8?" — normal":""}.`;
     if(k&&k.alone) read += ` Dos seus ${nf(k.total)} abates, ${k.alone} saíram com você já sozinho; ${k.aloneLost} desses, em round perdido.`;
-    K.lastAlive=(fcard("Último vivo no ataque",`${me}%`,"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
+    K.lastAlive=fcard("Último vivo no ataque",solo(`${me}%`),"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
       bars([["Você",me,`${la.atk[0]} de ${la.atk[1]}`,1],["Bons jogadores*",ref,`${lr.atk[0]} de ${lr.atk[1]}`],["Acaso (1 em 5)",20,"20%"]]),
-      read,`* ${esc(c.refLabel)}. Base: ${c.matches} partidas, ${nf(c.rounds)} rounds.`));
+      read,`* ${esc(c.refLabel)}. Base: ${c.matches} partidas, ${nf(c.rounds)} rounds.`,"lastAlive");
   }
   if(c&&c.killTiming&&c.killTiming.meEarly[1]>=100){
     const kt=c.killTiming, meE=pf(kt.meEarly[0],kt.meEarly[1]), rE=pf(kt.refEarly[0],kt.refEarly[1]);
@@ -1215,55 +1323,55 @@ function coachCards(cur){
     const read = rE-meE>=8
       ? `Você quase não participa da abertura: só <b>${meE}%</b> das suas kills são um dos 2 primeiros abates do round (eles, ${rE}%). Chegue junto do entry que a abertura vira sua.`
       : `A distribuição é parecida com a dos bons jogadores (abertura ${meE}% × ${rE}%, fim ${meL}% × ${rL}%). Ou seja: o "último vivo" não vem da hora das suas kills — vem de onde você está quando os outros caem.`;
-    K.killTiming=(fcard("Quando suas kills acontecem",`${meE}% · ${meL}%`,"das suas kills abrem o round (2 primeiros abates) · fecham o round (2 últimos)",
+    K.killTiming=fcard("Quando suas kills acontecem",pair([`${meE}%`,"abrem o round"],[`${meL}%`,"fecham o round"]),"das suas kills abrem o round (2 primeiros abates) · fecham o round (2 últimos)",
       bars([["Você — abertura",meE,`${kt.meEarly[0]} de ${kt.meEarly[1]}`,1],["Bons — abertura",rE,`${kt.refEarly[0]} de ${nf(kt.refEarly[1])}`],
             ["Você — fim",meL,`${kt.meLate[0]} de ${kt.meLate[1]}`,1],["Bons — fim",rL,`${kt.refLate[0]} de ${nf(kt.refLate[1])}`]]),
-      read,`* ${esc(c.refLabel)}.`));
+      read,`* ${esc(c.refLabel)}.`,"killTiming");
   }
   if(c&&c.states&&(c.states["4v4"]||[0,0])[1]>=10&&(c.states["4v5"]||[0,0])[1]>=10){
     const st=c.states, a44=st["4v4"], a45=st["4v5"];
     const L=[["5v4","Vocês na frente (5v4)"],["4v4","Troca feita (4v4)"],["4v5","Um a menos (4v5)"],["5v3","Dois na frente (5v3)"],["3v5","Dois a menos (3v5)"],["3v3","3v3"],["2v2","2v2"]];
-    const rows=L.filter(([k])=>(st[k]||[0,0])[1]>=8).map(([k,l])=>{const[w,n]=st[k];return `<tr><td>${l}</td><td><b>${pf(w,n)}%</b></td><td><small>${w} de ${n}</small></td></tr>`;}).join("");
-    K.states=(fcard("O round pelo placar de vivos",`${pf(a44[0],a44[1])}% × ${pf(a45[0],a45[1])}%`,"round vencido com a troca feita (4v4) × um a menos (4v5)",
-      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>${rows}</table>`,
+    const rows=L.filter(([k])=>(st[k]||[0,0])[1]>=8).map(([k,l])=>{const[w,n]=st[k];return `<tr><td>${l}</td><td><b>${pf(w,n)}%</b> <small>${w} de ${n}</small></td></tr>`;}).join("");
+    K.states=fcard("O round pelo placar de vivos",pair([`${pf(a44[0],a44[1])}%`,"troca feita (4v4)"],[`${pf(a45[0],a45[1])}%`,"um a menos (4v5)"]),"round vencido com a troca feita (4v4) × um a menos (4v5)",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th></tr>${rows}</table>`,
       `Perder o 1º duelo não fecha o round se vier a troca: em 4v4 vocês vencem <b>${pf(a44[0],a44[1])}%</b>; sem a troca (4v5), <b>${pf(a45[0],a45[1])}%</b>. É o número por trás do "morreu um, troque na hora".`,
-      "Primeira vez que o round chega em cada placar, pelo kill feed."));
+      "Primeira vez que o round chega em cada placar, pelo kill feed.","states");
   }
   if(s&&s.clutchBy){
     const cb=s.clutchBy, tot=cb.reduce((a,x)=>a+x[1],0), w=cb.reduce((a,x)=>a+x[0],0), hard=cb[3][1]+cb[4][1];
-    if(tot) K.clutch=(fcard("Quando você sobra sozinho",`${w} de ${tot}`,"situações de 1 contra X que você venceu nesta season",
+    if(tot) K.clutch=fcard("Quando você sobra sozinho",solo(`${w} de ${tot}`),"situações de 1 contra X que você venceu nesta season",
       bars(cb.map((x,i)=>[`1 contra ${i+1}`,pf(x[0],x[1]),`${x[0]} de ${x[1]}`,0])),
       hard?`<b>${hard}</b> das ${tot} foram 1 contra 4 ou 5. Ali quase ninguém vence: o ganho está em não chegar lá.`:"",
-      "Contagem do r6.tracker.network."));
+      "Contagem do r6.tracker.network.","clutch");
   }
   if(c&&c.hardBreach&&c.hardBreach.with[1]>=10&&c.hardBreach.without[1]>=10){
     const hb=c.hardBreach, a=pf(hb.with[0],hb.with[1]), b=pf(hb.without[0],hb.without[1]);
     const rows=[["Com hard breach",a,`${hb.with[0]} de ${hb.with[1]}`],["Sem hard breach",b,`${hb.without[0]} de ${hb.without[1]}`]];
     if(hb.self&&hb.self[1]) rows.push(["Você de breacher",pf(hb.self[0],hb.self[1]),`${hb.self[0]} de ${hb.self[1]}`,1]);
-    K.hardBreach=(fcard("Hard breach no ataque",`${a}% × ${b}%`,"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
-      bars(rows),`Em <b>${hb.without[1]} dos ${hb.with[1]+hb.without[1]}</b> rounds de ataque ninguém do seu time levou.`,""));
+    K.hardBreach=fcard("Hard breach no ataque",pair([`${a}%`,"com hard breach"],[`${b}%`,"sem hard breach"]),"rounds de ataque vencidos com e sem Thermite, Hibana, Ace ou Maverick no seu time",
+      bars(rows),`Em <b>${hb.without[1]} dos ${hb.with[1]+hb.without[1]}</b> rounds de ataque ninguém do seu time levou.`,"","hardBreach");
   }
   if(c&&c.score&&c.score.led20[1]>=8&&c.score.trail02[1]>=8){
     const sc=c.score, otShare=pf(sc.ot[1],c.matches);
-    const row=(l,a,v)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]} ${v}</small></td></tr>`;
-    K.score=(fcard("O placar da partida",`${pf(sc.led20[0],sc.led20[1])}% × ${pf(sc.trail02[0],sc.trail02[1])}%`,"partidas fechadas quando você abre 2-0 × viradas quando leva 0-2",
-      `<table class="ctable"><tr><th>Situação</th><th></th><th></th></tr>
+    const row=(l,a,v)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b> <small>${a[0]} de ${a[1]} ${v}</small></td></tr>`;
+    K.score=fcard("O placar da partida",pair([`${pf(sc.led20[0],sc.led20[1])}%`,"abriu 2-0"],[`${pf(sc.trail02[0],sc.trail02[1])}%`,"levou 0-2"]),"partidas fechadas quando você abre 2-0 × viradas quando leva 0-2",
+      `<table class="ctable"><tr><th>Situação</th><th>Resultado</th></tr>
         ${row("Abriu 2-0",sc.led20,"fechadas")}${row("Levou 0-2",sc.trail02,"viradas")}
         ${sc.ot[1]?row("Foi pro overtime (3-3)",sc.ot,"ganhas"):""}${sc.otRounds[1]?row("Rounds de overtime",sc.otRounds,"vencidos"):""}</table>`,
       `Quem abre 2-0 quase leva: você fechou <b>${sc.led20[0]} de ${sc.led20[1]}</b> e virou só <b>${sc.trail02[0]} de ${sc.trail02[1]}</b> — os dois primeiros rounds valem a partida, jogue eles a sério desde o pick.${otShare>=25?` E <b>${otShare}%</b> das suas partidas foram pro overtime: round 7 é rotina, não exceção.`:""}`,
-      `${c.matches} partidas com kill feed.`));
+      `${c.matches} partidas com kill feed.`,"score");
   }
   if(c&&c.teams){
     const t=c.teams, d=t.matesRP-t.enemiesRP, avg=Math.round((4*t.matesRP+t.meRP)/5);
     const big=Math.abs(d)<=50?"Mesmo nível":(d<0?"Um pouco abaixo":"Um pouco acima");
     const atk=pf(c.sideRounds.atk[0],c.sideRounds.atk[1]), def=pf(c.sideRounds.def[0],c.sideRounds.def[1]);
-    K.teams=(fcard("Seus times são mais fracos?",big,"seu time × time inimigo, no começo de cada partida",
-      `<table class="ctable"><tr><th></th><th>Colegas</th><th>Inimigos</th></tr>
+    K.teams=fcard("Seus times são mais fracos?",solo(big,1),"seu time × time inimigo, no começo de cada partida",
+      `<table class="ctable"><tr><th>Medida</th><th>Colegas</th><th>Inimigos</th></tr>
         <tr><td>RP médio</td><td><b>${nf(t.matesRP)}</b></td><td><b>${nf(t.enemiesRP)}</b></td></tr>
         <tr><td>K/D</td><td><b>${fx(t.matesKD,2)}</b></td><td><b>${fx(t.enemiesKD,2)}</b></td></tr>
         <tr><td>Abates <small>(time todo)</small></td><td><b>${nf(t.teamKills)}</b></td><td><b>${nf(t.enemyKills)}</b></td></tr></table>`,
       `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do dos inimigos porque o seu não entra nessa conta; com você, o time todo mata quase o mesmo que o inimigo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
-      "Colegas = os outros 4 do seu time, sem você. RP de antes da partida."));
+      "Colegas = os outros 4 do seu time, sem você. RP de antes da partida.","teams");
   }
   if(c&&c.pressure&&c.pressure.mine[1]>=15&&c.pressure.theirs[1]>=15){
     const a=c.pressure.mine, b=c.pressure.theirs;
@@ -1271,60 +1379,59 @@ function coachCards(cur){
     const lead=Math.abs(pa-pb)<=6
       ? `Fechar e sobreviver valem quase o mesmo pra você (~${Math.round((pa+pb)/20)} em 10).`
       : pa>pb ? `Você fecha melhor (${pa}%) do que segura (${pb}%).` : `Você segura melhor (${pb}%) do que fecha (${pa}%).`;
-    K.pressure=fcard("Sob pressão",`${pf(a[0],a[1])}% × ${pf(b[0],b[1])}%`,"rounds fechados com match point seu × segurados com match point deles",
-      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>
-        <tr><td>Match point seu</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>
-        <tr><td>Match point deles</td><td><b>${pf(b[0],b[1])}%</b></td><td><small>${b[0]} de ${b[1]}</small></td></tr></table>`,
+    K.pressure=fcard("Sob pressão",pair([`${pa}%`,"match point seu"],[`${pb}%`,"match point deles"]),"rounds fechados com match point seu × segurados com match point deles",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th></tr>
+        <tr><td>Match point seu</td><td><b>${pa}%</b> <small>${a[0]} de ${a[1]}</small></td></tr>
+        <tr><td>Match point deles</td><td><b>${pb}%</b> <small>${b[0]} de ${b[1]}</small></td></tr></table>`,
       `${lead} Com match point seu, jogue o round mais simples do dia: utilidade toda, zero herói — é o round que time nervoso joga pior.`,
-      "Match point = um time com 3 rounds a favor e o outro com até 2 (no overtime, com 4).");
+      "Match point = um time com 3 rounds a favor e o outro com até 2 (no overtime, com 4).","pressure");
   }
   if(c&&c.trades&&c.trades.mateDeaths>0&&c.trades.myDeaths>0){
     const t=c.trades, me=pf(t.byMe,t.mateDeaths), mates=pf(t.byMe+t.byOthers,t.mateDeaths), per=Math.round(100*t.byOthers/t.mateDeaths/3), mt=pf(t.meTraded,t.myDeaths);
     const quem=Math.abs(me-per)<=2?"como um colega médio":me>per?"mais que um colega médio":"menos que um colega médio";
     let read=`Você troca ${quem} (${me}% das mortes deles; um time de 4 troca ~${per}% por cabeça).`;
     if(mt<mates) read+=` O problema é a distância: os colegas são trocados em ${mates}% das mortes e você em só ${mt}% — você morre longe. Ande a uma sala do entry: a troca dele é sua, e a sua é dele.`;
-    K.trades=fcard("Trocas",`${me}% × ${mt}%`,"mortes de colegas que você trocou × suas mortes que o time trocou",
-      `<table class="ctable"><tr><th></th><th>Mortes</th><th>Trocadas</th></tr>
+    K.trades=fcard("Trocas",pair([`${me}%`,"você troca"],[`${mt}%`,"o time te troca"]),"mortes de colegas que você trocou × suas mortes que o time trocou",
+      `<table class="ctable"><tr><th>Quem morreu</th><th>Mortes</th><th>Trocadas</th></tr>
         <tr><td>Colegas</td><td><b>${nf(t.mateDeaths)}</b></td><td>você ${t.byMe} · outros ${t.byOthers}</td></tr>
         <tr><td>Você</td><td><b>${nf(t.myDeaths)}</b></td><td>${t.meTraded}</td></tr></table>`,
-      read,"Troca = quem matou cai nos 2 abates seguintes do round.");
+      read,"Troca = quem matou cai nos 2 abates seguintes do round.","trades");
   }
   if(c&&c.postClutch&&c.postClutch.afterLost[1]>=20){
     const pc=c.postClutch, l=pf(pc.afterLost[0],pc.afterLost[1]), an=pf(pc.afterAnyLost[0],pc.afterAnyLost[1]);
-    K.postClutch=fcard("O round depois do clutch",`${l}%`,"round seguinte vencido depois de você perder um clutch",
+    K.postClutch=fcard("O round depois do clutch",solo(`${l}%`),"round seguinte vencido depois de você perder um clutch",
       bars([["Depois de clutch perdido",l,`${pc.afterLost[0]} de ${pc.afterLost[1]}`,1],
             ["Depois de round perdido comum",an,`${pc.afterAnyLost[0]} de ${pc.afterAnyLost[1]}`],
             ["Depois de clutch vencido",pf(pc.afterWon[0],pc.afterWon[1]),`${pc.afterWon[0]} de ${pc.afterWon[1]}`]]),
       l<an
         ? `Depois que você sobra sozinho e perde, o time vence o seguinte ${l}% — abaixo dos ${an}% de um round perdido comum. Meio round de pedágio: respira no próximo, não force entrada pra compensar.`
         : `Depois que você sobra sozinho e perde, o time vence o seguinte ${l}% — igual ou acima dos ${an}% de um round perdido comum: sem pedágio visível.`,
-      "Clutch = você é o último vivo do seu time no round.");
+      "Clutch = você é o último vivo do seu time no round.","postClutch");
   }
   if(c&&c.noKill&&c.noKill.died[1]>=30){
     const nk=c.noKill, al=pf(nk.alive[0],nk.alive[1]), di=pf(nk.died[0],nk.died[1]), dk=pf(nk.diedWithKill[0],nk.diedWithKill[1]);
     const share=pf(nk.alive[1]+nk.died[1],c.rounds);
-    const row=(l,a)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>`;
-    K.noKill=fcard("Seu round sem abate",`${al}% × ${di}%`,"rounds com 0 abate seu: vencidos quando você fica vivo × quando você morre",
-      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th><th></th></tr>${row("0 abate, vivo no fim",nk.alive)}${row("0 abate, morto",nk.died)}${row("Morto, mesmo levando 1+",nk.diedWithKill)}</table>`,
+    const row=(l,a)=>`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b> <small>${a[0]} de ${a[1]}</small></td></tr>`;
+    K.noKill=fcard("Seu round sem abate",pair([`${al}%`,"vivo no fim"],[`${di}%`,"morto"]),"rounds com 0 abate seu: vencidos quando você fica vivo × quando você morre",
+      `<table class="ctable"><tr><th>Situação</th><th>Vencidos</th></tr>${row("0 abate, vivo no fim",nk.alive)}${row("0 abate, morto",nk.died)}${row("Morto, mesmo levando 1+",nk.diedWithKill)}</table>`,
       `${share>=40&&share<=55?"Quase metade dos seus rounds termina":`Em ${share}% dos seus rounds você termina`} sem abate seu — e tudo bem: vivo, ${al}% viram vitória. O round não pede seu frag, pede você vivo; morrer ${Math.abs(dk-di)<=8?"custa quase o mesmo":"não custa o mesmo"} levando alguém junto (${dk}%) ou não (${di}%).`,
-      `Vivo no fim e vitória andam juntos por natureza (defesa que segura o relógio termina viva) — leia como "morte barata custa round", não como "esconder-se vence".`);
+      `Vivo no fim e vitória andam juntos por natureza (defesa que segura o relógio termina viva) — leia como "morte barata custa round", não como "esconder-se vence".`,"noKill");
   }
   if(c&&c.rival&&c.rival.with[1]>=8){
     const a=c.rival.with, b=c.rival.without, tot=a[1]+b[1];
-    K.rival=fcard(`O duelo repetido <span class="exp">experimental</span>`,`${a[0]} de ${a[1]}`,"partidas vencidas quando um mesmo inimigo te matou 3+ vezes",
+    K.rival=fcard(`O duelo repetido <span class="exp">experimental</span>`,solo(`${a[0]} de ${a[1]}`),"partidas vencidas quando um mesmo inimigo te matou 3+ vezes",
       bars([["Com rival",pf(a[0],a[1]),`${a[0]} de ${a[1]}`,1],["Sem rival",pf(b[0],b[1]),`${b[0]} de ${b[1]}`]]),
       `Em ${a[1]} das ${tot} partidas alguém te matou 3+ vezes — você venceu ${a[0]}. Amostra curta e em ranked o adversário muda a cada partida (por isso o selo experimental); o uso é ao vivo: perdeu o MESMO duelo duas vezes, troque a rota — não volte pro mesmo ângulo.`,
-      "");
+      "","rival");
   }
-  // ordem = o que se decide DURANTE o jogo primeiro; contexto e perfil depois
-  return ["states","pressure","lastAlive","hardBreach","trades","killTiming","postClutch","noKill","clutch","rival","score","teams"]
-    .map(k=>K[k]||"").join("");
+  return K;
 }
+const CARD_ORDER=["states","pressure","lastAlive","hardBreach","trades","killTiming","postClutch","noKill","clutch","rival","score","teams"];   // o que se decide DURANTE o jogo primeiro; contexto e perfil depois
 function trendBlock(cur){
   const t=cur.coach&&cur.coach.trend;
   if(!t||t.last.n<10) return "";
   const L=t.last, R=t.rest;
-  const d1=x=>x.toFixed(1).replace(".",","), d2=x=>x.toFixed(2).replace(".",","), sg1=x=>sx(x,1);
+  const d2=x=>x.toFixed(2).replace(".",","), sg1=x=>sx(x,1);
   const eL=L.esr[1]?pf(L.esr[0],L.esr[1]):null, eR=R.esr[1]?pf(R.esr[0],R.esr[1]):null;
   let read=L.rp>R.rp
     ? `As últimas ${L.n} são seu melhor trecho da season: ${sg1(L.rp)} de RP por partida contra ${sg1(R.rp)} antes.`
@@ -1335,14 +1442,14 @@ function trendBlock(cur){
       ? " — você está ganhando mais entrando menos no duelo de abertura, que é exatamente o plano."
       : ".";
   }
-  return `<h2 class="sec">Tendência<span class="hint">últimas ${L.n} × o resto da season</span></h2>
-    <div class="cbox"><table class="ctable"><tr><th></th><th>Últimas ${L.n}</th><th>Antes (${R.n})</th></tr>
+  return card({k:"trend",title:"Tendência",head:pair([`${pf(L.w,L.n)}%`,`últimas ${L.n}`],[`${pf(R.w,R.n)}%`,`antes (${R.n})`]),
+    cap:`vitórias nas últimas ${L.n} × o resto da season`,
+    body:`<table class="ctable"><tr><th>Medida</th><th>Últimas ${L.n}</th><th>Antes (${R.n})</th></tr>
       <tr><td>Vitórias</td><td><b>${pf(L.w,L.n)}%</b> <small>${L.w} de ${L.n}</small></td><td>${pf(R.w,R.n)}% <small>${R.w} de ${R.n}</small></td></tr>
       <tr><td>K/D</td><td><b>${d2(L.kd)}</b></td><td>${d2(R.kd)}</td></tr>
       ${eL!=null?`<tr><td>1º duelo vencido</td><td><b>${eL}%</b> <small>${L.esr[0]} de ${L.esr[1]}</small></td><td>${eR!=null?eR+"%":"—"} <small>${R.esr[0]} de ${R.esr[1]}</small></td></tr>`:""}
-      <tr><td>RP por partida</td><td><b>${sg1(L.rp)}</b></td><td>${sg1(R.rp)}</td></tr></table>
-      <div class="fread" style="margin-top:10px">${read}</div>
-      <div class="fsrc">Últimas ${L.n} partidas da season × as outras ${R.n}. K/D e 1º duelo vêm do kill feed.</div></div>`;
+      <tr><td>RP por partida</td><td><b>${sg1(L.rp)}</b></td><td>${sg1(R.rp)}</td></tr></table>`,
+    read,note:`Últimas ${L.n} partidas da season × as outras ${R.n}. K/D e 1º duelo vêm do kill feed.`});
 }
 function tiltCard(cur){
   const t=cur.tilt; if(!t) return "";
@@ -1355,8 +1462,8 @@ function tiltCard(cur){
   const G=t.byGame;
   if(G&&G.some(x=>x[1]>=5)){
     const lbl=["1ª da sessão","2ª","3ª","4ª em diante"];
-    bg=`<div class="fsub" style="margin-top:12px"><b style="color:var(--txt)">Vitórias pela posição na sessão</b></div>
-      <table class="ctable">${G.map((x,i)=>x[1]?`<tr><td>${lbl[i]}</td><td><b>${pf(x[0],x[1])}%</b></td><td><small>${x[0]} de ${x[1]}</small></td></tr>`:"").join("")}</table>`;
+    bg=`<div class="sub2">Vitórias pela posição na sessão</div>
+      <table class="ctable"><tr><th>Partida</th><th>Vitórias</th></tr>${G.map((x,i)=>x[1]?`<tr><td>${lbl[i]}</td><td><b>${pf(x[0],x[1])}%</b> <small>${x[0]} de ${x[1]}</small></td></tr>`:"").join("")}</table>`;
     const g1=G[0], mid=[G[1][0]+G[2][0], G[1][1]+G[2][1]];
     if(g1[1]>=10&&mid[1]>=10&&pf(mid[0],mid[1])-pf(g1[0],g1[1])>=12)
       read+=` A <b>1ª partida da sessão</b> é a sua pior: ${g1[0]} de ${g1[1]} (${pf(g1[0],g1[1])}%), contra ${pf(mid[0],mid[1])}% na 2ª e 3ª — você entra frio.`;
@@ -1364,72 +1471,74 @@ function tiltCard(cur){
     if(G[3][1]>=8&&pf(pre[0],pre[1])-pf(G[3][0],G[3][1])>=12)
       read+=` Da <b>4ª em diante</b> cai pra ${pf(G[3][0],G[3][1])}% — sessão longa não paga.`;
   }
-  return fcard("Depois de perder",big,"a partida seguinte, na mesma sessão",
-    bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]])+bg,
-    read,`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas.`);
+  return card({k:"tilt",title:"Sequência · depois de perder",head:solo(big,1),cap:"a partida seguinte, na mesma sessão",
+    body:bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]],"partida seguinte vencida")+bg,
+    read,note:`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas.`});
 }
-function coachRules(cur,base){
+function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach que mostra o dado por trás ("" = nenhum)
   const c=cur.coach, s=cur.style, R=[];
-  const rule=(ico,cls,b,t)=>`<div class="pi"><div class="ico ${cls}">${ico}</div><div><b>${b}</b> <span>${t}</span></div></div>`;
+  const rule=(k,ico,cls,b,t)=>R.push({k,ico,cls,b,t});
   if(c&&c.lastAlive){
     const la=c.lastAlive.atk, lr=c.lastAliveRef.atk, me=pf(la[0],la[1]), ref=pf(lr[0],lr[1]), al=c.alone.atk;
-    if(me-ref>=10) R.push(rule("⚔","atk","No ataque, seja o 2º a entrar, não o 5º.",
-      `Ande a uma sala do seu entry: se ele cair, você troca na hora. Hoje, quando o time fica com 1 vivo no ataque, é você ${me}% das vezes (o normal é 20%), e sozinho você venceu ${al[0]} de ${al[1]}.`));
+    if(me-ref>=10) rule("lastAlive","sword","atk","No ataque, seja o 2º a entrar, não o 5º.",
+      `Ande a uma sala do seu entry: se ele cair, você troca na hora. Hoje, quando o time fica com 1 vivo no ataque, é você ${me}% das vezes (o normal é 20%), e sozinho você venceu ${al[0]} de ${al[1]}.`);
   }
   if(s&&s.esr>=60&&(s.fb+s.fd)>=20){
     const o=c&&c.opening;
-    R.push(rule("🎯","play","Confie no seu 1º duelo.",
-      `Quando você entra nele, vence ${Math.round(s.esr)}% (${s.fb} de ${s.fb+s.fd}).${o?` Round que começa com abate do seu time vira vitória ${pf(o.kill[0],o.kill[1])}% das vezes; com morte, ${pf(o.death[0],o.death[1])}%.`:""}`));
+    rule("style","target","play","Confie no seu 1º duelo.",
+      `Quando você entra nele, vence ${Math.round(s.esr)}% (${s.fb} de ${s.fb+s.fd}).${o?` Round que começa com abate do seu time vira vitória ${pf(o.kill[0],o.kill[1])}% das vezes; com morte, ${pf(o.death[0],o.death[1])}%.`:""}`);
   }
   if(c&&c.hardBreach){
     const hb=c.hardBreach, a=pf(hb.with[0],hb.with[1]), b=pf(hb.without[0],hb.without[1]);
     if(hb.with[1]>=10&&hb.without[1]>=10&&a-b>=8){
       const mine=(cur.operatorsAtk||[]).concat(cur.operatorsCut||[]).filter(o=>HARD_BREACH.includes(o.name)).sort((x,y)=>(y.rounds||0)-(x.rounds||0))[0];
-      R.push(rule("🧨","atk",`Sem hard breach no time? Pegue ${esc(mine?mine.name:"Thermite")}.`,
-        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} rounds de ataque ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+fx(mine.kd,2):""}.`:""}`));
+      rule("hardBreach","burst","atk",`Sem hard breach no time? Pegue ${esc(mine?mine.name:"Thermite")}.`,
+        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} rounds de ataque ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+fx(mine.kd,2):""}.`:""}`);
     }
   }
   const bans=(cur.maps||[]).filter(m=>m.matches>=4&&m.seasonWR<40).sort((x,y)=>x.seasonWR-y.seasonWR);
-  if(bans.length){ const m=bans[0]; R.push(rule("⛔","ban",`Bane ${esc(m.name)}.`,`${m.seasonWR.toFixed(0)}% em ${m.matches} partidas.${m.note?" "+esc(m.note):""}`)); }
+  if(bans.length){ const m=bans[0]; rule("","ban","ban",`Bane ${esc(m.name)}.`,`${m.seasonWR.toFixed(0)}% em ${m.matches} partidas.${m.note?" "+esc(m.note):""}`); }
   const t=cur.tilt;
   if(t&&t.afterLoss[1]>=8&&pf(t.afterLoss[0],t.afterLoss[1])<45)
-    R.push(rule("🧠","ban","Perdeu duas seguidas? Pausa antes da próxima.",`Depois de uma derrota você venceu a seguinte só ${t.afterLoss[0]} de ${t.afterLoss[1]}.`));
+    rule("tilt","pause","ban","Perdeu duas seguidas? Pausa antes da próxima.",`Depois de uma derrota você venceu a seguinte só ${t.afterLoss[0]} de ${t.afterLoss[1]}.`);
   if(t&&t.byGame){
     const g1=t.byGame[0], mid=[t.byGame[1][0]+t.byGame[2][0], t.byGame[1][1]+t.byGame[2][1]];
     if(g1[1]>=10&&mid[1]>=10&&pf(mid[0],mid[1])-pf(g1[0],g1[1])>=12)
-      R.push(rule("🔥","play","Aqueça antes da primeira ranqueada.",
-        `Sua 1ª partida da sessão é a pior: ${g1[0]} de ${g1[1]} (${pf(g1[0],g1[1])}%), contra ${pf(mid[0],mid[1])}% na 2ª e 3ª. Estande de tiro ou uma casual antes de dar queue.`));
+      rule("tilt","flame","play","Aqueça antes da primeira ranqueada.",
+        `Sua 1ª partida da sessão é a pior: ${g1[0]} de ${g1[1]} (${pf(g1[0],g1[1])}%), contra ${pf(mid[0],mid[1])}% na 2ª e 3ª. Estande de tiro ou uma casual antes de dar queue.`);
   }
   const sq=[[cur.squad,cur],[base&&base.squad,base]].find(([q])=>q&&q.solo[1]>=10&&q.together[1]>=10);
   if(sq){
     const [q,sn]=sq, a=pf(q.together[0],q.together[1]), b=pf(q.solo[0],q.solo[1]);
-    if(a-b>=8) R.push(rule("👥","play","Jogue com o squad quando der.",`Na ${esc(sn.season)}: ${q.together[0]} de ${q.together[1]} juntos (${a}%); sozinho, ${q.solo[0]} de ${q.solo[1]} (${b}%).`));
+    if(a-b>=8) rule("squad","squad","play","Jogue com o squad quando der.",`Na ${esc(sn.season)}: ${q.together[0]} de ${q.together[1]} juntos (${a}%); sozinho, ${q.solo[0]} de ${q.solo[1]} (${b}%).`);
   }
-  return R.length?`<div class="plan">${R.join("")}</div>`
-    :`<div class="banner" style="margin-top:0">Nenhuma regra passou no corte dos seus números ainda. Mapas e operadores estão no Plano de jogo do Início.</div>`;
+  return R;
+}
+function coachRules(cur,base){
+  const R=coachRuleItems(cur,base);
+  return R.length?`<div class="plan">${R.map(r=>`<div class="pi"><div class="ico ${r.cls}">${ic(r.ico)}</div><div><b>${r.b}</b> <span>${r.t}</span></div></div>`).join("")}</div>`
+    :bnr("info","Nenhuma regra passou no corte dos seus números ainda. Mapas e operadores estão no Plano de jogo do Início.","flat");
 }
 function renderCoach(){
   const cur=active, base=baselineOf(cur), latest=cur===SEASONS[0];
   const el=document.getElementById("scr-coach");
   if(!cur.style){
-    el.innerHTML=`<div class="banner">🧭 O coach usa dados que só existem a partir da Y11S2. Troque a season no seletor do topo.</div>`;
+    el.innerHTML=bnr("compass","O coach usa dados que só existem a partir da Y11S2. Troque a season no seletor do topo.");
     return;
   }
+  PLAN={}; if(latest) coachRuleItems(cur,base).forEach(r=>{ if(r.k) PLAN[r.k]=1; });
+  const K=coachCards(cur);
   el.innerHTML=`
-    ${latest?`<h2 class="sec" style="margin-top:4px">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}
+    ${latest?`<h2 class="sec first">Plano pra próxima sessão<span class="hint">tirado dos seus números</span></h2>${coachRules(cur,base)}
       <h2 class="sec">Meta</h2>${goalCard()}`
-      :`<div class="banner" style="margin:0 0 6px">📅 Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.</div>`}
+      :bnr("calendar",`Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.`,"tight")}
     <h2 class="sec">O que os rounds mostram<span class="hint">${esc(cur.season)}</span></h2>
-    ${cur.coach?"":`<div class="banner" style="margin:0 0 12px">🔎 O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.</div>`}
-    <div class="fcards">${coachCards(cur)}</div>
-    ${trendBlock(cur)}
-    ${cur.squad?`<h2 class="sec">Fila<span class="hint">sozinho × com o squad</span></h2>${squadCard(cur,base)}`:""}
-    <h2 class="sec">Seu estilo em números<span class="hint">${base&&base.style?"vs "+esc(base.season):esc(cur.season)}</span></h2>${styleTable(cur,base)}
-    ${cur.tilt?`<h2 class="sec">Sequência</h2>${tiltCard(cur)}`:""}`;
+    ${cur.coach?"":bnr("search",`O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.`,"gap")}
+    <div class="fcards">${CARD_ORDER.map(k=>K[k]||"").join("")}${trendBlock(cur)}${cur.squad?squadCard(cur,base):""}${styleTable(cur,base)}${cur.tilt?tiltCard(cur):""}</div>`;
 }
 
 /* ---------- SQUAD ---------- */
-const SQUAD_AVISO=`👥 Amostra pequena vira indício, não veredito — vocês jogaram pouco juntos nesta season. Squad = partida no mesmo minuto e mapa de outro perfil daqui; amigo de fora do app conta como "sozinho".`;
+const SQUAD_AVISO=`Amostra pequena vira indício, não veredito — vocês jogaram pouco juntos nesta season. Squad = partida no mesmo minuto e mapa de outro perfil daqui; amigo de fora do app conta como "sozinho".`;
 function squadTable(sn){
   const q=sn.squad;
   const row=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>`:"";
@@ -1441,18 +1550,18 @@ function squadTable(sn){
 function renderSquad(){
   const el=document.getElementById("scr-squad");
   const seas=SEASONS.filter(s=>s.squad);
-  if(!seas.length){ el.innerHTML=`<div class="banner">👥 Sem dados de fila carregados.</div>`; return; }
-  el.innerHTML=seas.map((s,i)=>`<h2 class="sec"${i?"":' style="margin-top:4px"'}>${esc(s.season)}<span class="hint">${esc(s.seasonLabel||"")} · ${s.squad.n} partidas</span></h2>${squadTable(s)}${i===0?`<div class="banner">${SQUAD_AVISO}</div>`:""}`).join("");
+  if(!seas.length){ el.innerHTML=bnr("squad","Sem dados de fila carregados."); return; }
+  el.innerHTML=seas.map((s,i)=>`<h2 class="sec${i?"":" first"}">${esc(s.season)}<span class="hint">${esc(s.seasonLabel||"")} · ${s.squad.n} partidas</span></h2>${squadTable(s)}${i===0?bnr("squad",SQUAD_AVISO):""}`).join("");
 }
 
 /* ---------- SELETOR / SHELL ---------- */
 const TABS=[
-  {id:"inicio",label:"Início",icon:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>'},
-  {id:"coach",label:"Coach",icon:'<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>'},
-  {id:"mapas",label:"Mapas",icon:'<svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>'},
-  {id:"ops",label:"Operadores",icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>'},
-  {id:"squad",label:"Squad",icon:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.6"/><path d="M14.8 14.6c.7-.4 1.4-.6 2.2-.6 2.3 0 4.1 1.5 4.6 4.3"/></svg>'},
-  {id:"evo",label:"Evolução",icon:'<svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-8"/></svg>'}
+  {id:"inicio",label:"Início",icon:ic("home")},
+  {id:"coach",label:"Coach",icon:ic("coach")},
+  {id:"mapas",label:"Mapas",icon:ic("map")},
+  {id:"ops",label:"Operadores",icon:ic("ops")},
+  {id:"squad",label:"Squad",icon:ic("squad")},
+  {id:"evo",label:"Evolução",icon:ic("evo")}
 ];
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id==="scr-"+id));
@@ -1482,18 +1591,18 @@ function openSeasons(){
 }
 function openHelp(){
   openSheet(`<h3>Como ler o SIEGE·LAB</h3>
-    <div class="legrow"><b style="color:var(--play)">▲</b> subiu vs a season anterior (no computador, passe o mouse na seta: antes → agora)</div>
-    <div class="legrow"><b style="color:var(--ban)">▼</b> caiu vs a season anterior</div>
-    <div class="legrow"><b style="color:#8b919c">=</b> estável</div>
-    <div class="legrow"><b>°</b> amostra pequena — indicativo</div>
-    <div class="legrow"><b style="color:var(--def)">■</b> defesa · <b style="color:var(--atk)">■</b> ataque</div>
-    <div class="legrow"><b style="color:var(--gold)">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
-    <div class="legrow"><b>🗺</b> Mapas: priorize = win% ≥55 · neutro 40–54 · banir &lt;40 (conta só a season escolhida)</div>
-    <div class="legrow"><b>⇅</b> troque a season pelo seletor no topo pra comparar épocas</div>
-    <div class="legrow"><b style="color:#9aa3ad">▲</b> cinza no Coach: mudou o estilo, não o resultado (nem bom nem ruim)</div>
-    <div class="legrow"><b>💡</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards de cima são os que valem olhar durante o jogo</div>
-    <div class="legrow"><b>🎖</b> Operadores: toque em qualquer operador (mains, hard breach ou tabela) pra abrir a ficha completa</div>
-    <div class="legrow"><b>👥</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
+    <div class="legrow"><b class="cup">▲</b> subiu vs a season anterior (toque na seta pra ver antes → agora)</div>
+    <div class="legrow"><b class="cdn">▼</b> caiu vs a season anterior</div>
+    <div class="legrow"><b class="cmut">=</b> estável</div>
+    <div class="legrow"><b>°</b> amostra pequena — indicativo (mapa com menos de 4 partidas · operador com menos de 8 rounds)</div>
+    <div class="legrow"><b class="cdef">■</b> defesa · <b class="catk">■</b> ataque</div>
+    <div class="legrow"><b class="cgold">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
+    <div class="legrow"><b>${ic("map")}</b> Mapas: priorize = win% ≥55 · neutro 40–54 · banir &lt;40 (conta só a season escolhida)</div>
+    <div class="legrow"><b>${ic("swap")}</b> troque a season pelo seletor no topo pra comparar épocas</div>
+    <div class="legrow"><b class="cnt">▲</b> cinza: mudou o estilo ou a contagem, não o resultado (nem bom nem ruim)</div>
+    <div class="legrow"><b>${ic("coach")}</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards marcados "no plano" são os que valem olhar durante o jogo</div>
+    <div class="legrow"><b>${ic("medal")}</b> Operadores: toque em qualquer operador (mains, hard breach ou tabela) pra abrir a ficha completa</div>
+    <div class="legrow"><b>${ic("squad")}</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
 }
 function openShare(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);
@@ -1511,10 +1620,10 @@ function openShare(){
     <div class="scfoot">${esc(active.season)} · thebsilva.github.io/siege-lab</div>
   </div>`;
   openSheet(`<h3>Compartilhar</h3>${card}
-    <div class="shint">Tire um print do card e mande no grupo 👊</div>
+    <div class="shint">Tire um print do card e mande no grupo</div>
     ${navigator.share?`<button class="btn-share" id="doshare">Compartilhar o link</button>`:`<button class="btn-share" id="docopy">Copiar o link</button>`}`);
   const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:"SIEGE·LAB — "+PLAYER.name,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
-  const c=document.getElementById("docopy"); if(c) c.onclick=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(location.href); c.textContent="Link copiado ✓"; };
+  const c=document.getElementById("docopy"); if(c) c.onclick=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(location.href); c.innerHTML=ic("check")+" Link copiado"; };
 }
 const bg=document.getElementById("sheetbg"), sh=document.getElementById("sheet");
 function openSheet(html){ sh.innerHTML='<div class="grab"></div>'+html; bg.classList.add("open"); sh.classList.add("open"); }
@@ -1529,6 +1638,24 @@ function shell(){
   document.getElementById("subline").innerHTML = `<span class="pn">${esc(PLAYER.name)}</span><span class="pq"> · Ranked</span>`;
   document.title = "SIEGE·LAB — " + PLAYER.name;
   bg.onclick=closeSheet;
+  const pop=document.getElementById("poptip"); let popT=0;
+  const hide=()=>pop.classList.remove("on");
+  const show=el=>{
+    pop.textContent=el.dataset.tip; pop.classList.add("on");
+    const r=el.getBoundingClientRect(), w=pop.offsetWidth, h=pop.offsetHeight, vw=document.documentElement.clientWidth;
+    pop.style.left=Math.min(Math.max(8,r.left+r.width/2-w/2),vw-w-8)+"px";
+    pop.style.top=(r.top-h-8>=8?r.top-h-8:r.bottom+8)+"px";
+    clearTimeout(popT); popT=setTimeout(hide,3200);
+  };
+  document.addEventListener("click",e=>{                // captura: a dica abre sem disparar o clique da linha que a contém
+    const t=e.target.closest&&e.target.closest("[data-tip]");
+    if(t){ e.stopPropagation(); e.preventDefault(); show(t); } else hide();
+  },true);
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape") hide();
+    else if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.tip){ e.preventDefault(); show(e.target); }
+  });
+  window.addEventListener("scroll",hide,{passive:true});
 }
 shell(); renderAll(); go("inicio");
 </script>
