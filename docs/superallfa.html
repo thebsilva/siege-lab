@@ -51,7 +51,7 @@
 
   header{position:sticky;top:0;z-index:50;background:rgba(10,11,14,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
   .hbar{display:flex;align-items:center;gap:6px;padding:8px 10px;max-width:1100px;margin:0 auto;min-height:56px}
-  .hbrand{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto;color:inherit;text-decoration:none;border-radius:var(--r-2)}
+  .hbrand{display:flex;align-items:center;gap:8px;min-width:0;min-height:40px;flex:1 1 auto;color:inherit;text-decoration:none;border-radius:var(--r-2)}
   .hbrand:focus-visible,.hbar button:focus-visible,nav.bottom button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .logo{width:32px;height:32px;flex:none;filter:drop-shadow(0 0 9px rgba(244,194,13,.28))}
   .brand{min-width:0;line-height:1.1}
@@ -93,6 +93,9 @@
   .d.up{color:var(--play)} .d.dn{color:var(--ban)} .d.eq{color:var(--muted);font-weight:600}
   .d.nt{color:#9aa3ad}                        /* contagem (partidas) ou estilo: a seta mostra o sentido, não bom nem ruim */
   .smp{color:var(--neu);font-weight:800;font-size:1.25em;line-height:0;padding:4px 2px;margin-left:1px}
+  .d,.smp{position:relative}                 /* área de toque de 40 px sem mexer no layout da linha */
+  .d::after,.smp::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:40px;transform:translateY(-50%)}
+  .smp::after{left:-7px;right:-7px}
   .poptip{position:fixed;z-index:120;max-width:min(260px,calc(100vw - 24px));padding:8px 11px;border-radius:var(--r-2);background:#0b0d11;border:1px solid var(--gold);
           color:var(--txt);font-size:var(--fs-3);line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
   .poptip.on{opacity:1;transform:none}
@@ -519,6 +522,10 @@
     .opcard.gap h3{grid-column:1/-1}
     .opcard.gap .fsrc{margin-top:10px;font-size:var(--fs-3);line-height:1.5}
   }
+  @media(min-width:900px) and (max-width:1049px){   /* abas mais justas pra o nome do jogador caber inteiro no cabeçalho */
+    .desktabs{margin-left:6px;gap:2px}
+    .desktabs button{padding:0 7px}
+  }
 </style>
 </head>
 <body>
@@ -871,7 +878,7 @@ function renderMapas(){
   const main=list.filter(m=>m.matches>=4), short=list.filter(m=>m.matches<4);
   const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds ganhos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
   document.getElementById("scr-mapas").innerHTML = `
-    <h2 class="sec">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra abrir</span></h2>
+    <h2 class="sec">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra ${WIDE()?"recolher":"abrir"}</span></h2>
     <div class="tier">
       <div class="tcol play"><div class="th"><span class="dot"></span>Priorize</div><div class="chips">${tierChips(cur,base,"play")}</div></div>
       <div class="tcol neu"><div class="th"><span class="dot"></span>Neutro</div><div class="chips">${tierChips(cur,base,"neu")}</div></div>
