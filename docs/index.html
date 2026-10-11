@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0e">
 <title>SIEGE·LAB — Squad</title>
+<meta name="color-scheme" content="dark">
+<meta name="description" content="O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores).">
+<meta name="apple-mobile-web-app-title" content="SIEGE·LAB">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22slg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ffd23a%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23eeb400%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M14%200H46L64%2018V50A14%2014%200%200%201%2050%2064H18L0%2046V14A14%2014%200%200%201%2014%200Z%22%20fill%3D%22url%28%23slg%29%22%2F%3E%3Cpath%20d%3D%22M16%2012H42L48%2018V21H25V27.5H48V52H22L16%2046Z%20M25%2036.5V43H39V36.5Z%22%20fill%3D%22%230a0b0e%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SIEGE·LAB">
+<meta property="og:title" content="SIEGE·LAB — Squad">
+<meta property="og:description" content="O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores).">
+<meta property="og:url" content="https://thebsilva.github.io/siege-lab/">
+<meta property="og:image" content="https://thebsilva.github.io/siege-lab/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d;--play:#34d399;--ban:#f0513f}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -12,7 +26,7 @@
        -webkit-font-smoothing:antialiased;min-height:100vh;padding:30px 18px 60px}
   .wrap{max-width:660px;margin:0 auto}
   .top{display:flex;align-items:center;gap:13px;margin-bottom:4px}
-  .logo{width:46px;height:46px;border-radius:11px;background:var(--gold);color:#111;display:grid;place-items:center;font-weight:900;font-size:26px;box-shadow:0 0 22px rgba(244,194,13,.32)}
+  .logo{width:46px;height:46px;flex:none;filter:drop-shadow(0 0 12px rgba(244,194,13,.3))}
   h1{font-size:22px;letter-spacing:.5px} h1 em{font-style:normal;color:var(--gold)}
   .sub{color:var(--muted);font-size:13px;margin:4px 0 24px}
   h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
@@ -38,8 +52,9 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="slg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd23a"/><stop offset="1" stop-color="#eeb400"/></linearGradient></defs><symbol id="sl-logo" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z" fill="url(#slg)"/><path d="M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="#0a0b0e" fill-rule="evenodd"/></symbol><symbol id="sl-logo-mono" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="currentColor" fill-rule="evenodd"/></symbol></svg>
   <div class="wrap">
-    <div class="top"><div class="logo">6</div><h1>SIEGE<em>·</em>LAB</h1></div>
+    <div class="top"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg><h1>SIEGE<em>·</em>LAB</h1></div>
     <div class="sub">O squad · ranqueada R6 · toque num jogador pra abrir a análise completa</div>
     <h2>Destaques do grupo</h2>
     <div class="sups"><div class="sup"><div class="sup-l">🎯 Maior K/D</div><div class="sup-n">SuperAllfa</div><div class="sup-v">1,31</div></div><div class="sup"><div class="sup-l">🛡 Melhor defesa</div><div class="sup-n">BrunoPrufer</div><div class="sup-v">Thorn · 61%</div></div><div class="sup"><div class="sup-l">🔥 Melhor forma</div><div class="sup-n">BrunoPrufer</div><div class="sup-v">11V-9D nas últimas</div></div><div class="sup"><div class="sup-l">🧊 Em maré fria</div><div class="sup-n">laprufer</div><div class="sup-v">7V-13D · -67 RP</div></div></div>

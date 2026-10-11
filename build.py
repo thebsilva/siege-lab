@@ -11,10 +11,43 @@ Nova medição: coletar em players/<slug>/raw/, rodar `python3 ingest.py AAAA-MM
 (gera os snapshots) e depois este script.
 """
 import json, glob, os
+import html as _html
+
+import brand                      # identidade visual (símbolo, favicon, PNGs) — uma fonte só
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PLAYERS_DIR = os.path.join(HERE, "players")
 OUT_DIR = os.path.join(HERE, "docs")  # GitHub Pages serve daqui
+SITE_URL = "https://thebsilva.github.io/siege-lab/"
+
+LOGO_SVG = brand.symbol()         # <symbol id="sl-logo">: header, landing e card de compartilhar usam <use href="#sl-logo">
+
+
+def sprite():
+    """Sprite SVG inline (invisível): gradiente da marca + símbolos. Sem requisição externa."""
+    return ('<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>'
+            + brand.GRAD + '</defs>' + LOGO_SVG + brand.symbol_mono() + '</svg>')
+
+
+def head_meta(title, desc, url):
+    """Ícone da aba, prévia do link (WhatsApp/Telegram) e título — iguais nas duas páginas."""
+    e = lambda s: _html.escape(s, quote=True)
+    return "\n".join([
+        '<meta name="color-scheme" content="dark">',
+        f'<meta name="description" content="{e(desc)}">',
+        '<meta name="apple-mobile-web-app-title" content="SIEGE·LAB">',
+        f'<link rel="icon" type="image/svg+xml" href="{brand.favicon_href()}">',
+        '<link rel="apple-touch-icon" href="apple-touch-icon.png">',
+        '<meta property="og:type" content="website">',
+        '<meta property="og:site_name" content="SIEGE·LAB">',
+        f'<meta property="og:title" content="{e(title)}">',
+        f'<meta property="og:description" content="{e(desc)}">',
+        f'<meta property="og:url" content="{e(url)}">',
+        f'<meta property="og:image" content="{SITE_URL}og.png">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta name="twitter:card" content="summary_large_image">',
+    ])
 
 
 def rank_py(rp):
@@ -66,21 +99,29 @@ def build_player(pdir, names=None):
     if os.path.exists(pb_path):
         with open(pb_path, encoding="utf-8") as fh:
             playbook = json.load(fh)
+    latest = max(snaps, key=lambda s: s.get("seasonOrder", 0))
+    k = latest.get("kpis", {})
+    curRP = k.get("latestRP") if k.get("latestRP") is not None else k.get("peakRP")
+    rk, color = rank_py(curRP)
+    slug = profile.get("slug", "player")
+    title = "SIEGE·LAB — " + str(profile.get("name"))
+    rp_txt = f"{curRP or 0:,}".replace(",", ".")
+    kd_txt = f"{k.get('kd') or 0:.2f}".replace(".", ",")
+    desc = f"{profile.get('name')} · {rk} · {rp_txt} RP · K/D {kd_txt} — análise de ranqueada do R6 Siege: coach, mapas, operadores e squad."
     html = (TEMPLATE
+            .replace("__HEAD__", head_meta(title, desc, SITE_URL + slug + ".html"))
+            .replace("__TITLE__", _html.escape(title))
+            .replace("__SPRITE__", sprite())
             .replace("__DATA__", json.dumps(snaps, ensure_ascii=False))
             .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False))
             .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False))
             .replace("__NAMES__", json.dumps(names or {}, ensure_ascii=False)))
     os.makedirs(OUT_DIR, exist_ok=True)
-    out = os.path.join(OUT_DIR, profile.get("slug", "player") + ".html")
+    out = os.path.join(OUT_DIR, slug + ".html")
     with open(out, "w", encoding="utf-8") as fh:
         fh.write(html)
     seasons = sorted({s.get("season") for s in snaps})
     print(f"OK -> docs/{os.path.basename(out)}  ({profile.get('name')}: {len(snaps)} season(s): {', '.join(seasons)})")
-    latest = max(snaps, key=lambda s: s.get("seasonOrder", 0))
-    k = latest.get("kpis", {})
-    curRP = k.get("latestRP") if k.get("latestRP") is not None else k.get("peakRP")
-    rk, color = rank_py(curRP)
     dmain = (latest.get("operatorsDef") or [{}])[0]
     amain = (latest.get("operatorsAtk") or [{}])[0]
     rm = latest.get("recentMatches") or []
@@ -125,8 +166,12 @@ def write_index(cards):
             f'<div class="psub">{c["wr"]:.0f}% vitórias · K/D {dec(c["kd"])} · {esc(c["season"])} {pill}</div></div>'
             f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div></a>')
     out = os.path.join(OUT_DIR, "index.html")
+    desc = "O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores)."
     with open(out, "w", encoding="utf-8") as fh:
-        fh.write(INDEX_TEMPLATE.replace("__CHIPS__", chips).replace("__ROWS__", rows))
+        fh.write(INDEX_TEMPLATE
+                 .replace("__HEAD__", head_meta("SIEGE·LAB — Squad", desc, SITE_URL))
+                 .replace("__SPRITE__", sprite())
+                 .replace("__CHIPS__", chips).replace("__ROWS__", rows))
     print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
 
 
@@ -142,6 +187,11 @@ def main():
             cards.append(s)
     cards.sort(key=lambda c: (c.get("wr") or 0), reverse=True)
     write_index(cards)
+    try:
+        brand.write_pngs(OUT_DIR)
+        print("  png -> docs/apple-touch-icon.png, docs/og.png")
+    except ImportError:
+        print("  (Pillow não instalado: apple-touch-icon.png e og.png não foram regenerados)")
 
 
 INDEX_TEMPLATE = r"""<!DOCTYPE html>
@@ -151,6 +201,7 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0e">
 <title>SIEGE·LAB — Squad</title>
+__HEAD__
 <style>
   :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d;--play:#34d399;--ban:#f0513f}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -158,7 +209,7 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
        -webkit-font-smoothing:antialiased;min-height:100vh;padding:30px 18px 60px}
   .wrap{max-width:660px;margin:0 auto}
   .top{display:flex;align-items:center;gap:13px;margin-bottom:4px}
-  .logo{width:46px;height:46px;border-radius:11px;background:var(--gold);color:#111;display:grid;place-items:center;font-weight:900;font-size:26px;box-shadow:0 0 22px rgba(244,194,13,.32)}
+  .logo{width:46px;height:46px;flex:none;filter:drop-shadow(0 0 12px rgba(244,194,13,.3))}
   h1{font-size:22px;letter-spacing:.5px} h1 em{font-style:normal;color:var(--gold)}
   .sub{color:var(--muted);font-size:13px;margin:4px 0 24px}
   h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
@@ -184,8 +235,9 @@ INDEX_TEMPLATE = r"""<!DOCTYPE html>
 </style>
 </head>
 <body>
+__SPRITE__
   <div class="wrap">
-    <div class="top"><div class="logo">6</div><h1>SIEGE<em>·</em>LAB</h1></div>
+    <div class="top"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg><h1>SIEGE<em>·</em>LAB</h1></div>
     <div class="sub">O squad · ranqueada R6 · toque num jogador pra abrir a análise completa</div>
     <h2>Destaques do grupo</h2>
     <div class="sups">__CHIPS__</div>
@@ -205,7 +257,8 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>SIEGE·LAB</title>
+<title>__TITLE__</title>
+__HEAD__
 <style>
   :root{
     --bg:#0a0b0e; --panel:#14161c; --panel2:#1a1d24; --line:#262a33;
@@ -221,7 +274,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
   header{position:sticky;top:0;z-index:50;background:rgba(10,11,14,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
   .hbar{display:flex;align-items:center;gap:11px;padding:11px 16px;max-width:1100px;margin:0 auto}
-  .logo{width:36px;height:36px;border-radius:9px;background:var(--gold);color:#111;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 0 18px rgba(244,194,13,.3);flex:none}
+  .logo{width:36px;height:36px;flex:none;filter:drop-shadow(0 0 9px rgba(244,194,13,.28))}
   .brand{font-weight:800;font-size:16px;letter-spacing:.5px;line-height:1.05}
   .brand em{font-style:normal;color:var(--gold)}
   .brand small{display:block;font-weight:500;font-size:10.5px;color:var(--muted);letter-spacing:.3px;margin-top:1px}
@@ -386,7 +439,8 @@ TEMPLATE = r"""<!DOCTYPE html>
   .sharecard{border:1px solid var(--line);border-radius:16px;background:linear-gradient(160deg,#1a1d24,#0b0d11);
        padding:22px 18px 18px;text-align:center;position:relative;overflow:hidden;margin:6px 0 14px}
   .sharecard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 0%,rgba(244,194,13,.12),transparent)}
-  .scbrand{font-weight:800;letter-spacing:1px;font-size:14px;position:relative} .scbrand span{color:var(--gold)}
+  .scbrand{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;position:relative} .scbrand b{font-weight:800;letter-spacing:1px} .scbrand i{font-style:normal;color:var(--gold)}
+  .sclogo{width:24px;height:24px;flex:none}
   .scemb{margin:12px 0 6px;position:relative} .scemb .remb{filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
   .scname{font-size:22px;font-weight:800;position:relative}
   .scrank{font-size:13px;font-weight:700;margin-top:2px;position:relative}
@@ -533,10 +587,10 @@ TEMPLATE = r"""<!DOCTYPE html>
 </style>
 </head>
 <body>
-
+__SPRITE__
 <header>
   <div class="hbar">
-    <div class="logo">6</div>
+    <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg>
     <div class="brand">SIEGE<em>·</em>LAB<small id="subline"></small></div>
     <nav class="desktabs" id="desktabs"></nav>
     <div class="seasonsel" id="seasonsel">
@@ -1416,7 +1470,7 @@ function openShare(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);
   const rm=active.recentMatches||[]; const w=rm.filter(m=>m.w).length, l=rm.length-w;
   const card=`<div class="sharecard">
-    <div class="scbrand">SIEGE<span>·</span>LAB</div>
+    <div class="scbrand"><svg class="sclogo" viewBox="0 0 64 64" aria-hidden="true"><use href="#sl-logo"/></svg><b>SIEGE<i>·</i>LAB</b></div>
     <div class="scemb">${rankEmblem(rk.color,rk.div,rk.champ,90)}</div>
     <div class="scname">${esc(PLAYER.name)}</div>
     <div class="scrank" style="color:${rk.color}">${rk.name} · ${curRP.toLocaleString('pt-BR')} RP</div>
