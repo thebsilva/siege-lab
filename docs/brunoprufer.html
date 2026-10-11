@@ -909,7 +909,7 @@ function coachCards(cur){
     let read = me-ref>=10
       ? `No ataque você fica pra trás: é o 1º do time a morrer em só <b>${fd}%</b> dos rounds (eles, ${fdr}%) e, quando sobra, encara <b>${String(al[2]).replace(".",",")} inimigos</b> em média. Sozinho no ataque, venceu <b>${al[0]} de ${al[1]}</b>.`
       : `No ataque você sobra sozinho perto do que acontece com eles.`;
-    read += ` Na defesa: ${md}% (eles, ${rd}%)${Math.abs(md-rd)<8?", normal":""}.`;
+    read += ` Na defesa, quando sobra 1 do time, é você em <b>${md}%</b> das vezes (eles, ${rd}%)${Math.abs(md-rd)<8?" — normal":""}.`;
     if(k&&k.alone) read += ` Dos seus ${nf(k.total)} abates, ${k.alone} saíram com você já sozinho; ${k.aloneLost} desses, em round perdido.`;
     K.lastAlive=(fcard("Último vivo no ataque",`${me}%`,"das vezes em que o seu time ficou com 1 vivo no ataque, esse 1 era você",
       bars([["Você",me,`${la.atk[0]} de ${la.atk[1]}`,1],["Bons jogadores*",ref,`${lr.atk[0]} de ${lr.atk[1]}`],["Acaso (1 em 5)",20,"20%"]]),
@@ -968,7 +968,7 @@ function coachCards(cur){
         <tr><td>RP médio</td><td><b>${nf(t.matesRP)}</b></td><td><b>${nf(t.enemiesRP)}</b></td></tr>
         <tr><td>K/D</td><td><b>${fx(t.matesKD,2)}</b></td><td><b>${fx(t.enemiesKD,2)}</b></td></tr>
         <tr><td>Abates <small>(time todo)</small></td><td><b>${nf(t.teamKills)}</b></td><td><b>${nf(t.enemyKills)}</b></td></tr></table>`,
-      `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do inimigo porque o seu entra na mesma conta: os dois times matam quase o mesmo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
+      `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do dos inimigos porque o seu não entra nessa conta; com você, o time todo mata quase o mesmo que o inimigo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
       "Colegas = os outros 4 do seu time, sem você. RP de antes da partida."));
   }
   if(c&&c.pressure&&c.pressure.mine[1]>=15&&c.pressure.theirs[1]>=15){
@@ -1092,7 +1092,7 @@ function coachRules(cur,base){
     if(hb.with[1]>=10&&hb.without[1]>=10&&a-b>=8){
       const mine=(cur.operatorsAtk||[]).concat(cur.operatorsCut||[]).filter(o=>HARD_BREACH.includes(o.name)).sort((x,y)=>(y.rounds||0)-(x.rounds||0))[0];
       R.push(rule("🧨","atk",`Sem hard breach no time? Pegue ${esc(mine?mine.name:"Thermite")}.`,
-        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+fx(mine.kd,2):""}.`:""}`));
+        `Com hard breach o time vence ${a}% dos rounds de ataque; sem, ${b}%. Em ${hb.without[1]} de ${hb.with[1]+hb.without[1]} rounds de ataque ninguém levou.${mine?` Seu ${esc(mine.name)}: ${mine.wr}% em ${mine.rounds} rounds${mine.kd!=null?", K/D "+fx(mine.kd,2):""}.`:""}`));
     }
   }
   const bans=(cur.maps||[]).filter(m=>m.matches>=4&&m.seasonWR<40).sort((x,y)=>x.seasonWR-y.seasonWR);
