@@ -565,6 +565,31 @@ __HEAD__
 
   /* MAPAS: linha compacta (a decisão num relance) que abre o detalhe */
   .maps{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
+  [hidden]{display:none!important}
+  /* achar o mapa: busca pelo nome + ordem da lista */
+  .mtools{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+  .msearch{position:relative;display:flex;align-items:center}
+  .msearch>.ic{position:absolute;left:13px;width:18px;height:18px;color:var(--muted);pointer-events:none}
+  .msearch input{width:100%;min-height:44px;padding:0 44px 0 40px;border-radius:var(--r-2);border:1px solid var(--chipline);background:var(--panel);color:var(--txt);
+                 font:inherit;font-size:16px;-webkit-appearance:none;appearance:none}   /* 16px: o iPhone dá zoom na página com fonte menor que isso */
+  .msearch input::placeholder{color:var(--muted)}
+  .msearch input::-webkit-search-cancel-button,.msearch input::-webkit-search-decoration{-webkit-appearance:none;display:none}
+  .msearch input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(244,194,13,.18)}
+  .mclr{position:absolute;right:2px;top:2px;width:40px;height:40px;display:grid;place-items:center;border:0;background:none;color:var(--muted);border-radius:var(--r-2);cursor:pointer}
+  .mclr .ic{width:16px;height:16px}
+  .mclr:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .msort{display:flex;flex-wrap:wrap;align-items:center;gap:6px 7px}
+  .msort .flab{flex:1 0 100%;font-size:var(--fs-2);color:var(--muted)}
+  .msort .fchip{flex:1 1 0;padding:0 8px}
+  .mnone{padding:16px 14px;border:1px dashed var(--chipline);border-radius:var(--r-2);color:var(--muted);font-size:var(--fs-3);text-align:center}
+  .mnone b{color:var(--txt)}
+  .mnone button{margin:8px 0 0 6px;min-height:40px;padding:0 14px;border-radius:var(--r-1);border:1px solid var(--chipline);background:var(--chip);color:var(--gold);font:inherit;font-weight:700;cursor:pointer}
+  @media(min-width:640px){
+    .mtools{flex-direction:row;align-items:center;flex-wrap:wrap;gap:10px 18px}
+    .msearch{flex:1 1 260px;max-width:420px}
+    .msort .flab{flex:none;margin-right:2px}
+    .msort .fchip{flex:none;padding:0 14px}
+  }
   .map{overflow:hidden}
   .mrow{scroll-margin-top:72px}
   .mrow.play{border-left:3px solid var(--play)} .mrow.neu{border-left:3px solid var(--neu)} .mrow.ban{border-left:3px solid var(--ban)}
@@ -1109,8 +1134,8 @@ function tierChips(cur, base, tier){
     .map(m=>{
       const inner=`${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?smp("m"):""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small>`;
       return m.matches>=1
-        ?`<a class="chipm" href="#c-map-${mapId(m.name)}" onclick="seeCard('map-${mapId(m.name)}');return false">${inner}</a>`
-        :`<span class="chipm">${inner}</span>`;
+        ?`<a class="chipm" data-n="${esc(normQ(m.name))}" href="#c-map-${mapId(m.name)}" onclick="seeCard('map-${mapId(m.name)}');return false">${inner}</a>`
+        :`<span class="chipm" data-n="${esc(normQ(m.name))}">${inner}</span>`;
     }).join("") || `<span class="chipm none">—</span>`;
 }
 function strongSide(m){
@@ -1226,6 +1251,54 @@ function formaRecente(){
       ${ins.map(x=>`<div class="fins"><i class="${x.c}">${ic(x.i)}</i><p>${x.f}<span class="act">${x.a}</span></p></div>`).join("")}
     </div>`;
 }
+const MAPSORTS=[["az","A–Z","ordem alfabética"],["wr","Vitórias","do mapa com mais vitórias pro com menos"],["n","Partidas","do mapa mais jogado pro menos jogado"]];
+let MAPSORT=(()=>{ try{ const v=localStorage.getItem("siegelab.mapsort"); if(MAPSORTS.some(x=>x[0]===v)) return v; }catch(e){} return "az"; })(), MAPQ="";
+const normQ=s=>String(s==null?"":s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+function mapSortBy(v){ MAPSORT=v; try{ localStorage.setItem("siegelab.mapsort",v); }catch(e){} renderMapas(); }
+function mapFind(v,focus){
+  MAPQ=String(v||"");
+  const i=document.getElementById("mapq"); if(i&&i.value!==MAPQ) i.value=MAPQ;
+  applyMapFilter(); if(focus&&i) i.focus();
+}
+function mapKey(e){                    // Enter fecha o teclado e leva ao 1º resultado · Esc limpa
+  if(e.key==="Escape"&&MAPQ){ e.preventDefault(); mapFind(""); }
+  else if(e.key==="Enter"){
+    e.preventDefault(); e.target.blur();
+    const f=document.querySelector("#maplist details.mrow:not([hidden])");
+    if(f) f.scrollIntoView({behavior:(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)?"auto":"smooth",block:"start"});
+  }
+}
+function applyMapFilter(){             // esconde o que não bate com a busca; se sobrar um só, abre
+  const host=document.getElementById("maplist"); if(!host) return;
+  const toks=normQ(MAPQ).split(/\s+/).filter(Boolean);
+  let shown=0, last=null;
+  host.querySelectorAll("details.mrow").forEach(d=>{
+    const ok=!toks.length||toks.every(t=>d.dataset.n.indexOf(t)>-1);
+    d.hidden=!ok; if(ok){ shown++; last=d; }
+  });
+  host.querySelectorAll(".maps").forEach(g=>{
+    const any=!!g.querySelector("details.mrow:not([hidden])");
+    g.hidden=!any;
+    const h=g.previousElementSibling; if(h&&h.classList.contains("grp")) h.hidden=!any;
+  });
+  const none=document.getElementById("mapnone"), note=document.getElementById("mapnote"), clr=document.getElementById("mapclr"), cnt=document.getElementById("mapcount");
+  const tier=document.getElementById("maptier"), sec=document.getElementById("mapsec");
+  if(tier){                            // "Jogar vs banir" também responde à busca: só ficam os chips que batem
+    let any=false;
+    tier.querySelectorAll(".chipm").forEach(c=>{
+      const ok=!toks.length||(c.dataset.n!=null&&toks.every(t=>c.dataset.n.indexOf(t)>-1));
+      c.hidden=!ok; if(ok&&c.dataset.n!=null) any=true;
+    });
+    tier.querySelectorAll(".tcol").forEach(col=>{ col.hidden=!!toks.length&&!col.querySelector(".chipm:not([hidden])[data-n]"); });
+    tier.hidden=!!toks.length&&!any;
+  }
+  if(sec) sec.hidden=!!toks.length&&!shown;
+  if(none){ none.hidden=!(toks.length&&!shown); const b=none.querySelector("b"); if(b) b.textContent=MAPQ.trim(); }
+  if(note) note.hidden=!!toks.length;
+  if(clr) clr.hidden=!MAPQ;
+  if(cnt) cnt.textContent=toks.length?(shown?`${shown} ${shown===1?"mapa":"mapas"}`:"Nenhum mapa"):"";
+  if(toks.length&&shown===1&&last&&!last.open) last.open=true;
+}
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};
   const rbm=recentByMap();
@@ -1237,7 +1310,7 @@ function renderMapas(){
     const pside=(cls,pbLbl,myLbl)=>{const c=candidates(m,cls); return `<div class="pside ${cls}"><div class="sh"><span class="ic"></span>${c.src==="playbook"?pbLbl:myLbl}<span class="src">${esc(srcLabel(c.src))}</span></div>${pickRows(m,cls)}</div>`;};
     const warn=(m.avoid?`<div class="mwarn avoid">${ic("ban")}<span><b>Evite:</b> ${esc(m.avoid)}</span></div>`:"")
              +(m.note?`<div class="mwarn note">${ic("warn")}<span>${esc(m.note)}</span></div>`:"");
-    return `<details class="map mrow ${t}" id="c-map-${mapId(m.name)}"${WIDE()?" open":""}>
+    return `<details class="map mrow ${t}" id="c-map-${mapId(m.name)}" data-n="${esc(normQ(m.name))}"${WIDE()?" open":""}>
       <summary>
         <div class="mh"><span class="mn">${esc(m.name)}</span><span class="wr">${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</span>${ic("chev","chev")}</div>
         <div class="mm"><span class="verdict ${t}">${v}</span><span>${m.matches} ${m.matches===1?"partida":"partidas"}${m.matches<4?smp("m"):""}</span>${rbadge}</div>
@@ -1254,20 +1327,40 @@ function renderMapas(){
       ${rn}
     </details>`;
   };
-  const list=cur.maps.filter(m=>m.matches>=1).sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR));
-  const main=list.filter(m=>m.matches>=4), short=list.filter(m=>m.matches<4);
+  const byAZ=(a,b)=>a.name.localeCompare(b.name,"pt-BR");
+  const cmp=MAPSORT==="az"?byAZ
+    :MAPSORT==="n"?(a,b)=>(b.matches-a.matches)||(b.seasonWR-a.seasonWR)||byAZ(a,b)
+    :(a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR);
+  const list=cur.maps.filter(m=>m.matches>=1).sort(cmp);
+  const grouped=MAPSORT==="wr";          // só a ordem por vitórias separa "poucas partidas"; nas outras a lista é uma só
+  const main=grouped?list.filter(m=>m.matches>=4):list, short=grouped?list.filter(m=>m.matches<4):[];
+  const sortChips=MAPSORTS.map(([v,l,d])=>`<button type="button" class="fchip${MAPSORT===v?" on":""}" aria-pressed="${MAPSORT===v}" aria-label="${l}: ${d}" onclick="mapSortBy('${v}')">${l}</button>`).join("");
+  const tools=`<div class="mtools">
+      <div class="msearch">${ic("search")}<input id="mapq" type="search" inputmode="search" enterkeyhint="search" placeholder="Buscar mapa" aria-label="Buscar mapa pelo nome" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" value="${esc(MAPQ)}" oninput="mapFind(this.value)" onkeydown="mapKey(event)"><button type="button" class="mclr" id="mapclr" aria-label="Limpar busca" onclick="mapFind('',1)"${MAPQ?"":" hidden"}>${ic("x")}</button></div>
+      <div class="msort" role="group" aria-label="Ordenar os mapas"><span class="flab">Ordenar por</span>${sortChips}</div>
+    </div>`;
   const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds ganhos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
   document.getElementById("scr-mapas").innerHTML = `
-    <h2 class="sec">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra ${WIDE()?"recolher":"abrir"}</span></h2>
-    <div class="tier">
-      <div class="tcol play"><div class="th"><span class="dot"></span>Priorize</div><div class="chips">${tierChips(cur,base,"play")}</div></div>
-      <div class="tcol neu"><div class="th"><span class="dot"></span>Neutro</div><div class="chips">${tierChips(cur,base,"neu")}</div></div>
-      <div class="tcol ban"><div class="th"><span class="dot"></span>Banir</div><div class="chips">${tierChips(cur,base,"ban")}</div></div>
+    ${tools}
+    <div class="mnone" id="mapnone" hidden>Nenhum mapa com “<b></b>”.<button type="button" onclick="mapFind('',1)">Limpar busca</button></div>
+    <div id="maptier">
+      <h2 class="sec first">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra ${WIDE()?"recolher":"abrir"}</span></h2>
+      <div class="tier">
+        <div class="tcol play"><div class="th"><span class="dot"></span>Priorize</div><div class="chips">${tierChips(cur,base,"play")}</div></div>
+        <div class="tcol neu"><div class="th"><span class="dot"></span>Neutro</div><div class="chips">${tierChips(cur,base,"neu")}</div></div>
+        <div class="tcol ban"><div class="th"><span class="dot"></span>Banir</div><div class="chips">${tierChips(cur,base,"ban")}</div></div>
+      </div>
     </div>
-    <h2 class="sec">Mapa a mapa<span class="hint">ataque × defesa · toque pra ver o top 3 de cada lado</span></h2>
-    ${opsNote}
-    ${main.length?`<div class="maps">${main.map(row).join("")}</div>`:""}
-    ${short.length?`<h3 class="grp">Poucas partidas<small>menos de 4 partidas: indício, não veredito</small></h3><div class="maps">${short.map(row).join("")}</div>`:""}`;
+    <div id="mapsec">
+      <h2 class="sec">Mapa a mapa<span class="hint">ataque × defesa · toque pra ver o top 3 de cada lado</span></h2>
+      <div id="mapnote">${opsNote}</div>
+      <div id="maplist">
+        ${main.length?`<div class="maps">${main.map(row).join("")}</div>`:""}
+        ${short.length?`<h3 class="grp">Poucas partidas<small>menos de 4 partidas: indício, não veredito</small></h3><div class="maps">${short.map(row).join("")}</div>`:""}
+      </div>
+    </div>
+    <div class="sr" id="mapcount" role="status" aria-live="polite"></div>`;
+  applyMapFilter();
 }
 
 /* ---------- OPERADORES ---------- */
@@ -1576,6 +1669,7 @@ function card(o){                      // título · manchete · legenda · tabe
 const fcard=(title,head,cap,body,read,note,k)=>card({title,head,cap,body,read,note,k});
 function seeCard(k){                   // do plano pro dado: abre o card, leva até ele e pisca
   const el=document.getElementById("c-"+k); if(!el) return;
+  if(el.hidden||(el.parentElement&&el.parentElement.hidden)) mapFind("");    // o mapa estava escondido pela busca
   el.open=true;
   el.scrollIntoView({behavior:(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)?"auto":"smooth",block:"start"});
   el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
@@ -1887,6 +1981,7 @@ function openHelp(){
     <div class="legrow"><b class="cdef">■</b> defesa · <b class="catk">■</b> ataque</div>
     <div class="legrow"><b class="cgold">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
     <div class="legrow"><b>${ic("map")}</b> Mapas: priorize = vitórias ≥55% · neutro 40–54% · banir &lt;40% (conta só a season escolhida)</div>
+    <div class="legrow"><b>${ic("search")}</b> Mapas: busque pelo nome e ordene a lista por A–Z, vitórias ou partidas (a ordem fica salva neste aparelho)</div>
     <div class="legrow"><b>${ic("swap")}</b> troque a season pelo seletor no topo pra comparar épocas</div>
     <div class="legrow"><b class="cnt">▲</b> cinza: mudou o estilo ou a contagem, não o resultado (nem bom nem ruim)</div>
     <div class="legrow"><b>${ic("coach")}</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards marcados "no plano" são os que valem olhar durante o jogo</div>
