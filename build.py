@@ -417,6 +417,7 @@ __HEAD__
   .banner b{color:var(--txt)}
   .banner .bsub{display:block;margin-top:3px;font-size:var(--fs-2)}
   .banner.flat{margin-top:0} .banner.tight{margin:0 0 6px} .banner.gap{margin:0 0 12px}
+  .banner.attn{background:rgba(244,194,13,.06);border-color:rgba(244,194,13,.35)} .banner.attn>.ic{color:var(--gold)}   /* aviso que muda a leitura */
   .changed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}   /* 2 colunas quando cabe; empilha em 320 */
   .chcol{border:1px solid var(--line);border-radius:var(--r-2);background:var(--panel);padding:13px 15px}
   .chcol h4{font-size:var(--fs-2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
@@ -647,26 +648,54 @@ __HEAD__
     .opn{font-size:var(--fs-3)}
   }
 
+  /* SQUAD */
+  @media(min-width:900px){ .sqgrid{display:grid;grid-template-columns:1fr 1fr;column-gap:16px} }
+
   /* EVOLUÇÃO */
-  .evo{padding:16px;margin-bottom:12px}
-  .evo h3{font-size:var(--fs-3);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-  .spark{width:100%;height:96px;overflow:visible}
-  .sparklbl{position:relative;height:16px;margin-top:8px}
+  .evlay{display:grid;gap:12px}
+  .evo{padding:16px}
+  .evo h3{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:var(--fs-3);color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .evo h3 .lg{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-2);font-weight:700;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums}
+  .evo h3 .lg i{width:18px;border-top:2px dashed currentColor;opacity:.7}
+  .evo .cap{margin-top:3px;font-size:var(--fs-2);color:var(--muted)}
+  .sp{--pl:22px;--pr:22px;margin-top:4px}
+  .sp.g{--c:var(--play)} .sp.y{--c:var(--gold)}
+  .sp .plot{position:relative;height:116px;margin:30px var(--pr) 0 var(--pl)}      /* os 30 px de cima são do número do ponto mais alto */
+  .sp svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .sp .ln{fill:none;stroke:var(--c);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+  .sp .s0{stop-color:var(--c);stop-opacity:.22} .sp .s1{stop-color:var(--c);stop-opacity:0}
+  .sp .ref{stroke:var(--muted);stroke-opacity:.55;stroke-width:1;stroke-dasharray:3 4}
+  .sp .dot{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px var(--panel)}
+  .sp .dot.now{width:14px;height:14px;margin:-7px 0 0 -7px;box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--c)}
+  .sp .val{position:absolute;transform:translate(-50%,-100%);margin-top:-11px;font-size:var(--fs-3);font-weight:700;color:var(--c);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .sp .val.l{transform:translate(-82%,-100%)} .sp .val.r{transform:translate(-18%,-100%)}      /* sai de cima do traço que chega ao ponto */
+  .sparklbl{position:relative;height:16px;margin:12px var(--pr) 0 var(--pl)}
   .sparklbl span{position:absolute;top:0;transform:translateX(-50%);font-size:var(--fs-2);font-weight:700;color:var(--muted);letter-spacing:.3px;white-space:nowrap}
+  .sparklbl span.now{color:var(--txt)}
   .evhead,.evrow{display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
   .evhead{padding-bottom:7px;font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .evo h3+.evhead{margin-top:12px}
   .evrow{padding:11px 0;border-top:1px solid var(--hair);font-size:var(--fs-3)}
   .evrow .sn{width:118px;flex:none;font-weight:700}
   .evrow .sn small{display:block;font-weight:500;color:var(--muted);font-size:var(--fs-2)}
+  .evrow.now .sn{color:var(--gold)}
   .evhead .sn{width:118px;flex:none}
   .cell{flex:1;text-align:right;color:var(--muted)} .cell b{color:var(--txt)}
+  .evhead .cell:nth-child(2),.evrow .cell:nth-child(2){text-align:left}      /* a pílula do pico alinha com o nome da season */
   .rkb2{font-size:var(--fs-2);font-weight:800;padding:2px 6px;border-radius:var(--r-1)}
-  @media(max-width:560px){            /* celular: a season ocupa uma linha e os 4 números ficam embaixo (antes a coluna Partidas saía da tela) */
+  @media(max-width:560px),(min-width:900px){      /* tabela estreita (celular ou coluna do desktop): a season ocupa uma linha e os 4 números ficam embaixo */
     .evhead .sn{display:none}
-    .evhead,.evrow{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;column-gap:6px;row-gap:7px}
+    .evhead,.evrow{display:grid;grid-template-columns:minmax(78px,1.3fr) minmax(58px,1fr) minmax(36px,.7fr) minmax(56px,.9fr);column-gap:6px;row-gap:7px}
+    .evhead{letter-spacing:.3px}
     .evrow .sn{grid-column:1/-1;width:auto;display:flex;align-items:baseline;gap:8px}
     .evrow .sn small{display:inline}
     .evrow .cell .d{display:block;margin-left:0}
+  }
+  @media(max-width:560px){ .sp.thin .alt{display:none} }       /* 7+ seasons: números e rótulos alternados saem pra não encavalar (os pontos ficam todos) */
+  @media(min-width:900px){            /* gráficos empilhados à esquerda, tabela de seasons à direita */
+    .evlay{grid-template-columns:1fr 1fr;align-items:start}
+    .evlay .tbl{grid-column:2;grid-row:1 / span 2}
+    .sp .plot{height:140px}
   }
 
   nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(13,14,18,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
@@ -1125,7 +1154,7 @@ function renderMapas(){
   };
   const list=cur.maps.filter(m=>m.matches>=1).sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR));
   const main=list.filter(m=>m.matches>=4), short=list.filter(m=>m.matches<4);
-  const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds vencidos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
+  const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds ganhos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
   document.getElementById("scr-mapas").innerHTML = `
     <h2 class="sec">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra abrir</span></h2>
     <div class="tier">
@@ -1267,24 +1296,38 @@ function openOpSheet(name){
 }
 
 /* ---------- EVOLUÇÃO ---------- */
-function spark(vals, color, fmt, labels){
-  if(vals.length<2) return `<div class="empty">Só 1 season carregada — o gráfico aparece com 2+.</div>`;
-  const w=560,h=96,pad=14;
-  const mn=Math.min(...vals), mx=Math.max(...vals), rg=(mx-mn)||1;
-  const X=i=>pad+i*(w-2*pad)/(vals.length-1), Y=v=>h-pad-(v-mn)/rg*(h-2*pad);
-  const line=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
-  const dots=vals.map((v,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3.5" fill="${color}"/><text x="${X(i).toFixed(1)}" y="${(Y(v)-9).toFixed(1)}" fill="${color}" font-size="12" font-weight="700" text-anchor="middle">${fmt(v)}</text>`).join("");
-  const lbl=labels?`<div class="sparklbl">${labels.map((l,i)=>`<span style="left:${(X(i)/w*100).toFixed(1)}%">${esc(l)}</span>`).join("")}</div>`:"";
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}</svg>${lbl}`;
+function spark(o){                      // só o traço é SVG (estica à vontade); pontos, números e rótulos são HTML e não deformam
+  const {vals,labels,key,fmt,ref,span,now,name}=o, n=vals.length;
+  if(n<2) return `<div class="empty">Só 1 season carregada — o gráfico aparece com 2+.</div>`;
+  let lo=Math.min(...vals,ref.v), hi=Math.max(...vals,ref.v);
+  if(hi-lo<span){ const m=(hi+lo)/2; lo=m-span/2; hi=m+span/2; }         // amplitude mínima: variação pequena não vira penhasco
+  const pad=(hi-lo)*.08; lo-=pad; hi+=pad;
+  const X=i=>(100*i/(n-1)).toFixed(2), Y=v=>(100*(hi-v)/(hi-lo)).toFixed(2);
+  const pts=vals.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  const thin=n>6, alt=i=>thin&&((n-1-i)%2)?" alt":"";
+  const steep=(a,b)=>Math.abs(vals[a]-vals[b])/(hi-lo)*(n-1)>1.3;       // inclinação que riscaria um número centralizado
+  const side=i=>{ const L=i>0&&vals[i-1]>vals[i]&&steep(i-1,i), R=i<n-1&&vals[i+1]>vals[i]&&steep(i,i+1); return L&&!R?" r":(R&&!L?" l":""); };   // o número foge do lado de onde o traço íngreme vem/vai por cima
+  const dots=vals.map((v,i)=>`<i class="dot${i===now?" now":""}" style="left:${X(i)}%;top:${Y(v)}%"></i><b class="val${side(i)}${alt(i)}" style="left:${X(i)}%;top:${Y(v)}%">${fmt(v)}</b>`).join("");
+  const lbl=labels.map((l,i)=>`<span class="${i===now?"now":""}${alt(i)}" style="left:${X(i)}%">${esc(l)}</span>`).join("");
+  const say=labels.map((l,i)=>`${l} ${fmt(vals[i])}`).join(", ");
+  return `<div class="sp ${key==="g"?"g":"y"}${thin?" thin":""}" role="img" aria-label="${esc(name)} por season: ${esc(say)}. Linha tracejada em ${esc(ref.t)}.">
+    <div class="plot"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="sg-${key}" x1="0" y1="0" x2="0" y2="1"><stop class="s0" offset="0"/><stop class="s1" offset="1"/></linearGradient></defs>
+      <polygon points="0,100 ${pts} 100,100" fill="url(#sg-${key})"/>
+      <line class="ref" x1="0" x2="100" y1="${Y(ref.v)}" y2="${Y(ref.v)}" vector-effect="non-scaling-stroke"/>
+      <polyline class="ln" points="${pts}" vector-effect="non-scaling-stroke"/></svg>
+      ${dots}</div>
+    <div class="sparklbl">${lbl}</div></div>`;
 }
 function renderEvo(){
   const chron = SEASONS.slice().sort((a,b)=>a.seasonOrder-b.seasonOrder); // antiga→nova
-  const wrVals=chron.map(s=>s.kpis.winRate), kdVals=chron.map(s=>s.kpis.kd), seasonIds=chron.map(s=>s.season);
-  const rows = chron.slice().reverse().map((s,idx,arr)=>{
+  const ids=chron.map(s=>s.season), now=chron.indexOf(active);
+  const chart=(key,name,cap,vals,fmt,ref,span)=>`<div class="evo"><h3>${name}<span class="lg"><i></i>${ref.t}</span></h3><div class="cap">${cap}</div>${spark({vals,labels:ids,key,fmt,ref,span,now,name})}</div>`;
+  const rows = chron.slice().reverse().map(s=>{
     const older = chron[chron.indexOf(s)-1];
     const p=older?older.kpis:{};
     const rk=rankInfo(s.kpis.peakRP);
-    return `<div class="evrow"><span class="sn">${esc(s.season)}<small>${esc(s.seasonLabel||"")}</small></span>
+    return `<div class="evrow${s===active?" now":""}"><span class="sn">${esc(s.season)}<small>${esc(s.seasonLabel||"")}</small></span>
       <span class="cell"><span class="rkb2" style="background:${rk.color}22;color:${rk.color}">${rk.name}</span></span>
       <span class="cell"><b>${fx(s.kpis.winRate,1)}%</b>${delta(s.kpis.winRate,p.winRate,1)}</span>
       <span class="cell"><b>${fx(s.kpis.kd,2)}</b>${delta(s.kpis.kd,p.kd,2)}</span>
@@ -1292,11 +1335,13 @@ function renderEvo(){
   }).join("");
   document.getElementById("scr-evo").innerHTML = `
     <h2 class="sec">Evolução<span class="hint">season a season</span></h2>
-    <div class="evo"><h3>Win rate %</h3>${spark(wrVals,"#34d399",v=>v.toFixed(0)+"%",seasonIds)}</div>
-    <div class="evo"><h3>K/D</h3>${spark(kdVals,"#f4c20d",v=>fx(v,2),seasonIds)}</div>
-    <div class="evo"><h3>Seasons</h3>
-      <div class="evhead"><span class="sn">Season</span><span class="cell">Pico</span><span class="cell">Win</span><span class="cell">K/D</span><span class="cell">Partidas</span></div>
-      ${rows}</div>`;
+    <div class="evlay">
+      ${chart("g","Vitórias","% das partidas ganhas em cada season",chron.map(s=>s.kpis.winRate),v=>v.toFixed(0)+"%",{v:50,t:"50%"},12)}
+      ${chart("y","K/D","abates ÷ mortes em cada season",chron.map(s=>s.kpis.kd),v=>fx(v,2),{v:1,t:fx(1,2)},.4)}
+      <div class="evo tbl"><h3>Seasons</h3>
+      <div class="evhead"><span class="sn">Season</span><span class="cell">Pico</span><span class="cell">Vitórias</span><span class="cell">K/D</span><span class="cell">Partidas</span></div>
+      ${rows}</div>
+    </div>`;
 }
 
 /* ---------- COACH ---------- */
@@ -1352,9 +1397,9 @@ function goalCard(){
 
 /* chave, rótulo, unidade, casas, direção (1 = subir é bom · -1 = subir é ruim · 0 = estilo) */
 const STYLE_ROWS=[
-  ["roundWR","Rounds vencidos","%",0,1],
-  ["atkRoundWR","Rounds vencidos no ataque","%",0,1],
-  ["defRoundWR","Rounds vencidos na defesa","%",0,1],
+  ["roundWR","Rounds ganhos","%",0,1],
+  ["atkRoundWR","Rounds ganhos no ataque","%",0,1],
+  ["defRoundWR","Rounds ganhos na defesa","%",0,1],
   ["esr","1º duelo que você vence","%",0,1],
   ["openPct","Rounds em que você entra no 1º duelo","%",0,0],
   ["fdPct","Rounds em que a 1ª morte do round (dos 10) é a sua","%",0,0],
@@ -1680,20 +1725,20 @@ function renderCoach(){
 }
 
 /* ---------- SQUAD ---------- */
-const SQUAD_AVISO=`Amostra pequena vira indício, não veredito — vocês jogaram pouco juntos nesta season. Squad = partida no mesmo minuto e mapa de outro perfil daqui; amigo de fora do app conta como "sozinho".`;
-function squadTable(sn){
+const SQUAD_AVISO=`<b>Amostra pequena vira indício, não veredito.</b> Vocês jogaram pouco juntos nesta season.<span class="bsub">Squad = partida no mesmo minuto e mapa de outro perfil daqui; amigo de fora do app conta como "sozinho".</span>`;
+function squadTable(sn){                // barra = % de vitórias; "N de M" ao lado é a base dessa %
   const q=sn.squad;
-  const row=(l,a)=>a&&a[1]?`<tr><td>${l}</td><td><b>${pf(a[0],a[1])}%</b></td><td><small>${a[0]} de ${a[1]}</small></td></tr>`:"";
+  const row=(l,a,me)=>a&&a[1]?[l,pf(a[0],a[1]),`${a[0]} de ${a[1]}`,me]:null;
   const friends=Object.entries(q.perFriend||{}).filter(([,a])=>a[1]>0).sort((a,b)=>b[1][1]-a[1][1])
-    .map(([sl,a])=>row(esc(NAMES[sl]||sl),a)).join("");
-  return `<div class="cbox"><table class="ctable"><tr><th>Fila</th><th>Vitórias</th><th>Partidas</th></tr>
-    ${row("Sozinho",q.solo)}${friends}${row("Trio",q.trio)}</table></div>`;
+    .map(([sl,a])=>row(esc(NAMES[sl]||sl),a));
+  const rows=[row("Sozinho",q.solo,true)].concat(friends,[row("Trio",q.trio)]).filter(Boolean);
+  return `<div class="cbox">${bars(rows,"Vitórias · % das partidas")}</div>`;
 }
 function renderSquad(){
   const el=document.getElementById("scr-squad");
   const seas=SEASONS.filter(s=>s.squad);
   if(!seas.length){ el.innerHTML=bnr("squad","Sem dados de fila carregados."); return; }
-  el.innerHTML=seas.map((s,i)=>`<h2 class="sec${i?"":" first"}">${esc(s.season)}<span class="hint">${esc(s.seasonLabel||"")} · ${s.squad.n} partidas</span></h2>${squadTable(s)}${i===0?bnr("squad",SQUAD_AVISO):""}`).join("");
+  el.innerHTML=bnr("warn",SQUAD_AVISO,"flat attn")+`<div class="sqgrid">`+seas.map(s=>`<div class="sqs"><h2 class="sec">${esc(s.season)}<span class="hint">${esc(s.seasonLabel||"")} · ${s.squad.n} partidas</span></h2>${squadTable(s)}</div>`).join("")+`</div>`;
 }
 
 /* ---------- SELETOR / SHELL ---------- */
