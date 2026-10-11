@@ -50,21 +50,29 @@
   .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 
   header{position:sticky;top:0;z-index:50;background:rgba(10,11,14,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .hbar{display:flex;align-items:center;gap:11px;padding:11px 16px;max-width:1100px;margin:0 auto}
-  .logo{width:36px;height:36px;flex:none;filter:drop-shadow(0 0 9px rgba(244,194,13,.28))}
-  .brand{font-weight:800;font-size:var(--fs-4);letter-spacing:.5px;line-height:1.05}
-  .brand em{font-style:normal;color:var(--gold)}
-  .brand small{display:block;font-weight:500;font-size:var(--fs-2);color:var(--muted);letter-spacing:.3px;margin-top:1px}
-  .seasonsel{margin-left:auto;display:flex;align-items:center;gap:7px;cursor:pointer;border:1px solid var(--line);background:var(--panel);
-       padding:5px 8px 5px 11px;border-radius:var(--r-3)}
+  .hbar{display:flex;align-items:center;gap:6px;padding:8px 10px;max-width:1100px;margin:0 auto;min-height:56px}
+  .hbrand{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto;color:inherit;text-decoration:none;border-radius:var(--r-2)}
+  .hbrand:focus-visible,.hbar button:focus-visible,nav.bottom button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .logo{width:32px;height:32px;flex:none;filter:drop-shadow(0 0 9px rgba(244,194,13,.28))}
+  .brand{min-width:0;line-height:1.1}
+  .brand .wm{display:block;font-weight:800;font-size:var(--fs-4);letter-spacing:.05em;white-space:nowrap}
+  .brand .wm em{font-style:normal;color:var(--gold)}
+  .brand small{display:block;margin-top:2px;font-weight:500;font-size:var(--fs-2);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .seasonsel{flex:none;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 10px 0 12px;border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:var(--r-pill);font:inherit;cursor:pointer}
   .seasonsel:active{transform:scale(.97)}
   .seasonsel .sv{font-weight:800;font-size:var(--fs-3)}
-  .seasonsel .rk{font-size:var(--fs-2);font-weight:700;padding:2px 7px;border-radius:var(--r-3)}
-  .seasonsel .cv{color:var(--muted);font-size:var(--fs-3);transition:transform .2s}
-  .qbtn{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:800;font-size:var(--fs-4);cursor:pointer;flex:none}
+  .seasonsel .rk{display:none;font-size:var(--fs-2);font-weight:700;padding:2px 8px;border-radius:var(--r-pill)}
+  .seasonsel .cv{width:10px;height:10px;color:var(--muted);flex:none}
+  .qbtn{flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--muted);font:inherit;font-weight:800;font-size:var(--fs-4);cursor:pointer}
+  .qbtn svg{width:18px;height:18px}
+  .qbtn:active{transform:scale(.94)}
   .desktabs{display:none;gap:4px;margin-left:14px}
-  .desktabs button{background:none;border:none;color:var(--muted);font-weight:700;font-size:var(--fs-3);padding:7px 12px;border-radius:var(--r-2);cursor:pointer}
+  .desktabs button{background:none;border:none;color:var(--muted);font-weight:700;font-size:var(--fs-3);padding:0 14px;min-height:40px;border-radius:var(--r-2);cursor:pointer}
+  .desktabs button:hover{color:var(--txt)}
   .desktabs button.on{color:#111;background:var(--gold)}
+  @media(max-width:399px){ .brand small .pq{display:none} }
+  @media(min-width:360px){ .hbar{padding:8px 12px;gap:8px} .hbrand{gap:9px} .logo{width:34px;height:34px} }
+  @media(min-width:520px){ .hbar{padding:10px 16px;gap:10px} .seasonsel .rk{display:inline-block} }
 
   .screen{display:none;padding-top:16px}
   .screen.active{display:block;animation:fade .18s ease}
@@ -107,7 +115,7 @@
   .ktile .rkb{display:inline-block;font-size:var(--fs-2);font-weight:800;padding:2px 8px;border-radius:var(--r-1);margin-top:6px}
   .banner{margin-top:12px;padding:10px 14px;border-radius:var(--r-2);font-size:var(--fs-3);color:var(--muted);background:var(--inset);border:1px solid var(--line)}
   .banner b{color:var(--txt)}
-  .changed{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .changed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}   /* 2 colunas quando cabe; empilha em 320 */
   .chcol{border:1px solid var(--line);border-radius:var(--r-2);background:var(--panel);padding:13px 15px}
   .chcol h4{font-size:var(--fs-2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
   .chcol.up h4{color:var(--play)} .chcol.dn h4{color:var(--ban)}
@@ -293,8 +301,9 @@
   }
 
   nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(13,14,18,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
-  nav.bottom button{flex:1;background:none;border:none;color:var(--muted);font-size:var(--fs-1);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;letter-spacing:.3px}
-  nav.bottom button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  nav.bottom button{position:relative;flex:1 1 auto;min-width:0;padding:0 2px;background:none;border:none;color:var(--muted);font:inherit;font-size:var(--fs-1);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;letter-spacing:.02em}
+  nav.bottom button.on::before{content:"";position:absolute;top:-1px;left:50%;width:26px;height:3px;margin-left:-13px;border-radius:0 0 var(--r-1) var(--r-1);background:var(--gold)}
+  nav.bottom button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   nav.bottom button.on{color:var(--gold)}
 
   .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;display:none}
@@ -367,16 +376,18 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="slg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd23a"/><stop offset="1" stop-color="#eeb400"/></linearGradient></defs><symbol id="sl-logo" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z" fill="url(#slg)"/><path d="M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="#0a0b0e" fill-rule="evenodd"/></symbol><symbol id="sl-logo-mono" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="currentColor" fill-rule="evenodd"/></symbol></svg>
 <header>
   <div class="hbar">
-    <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg>
-    <div class="brand">SIEGE<em>·</em>LAB<small id="subline"></small></div>
-    <nav class="desktabs" id="desktabs"></nav>
-    <div class="seasonsel" id="seasonsel">
+    <a class="hbrand" href="index.html" title="Ver o squad">
+      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#sl-logo"/></svg>
+      <span class="brand"><b class="wm">SIEGE<em>·</em>LAB</b><small id="subline"></small></span>
+    </a>
+    <nav class="desktabs" id="desktabs" aria-label="Seções"></nav>
+    <button class="seasonsel" id="seasonsel" type="button" aria-label="Trocar de season" aria-haspopup="dialog">
       <span class="sv" id="ss-season"></span>
       <span class="rk" id="ss-rank"></span>
-      <span class="cv">▾</span>
-    </div>
-    <button class="qbtn" id="sharebtn" aria-label="Compartilhar"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
-    <button class="qbtn" id="helpbtn" aria-label="Como ler">?</button>
+      <svg class="cv" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="qbtn" id="sharebtn" type="button" aria-label="Compartilhar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+    <button class="qbtn" id="helpbtn" type="button" aria-label="Como ler">?</button>
   </div>
 </header>
 
@@ -1205,7 +1216,7 @@ const TABS=[
 ];
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id==="scr-"+id));
-  document.querySelectorAll("nav.bottom button,.desktabs button").forEach(b=>b.classList.toggle("on", b.dataset.t===id));
+  document.querySelectorAll("nav.bottom button,.desktabs button").forEach(b=>{ const on=b.dataset.t===id; b.classList.toggle("on", on); if(on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   window.scrollTo({top:0});
 }
 function renderAll(){ renderInicio(); renderCoach(); renderMapas(); renderOps(); renderSquad(); renderEvo(); syncHeader(); }
@@ -1275,7 +1286,7 @@ function shell(){
   document.getElementById("seasonsel").onclick=openSeasons;
   document.getElementById("helpbtn").onclick=openHelp;
   document.getElementById("sharebtn").onclick=openShare;
-  document.getElementById("subline").textContent = PLAYER.name + " · Ranked";
+  document.getElementById("subline").innerHTML = `<span class="pn">${esc(PLAYER.name)}</span><span class="pq"> · Ranked</span>`;
   document.title = "SIEGE·LAB — " + PLAYER.name;
   bg.onclick=closeSheet;
 }
