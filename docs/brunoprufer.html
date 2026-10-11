@@ -656,7 +656,7 @@ function renderMapas(){
 function opPanel(list, pl){
   const p=byName(pl);
   return (list||[]).map(o=>{
-    const kd=o.kd!=null?` · ${fx(o.kd,2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
+    const kd=o.kd!=null?` · K/D ${fx(o.kd,2)}`:"", tag=o.tag?` · ${esc(o.tag)}`:"";
     return `<div class="oprow clk" data-op="${esc(o.name)}" onclick="openOpSheet(this.dataset.op)"><span class="nm">${esc(o.name)}${o.star?' <span class="star">★</span>':""}</span><span class="st"><b>${o.wr}%</b>${o.small?"°":""}${delta(o.wr,(p[o.name]||{}).wr,0)}${kd}${tag}</span></div>`;
   }).join("");
 }
