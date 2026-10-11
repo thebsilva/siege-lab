@@ -948,7 +948,8 @@ function openOpSheet(name){
   const feedHtml=fr?`<h3 style="margin:14px 0 8px">O que o kill feed mostra</h3><table class="ctable">
     <tr><td>Vivo no fim do round</td><td><b>${pf(fr[2],fr[0])}%</b> <small>${fr[2]} de ${fr[0]}</small></td></tr>
     <tr><td>1ª morte do time é você</td><td><b>${pf(fr[3],fr[0])}%</b></td></tr>
-    <tr><td>Rounds com kill sua na abertura</td><td><b>${pf(fr[4],fr[0])}%</b> <small>no fim: ${pf(fr[5],fr[0])}%</small></td></tr></table>
+    <tr><td>Kill sua na abertura do round</td><td><b>${pf(fr[4],fr[0])}%</b> <small>${fr[4]} de ${fr[0]}</small></td></tr>
+    <tr><td>Kill sua no fim do round</td><td><b>${pf(fr[5],fr[0])}%</b> <small>${fr[5]} de ${fr[0]}</small></td></tr></table>
     <div class="fsrc">Kill feed desta season (${fr[0]} rounds); pode divergir 1–2% do tracker.</div>`:"";
   const why=((PLAYBOOK.operators||{})[name]||{}).why;
   openSheet(`<h3>${esc(name)} <span class="tag sm ${o.s==="d"?"def":"atk"}">${o.s==="d"?"DEFESA":"ATAQUE"}</span></h3>
@@ -1042,7 +1043,7 @@ const STYLE_ROWS=[
   ["defRoundWR","Rounds vencidos na defesa","%",0,1],
   ["esr","1º duelo que você vence","%",0,1],
   ["openPct","Rounds em que você entra no 1º duelo","%",0,0],
-  ["fdPct","Rounds em que a 1ª morte é a sua","%",0,0],
+  ["fdPct","Rounds em que a 1ª morte do round é a sua","%",0,0],
   ["clutchPct","Rounds em que você sobra sozinho","%",0,-1],
   ["clutchWin","Vence quando sobra sozinho","%",0,1],
   ["hs","Abates na cabeça","%",0,1],
