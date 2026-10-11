@@ -164,53 +164,72 @@
 
   /* TIER */
   .tier{display:grid;grid-template-columns:1fr;gap:10px}
-  .tcol{border:1px solid var(--line);border-radius:var(--r-2);padding:12px 14px;background:var(--panel)}
-  .tcol .th{font-weight:800;font-size:var(--fs-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  .tcol{border:1px solid var(--line);border-radius:var(--r-2);padding:10px 12px 12px 14px;background:var(--panel)}
+  .tcol .th{font-weight:800;font-size:var(--fs-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
   .dot{width:9px;height:9px;border-radius:50%}
   .tcol.play{border-left:3px solid var(--play)} .tcol.play .dot{background:var(--play)}
   .tcol.neu{border-left:3px solid var(--neu)} .tcol.neu .dot{background:var(--neu)}
   .tcol.ban{border-left:3px solid var(--ban)} .tcol.ban .dot{background:var(--ban)}
-  .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chipm{font-size:var(--fs-3);padding:5px 10px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chipm{display:inline-flex;align-items:center;min-height:40px;padding:0 11px;border-radius:var(--r-2);background:var(--chip);border:1px solid var(--chipline);
+         font-size:var(--fs-3);font-weight:600;color:var(--txt);text-decoration:none}
   .chipm small{color:var(--muted);font-weight:500;margin-left:4px}
-  .chipm.none{opacity:.6}
+  .chipm.none{opacity:.6;min-height:30px}
+  a.chipm:hover{border-color:var(--gold)}
+  a.chipm:active{background:var(--panel2);border-color:var(--gold)}
+  a.chipm:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
 
-  /* MAP CARDS */
-  .maps{display:grid;grid-template-columns:1fr;gap:14px}
+  /* MAPAS: linha compacta (a decisão num relance) que abre o detalhe */
+  .maps{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
   .map{overflow:hidden}
-  .map .head{display:flex;align-items:center;gap:7px;padding:12px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
-  .map .head .mn{font-size:var(--fs-4);font-weight:800}
+  .mrow{scroll-margin-top:72px}
+  .mrow.play{border-left:3px solid var(--play)} .mrow.neu{border-left:3px solid var(--neu)} .mrow.ban{border-left:3px solid var(--ban)}
+  .mrow.flash{animation:flash 1.4s ease-out}
+  @media(prefers-reduced-motion:reduce){.mrow.flash{animation:none}}
+  .mrow>summary{display:block;list-style:none;cursor:pointer;padding:12px 14px 14px 13px}
+  .mrow>summary::-webkit-details-marker{display:none}
+  .mrow>summary:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .mh{display:flex;align-items:center;gap:8px}
+  .mrow .mn{flex:1;min-width:0;font-size:var(--fs-4);font-weight:800}
+  .mrow .wr{flex:none;font-size:var(--fs-5);font-weight:800;font-variant-numeric:tabular-nums}
+  .mrow .chev{flex:none;width:20px;height:20px;color:var(--muted);transition:transform .15s}
+  .mrow[open] .chev{transform:rotate(180deg)}
+  .mm{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin-top:6px;font-size:var(--fs-2);color:var(--muted)}
   .verdict{font-size:var(--fs-1);font-weight:800;padding:4px 8px;border-radius:var(--r-1);letter-spacing:.6px}
   .verdict.play{background:rgba(52,211,153,.16);color:var(--play);border:1px solid rgba(52,211,153,.4)}
   .verdict.neu{background:rgba(250,204,21,.15);color:var(--neu);border:1px solid rgba(250,204,21,.4)}
   .verdict.ban{background:rgba(240,81,63,.15);color:var(--ban-t);border:1px solid rgba(240,81,63,.4)}
-  .map .head .wr{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums}
-  .map .head .wr b{font-size:var(--fs-4)}
-  .map .head .wr small{display:block;font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-  @media(max-width:370px){.map .head{flex-wrap:wrap;row-gap:6px}}   /* telas estreitas: o bloco de win% desce em vez de estourar o card */
-  .ad{padding:11px 14px;display:flex;flex-direction:column;gap:7px;border-bottom:1px solid var(--line)}
+  .ad{display:flex;flex-direction:column;gap:7px;margin-top:12px}
   .adr{display:flex;align-items:center;gap:9px;font-size:var(--fs-2);font-weight:800}
   .adl{width:30px;letter-spacing:.5px} .adl.atk{color:var(--atk)} .adl.def{color:var(--def)}
   .adbar{flex:1;height:7px;border-radius:var(--r-1);background:var(--track);overflow:hidden}
   .adbar i{display:block;height:100%;border-radius:var(--r-1)}
   .adr.atk i{background:var(--atk)} .adr.def i{background:var(--def)}
-  .adv{width:56px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+  .adv{flex:none;min-width:56px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mpks{display:grid;grid-template-columns:1fr 1fr;margin-top:12px;border:1px solid var(--hair);border-radius:var(--r-2);background:var(--inset)}
+  .mpk{min-width:0;padding:8px 10px 9px}
+  .mpk+.mpk{border-left:1px solid var(--hair)}
+  .mpk i{display:block;font-style:normal;font-size:var(--fs-1);font-weight:800;letter-spacing:var(--ls-caps);text-transform:uppercase}
+  .mpk.def i{color:var(--def)} .mpk.atk i{color:var(--atk-t)}
+  .mpk p{margin-top:3px;font-size:var(--fs-3);line-height:1.3;overflow-wrap:anywhere}
+  .mpk p b{font-weight:700}
+  .mpk .v{margin-left:6px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .mpk .v.good{color:var(--play)} .mpk .v.mid{color:var(--neu)} .mpk .v.low{color:var(--ban-t)}
+  .mpk small{display:block;margin-top:1px;font-size:var(--fs-2);color:var(--muted)}
+  .mwarn{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:7px 10px;border-radius:var(--r-2);font-size:var(--fs-2);line-height:1.45}
+  .mwarn .ic{width:14px;height:14px;margin-top:1px}
+  .mwarn.avoid{color:#f3a99f;background:rgba(240,81,63,.08)} .mwarn.avoid .ic,.mwarn.avoid b{color:var(--ban-t)}
+  .mwarn.note{color:#d9c98a;background:rgba(250,204,21,.07)} .mwarn.note .ic{color:var(--neu)}
   .strong{padding:8px 14px;font-size:var(--fs-2);color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .sbadge{font-size:var(--fs-1);font-weight:800;padding:3px 8px;border-radius:var(--r-1);letter-spacing:.4px}
   .sbadge.atk{background:rgba(59,130,246,.14);color:var(--atk-t)}
   .sbadge.def{background:rgba(249,115,22,.14);color:var(--def)}
   .sbadge.bal{background:var(--track);color:var(--muted)}
-  .sides{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
-  .side{padding:11px 14px}
-  .side+.side{border-left:1px solid var(--line)}
-  .side .sh{font-size:var(--fs-2);font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-  .side.def .sh{color:var(--def)} .side.atk .sh{color:var(--atk)}
-  .side .sh .ic{width:7px;height:7px;border-radius:var(--r-1)}
-  .side.def .ic{background:var(--def)} .side.atk .ic{background:var(--atk)}
+  .mrow .strong{padding:10px 14px 10px 13px;border-top:1px solid var(--line)}
   .picks{border-top:1px solid var(--line)}
-  .pside{padding:11px 14px}
+  .pside{padding:11px 14px 11px 13px}
   .pside+.pside{border-top:1px solid var(--line)}
-  .pside .sh{font-size:var(--fs-2);font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .pside .sh{font-size:var(--fs-2);font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px}
   .pside.def .sh{color:var(--def)} .pside.atk .sh{color:var(--atk)}
   .pside .sh .ic{width:7px;height:7px;border-radius:var(--r-1)}
   .pside.def .ic{background:var(--def)} .pside.atk .ic{background:var(--atk)}
@@ -225,9 +244,8 @@
   .pw{font-size:var(--fs-2);color:var(--muted);line-height:1.45;margin-top:2px}
   .pwhy{display:block;color:var(--txt);font-weight:600;font-variant-numeric:tabular-nums}
   .prole{display:block;margin-top:1px}
-  .pside .sh .src{margin-left:auto;font-size:var(--fs-2);font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted)}
-  .tip{padding:9px 14px;font-size:var(--fs-3);color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
-  .mine{padding:8px 14px;font-size:var(--fs-2);color:var(--muted);border-top:1px solid var(--line);background:var(--inset);line-height:1.5}
+  .pside .sh .src{flex:1 0 100%;margin:0 0 0 13px;font-size:var(--fs-2);font-weight:600;letter-spacing:.2px;text-transform:none;color:var(--muted)}
+  .tip{padding:9px 14px 9px 13px;font-size:var(--fs-3);color:#e0d6ae;background:rgba(244,194,13,.07);border-top:1px solid var(--line);line-height:1.5}
   .forma{padding:14px 16px 6px}
   .frec{font-size:var(--fs-4);color:var(--muted);font-weight:600;white-space:nowrap;margin-bottom:12px}
   .frec b{color:var(--txt);font-size:var(--fs-6);font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
@@ -255,8 +273,9 @@
   .goal .gbar i{display:block;height:100%;min-width:4px;border-radius:inherit;background:var(--gold)}
   .goal .gsub{font-size:var(--fs-2)}
   .rbadge{font-size:var(--fs-2);font-weight:800;padding:3px 7px;border-radius:var(--r-1);letter-spacing:.3px;background:var(--chip);border:1px solid var(--chipline);white-space:nowrap}
+  .rbadge .ic{width:12px;height:12px;margin-right:3px;vertical-align:-.15em}
   .rbadge.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rbadge.dn{color:var(--ban-t);border-color:rgba(240,81,63,.4)} .rbadge.eq{color:var(--muted)}
-  .rnote{padding:8px 14px;font-size:var(--fs-2);line-height:1.5;border-top:1px solid var(--line)}
+  .rnote{padding:8px 14px 8px 13px;font-size:var(--fs-2);line-height:1.5;border-top:1px solid var(--line)}
   .rnote i{font-style:normal;font-weight:800;margin-right:3px}
   .rnote i .ic{width:13px;height:13px}
   .rnote.up{color:#a6e8c9;background:rgba(52,211,153,.07)} .rnote.up i{color:var(--play)}
@@ -278,15 +297,6 @@
   .btn-share{width:100%;padding:12px;border-radius:var(--r-2);border:1px solid var(--gold);background:rgba(244,194,13,.12);
        color:var(--gold);font-weight:800;font-size:var(--fs-4);cursor:pointer}
   .btn-share:active{transform:scale(.98)}
-  .pl{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:var(--fs-3)}
-  .pl .rk{color:var(--muted);font-size:var(--fs-2);width:13px}
-  .pl .nm{flex:1;margin-left:2px;font-weight:600}
-  .pl .pc{color:var(--muted);font-variant-numeric:tabular-nums}
-  .pc.good{color:var(--play)} .pc.mid{color:var(--neu)} .pc.low{color:var(--ban)}
-  .avoid{padding:8px 14px;font-size:var(--fs-2);color:#f3a99f;background:rgba(240,81,63,.07);border-top:1px solid var(--line)}
-  .avoid b{color:var(--ban)}
-  .notew{display:flex;gap:8px;align-items:flex-start;padding:8px 14px;font-size:var(--fs-2);color:#d9c98a;background:rgba(250,204,21,.06);border-top:1px solid var(--line)}
-  .notew .ic{width:14px;height:14px;margin-top:1px;color:var(--neu)}
 
   /* OPERADORES */
   .ops{display:grid;grid-template-columns:1fr;gap:12px}
@@ -442,6 +452,8 @@
     .changed{grid-template-columns:1fr 1fr}
     .tier{grid-template-columns:repeat(3,1fr)}
     .maps{grid-template-columns:repeat(2,1fr)}
+    .picks{display:grid;grid-template-columns:1fr 1fr}
+    .pside+.pside{border-top:0;border-left:1px solid var(--line)}
     .ops{grid-template-columns:repeat(3,1fr)}
   }
 </style>
@@ -575,7 +587,7 @@ function renderInicio(){
     const dns=movers.filter(m=>m.d<0).sort((a,b)=>a.d-b.d).slice(0,3);
     const row=m=>`<div class="chrow"><span class="nm">${esc(m.name)}</span><span class="vv"><span>${m.was.toFixed(0)}→${m.now.toFixed(0)}%</span>${delta(m.now,m.was,0)}</span></div>`;
     const none=`<div class="chrow"><span class="vv">—</span></div>`;
-    changed = `<h2 class="sec">O que mudou desde ${esc(base.season)}<span class="hint">win% por mapa</span></h2>
+    changed = `<h2 class="sec">O que mudou desde ${esc(base.season)}<span class="hint">vitórias por mapa</span></h2>
       <div class="changed">
         <div class="chcol up"><h4>${ic("up-right")} Subiram</h4>${ups.map(row).join("")||none}</div>
         <div class="chcol dn"><h4>${ic("down-right")} Caíram</h4>${dns.map(row).join("")||none}</div>
@@ -640,15 +652,17 @@ function recencyNote(m, rr){
 }
 
 /* ---------- MAPAS ---------- */
+const mapId=n=>String(n).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");   // id estável: chip → linha do mapa
 function tierChips(cur, base, tier){
   const pb = base?byName(base.maps):{};
   return cur.maps.filter(m=>tierOf(m.seasonWR)===tier)
     .sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR))
-    .map(m=>`<span class="chipm">${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?smp("m"):""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small></span>`).join("") || `<span class="chipm none">—</span>`;
-}
-function sideRows(list, pl){
-  const p=byName(pl);
-  return (list||[]).map((o,i)=>`<div class="pl"><span class="rk">${i+1}</span><span class="nm">${esc(o.name)}${o.small?smp("o"):""}</span><span class="pc ${wrClass(o.wr)}">${o.wr}%${delta(o.wr,(p[o.name]||{}).wr,0)}</span></div>`).join("");
+    .map(m=>{
+      const inner=`${esc(m.name)}<small>${m.seasonWR.toFixed(0)}%${m.matches<4?smp("m"):""}${delta(m.seasonWR,(pb[m.name]||{}).seasonWR,0)}</small>`;
+      return m.matches>=1
+        ?`<a class="chipm" href="#c-map-${mapId(m.name)}" onclick="seeCard('map-${mapId(m.name)}');return false">${inner}</a>`
+        :`<span class="chipm">${inner}</span>`;
+    }).join("") || `<span class="chipm none">—</span>`;
 }
 function strongSide(m){
   const dd=(m.atkWR||0)-(m.defWR||0);
@@ -707,19 +721,28 @@ function pickRows(m, side){
       `<div class="pw"><b class="pwhy">${esc(whyData(o,sc))}</b>${role?`<span class="prole">${esc(role)}</span>`:""}</div></div>`;
   }).join("");
 }
+function bestPick(m, side){            // o 1º da lista que o detalhe mostra (mesma conta de pickRows)
+  const c=candidates(m, side);
+  if(c.src==="playbook"){
+    const n=(((PLAYBOOK.maps||{})[m.name]||PLAYBOOK.default||{})[side]||[])[0];
+    return {src:c.src, name:n||""};
+  }
+  const base=baseOf();
+  const r=c.list.map(o=>({o, sc:scoreOp(o,base)})).sort((a,b)=>b.sc.score-a.sc.score)[0];
+  return r?{src:c.src, name:r.o.name, wr:r.o.wr, small:(r.o.rounds||0)<8}:{src:c.src, name:""};
+}
+const SRC_SHORT={season:"da sua season",playbook:"referência geral"};
+function pickCell(m, side){            // o melhor de cada lado, na linha fechada do mapa
+  const b=bestPick(m, side);
+  return `<div class="mpk ${side}"><i>${b.src==="playbook"?"Pegue":"Melhor"} ${side==="def"?"na defesa":"no ataque"}</i>${b.name
+    ?`<p><b>${esc(b.name)}</b>${b.wr!=null?`<span class="v ${wrClass(b.wr)}">${b.wr}%${b.small?smp("o"):""}</span>`:""}</p>${SRC_SHORT[b.src]?`<small>${SRC_SHORT[b.src]}</small>`:""}`
+    :`<p class="empty">—</p>`}</div>`;
+}
 function mapTip(m){
   const a=m.atkWR||0, d=m.defWR||0, diff=a-d;
   if(diff<=-8) return `Seu ataque aqui é o ponto fraco: ${a.toFixed(0)}% contra ${d.toFixed(0)}% na defesa. Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`;
   if(diff>=8) return `Sua defesa aqui é o ponto fraco: ${d.toFixed(0)}% contra ${a.toFixed(0)}% no ataque. Não segure passivo: atrase com roam e jogue o retake.`;
   return `Lados equilibrados (atk ${a.toFixed(0)}% / def ${d.toFixed(0)}%). O round se decide na primeira troca — entre junto.`;
-}
-function mineLine(m){
-  if(!m.def && !m.atk) return "";
-  const f=l=>(l||[]).map(o=>`${esc(o.name)} ${o.wr}%`).join(" · ");
-  const parts=[];
-  if(m.def) parts.push(`<b class="cdef">def</b> ${f(m.def)}`);
-  if(m.atk) parts.push(`<b class="catk">atk</b> ${f(m.atk)}`);
-  return `<div class="mine">Seus melhores aqui — ${parts.join(" &nbsp;·&nbsp; ")}</div>`;
 }
 function formaRecente(){
   const ms=active.recentMatches;
@@ -757,40 +780,45 @@ function formaRecente(){
 function renderMapas(){
   const cur=active, base=baselineOf(cur), pb=base?byName(base.maps):{};
   const rbm=recentByMap();
-  const cards = cur.maps.filter(m=>m.matches>=1).sort((a,b)=>(a.matches<4)-(b.matches<4)).map(m=>{
+  const row=m=>{
     const t=tierOf(m.seasonWR), v={play:"PRIORIZE",neu:"NEUTRO",ban:"BANIR"}[t];
-    const pm=pb[m.name]||{};
-    const rr=rbm[m.name];
-    const rbadge=rr?`<span class="rbadge ${rr.w>rr.l?'up':(rr.l>rr.w?'dn':'eq')}" title="resultado nas partidas recentes">últ. ${rr.w}V-${rr.l}D</span>`:"";
-    const cD=candidates(m,"def"), cA=candidates(m,"atk");
-    const opsHtml = `<div class="picks">
-        <div class="pside def"><div class="sh"><span class="ic"></span>${cD.src==="playbook"?"Pegue na defesa":"Seus melhores na defesa"}<span class="src">${esc(srcLabel(cD.src))}</span></div>${pickRows(m,"def")}</div>
-        <div class="pside atk"><div class="sh"><span class="ic"></span>${cA.src==="playbook"?"Pegue no ataque":"Seus melhores no ataque"}<span class="src">${esc(srcLabel(cA.src))}</span></div>${pickRows(m,"atk")}</div>
-      </div>
-      <div class="tip">${esc(mapTip(m))}</div>`;
+    const pm=pb[m.name]||{}, rr=rbm[m.name], rn=recencyNote(m,rr);
+    const rbadge=rr?`<span class="rbadge ${rr.w>rr.l?'up':(rr.l>rr.w?'dn':'eq')}" title="resultado nas partidas recentes">${rn?ic(rr.w>rr.l?"up-right":"down-right"):""}últ. ${rr.w}V-${rr.l}D</span>`:"";
     const adbar=(cls,val)=>`<div class="adr ${cls}"><span class="adl ${cls}">${cls.toUpperCase()}</span><div class="adbar"><i style="width:${Math.max(3,val||0)}%"></i></div><span class="adv">${(val||0).toFixed(0)}%${delta(val,(cls==='atk'?pm.atkWR:pm.defWR),0)}</span></div>`;
-    return `<div class="map">
-      <div class="head"><span class="mn">${esc(m.name)}</span><span class="verdict ${t}">${v}</span>${rbadge}
-        <span class="wr"><b>${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</b><small>${m.matches} ${m.matches===1?"PARTIDA":"PARTIDAS"}${m.matches<4?" "+smp("m"):""}</small></span></div>
-      <div class="ad">${adbar('atk',m.atkWR)}${adbar('def',m.defWR)}</div>
+    const pside=(cls,pbLbl,myLbl)=>{const c=candidates(m,cls); return `<div class="pside ${cls}"><div class="sh"><span class="ic"></span>${c.src==="playbook"?pbLbl:myLbl}<span class="src">${esc(srcLabel(c.src))}</span></div>${pickRows(m,cls)}</div>`;};
+    const warn=(m.avoid?`<div class="mwarn avoid">${ic("ban")}<span><b>Evite:</b> ${esc(m.avoid)}</span></div>`:"")
+             +(m.note?`<div class="mwarn note">${ic("warn")}<span>${esc(m.note)}</span></div>`:"");
+    return `<details class="map mrow ${t}" id="c-map-${mapId(m.name)}"${WIDE()?" open":""}>
+      <summary>
+        <div class="mh"><span class="mn">${esc(m.name)}</span><span class="wr">${m.seasonWR.toFixed(0)}%${delta(m.seasonWR,pm.seasonWR,0)}</span>${ic("chev","chev")}</div>
+        <div class="mm"><span class="verdict ${t}">${v}</span><span>${m.matches} ${m.matches===1?"partida":"partidas"}${m.matches<4?smp("m"):""}</span>${rbadge}</div>
+        <div class="ad">${adbar('atk',m.atkWR)}${adbar('def',m.defWR)}</div>
+        <div class="mpks">${pickCell(m,"atk")}${pickCell(m,"def")}</div>
+        ${warn}
+      </summary>
       <div class="strong">${strongSide(m)} <span>K/D ${fx(m.kd||0,2)}${delta(m.kd,pm.kd,2)}</span></div>
-      ${opsHtml}
-      ${recencyNote(m,rr)}
-      ${m.note?`<div class="notew">${ic("warn")}<span>${esc(m.note)}</span></div>`:""}
-      ${m.avoid?`<div class="avoid"><b>Evite:</b> ${esc(m.avoid)}</div>`:""}
-    </div>`;
-  }).join("");
+      <div class="picks">
+        ${pside("atk","Pegue no ataque","Seus melhores no ataque")}
+        ${pside("def","Pegue na defesa","Seus melhores na defesa")}
+      </div>
+      <div class="tip">${esc(mapTip(m))}</div>
+      ${rn}
+    </details>`;
+  };
+  const list=cur.maps.filter(m=>m.matches>=1).sort((a,b)=>((a.matches<4)-(b.matches<4))||(b.seasonWR-a.seasonWR));
+  const main=list.filter(m=>m.matches>=4), short=list.filter(m=>m.matches<4);
   const opsNote = bnr("target", `Em cada mapa, os operadores sugeridos pra cada lado vêm do seu histórico (quando há dado) ou de uma referência geral — o rótulo ao lado diz qual. Os números são % de rounds vencidos · rounds jogados. <b>°</b> = amostra pequena (mapa com menos de 4 partidas, operador com menos de 8 rounds): indício, não veredito.`, "gap");
   document.getElementById("scr-mapas").innerHTML = `
-    <h2 class="sec">Jogar vs banir<span class="hint">win% da season</span></h2>
+    <h2 class="sec">Jogar vs banir<span class="hint">% de vitórias na season · toque no mapa pra abrir</span></h2>
     <div class="tier">
       <div class="tcol play"><div class="th"><span class="dot"></span>Priorize</div><div class="chips">${tierChips(cur,base,"play")}</div></div>
       <div class="tcol neu"><div class="th"><span class="dot"></span>Neutro</div><div class="chips">${tierChips(cur,base,"neu")}</div></div>
       <div class="tcol ban"><div class="th"><span class="dot"></span>Banir</div><div class="chips">${tierChips(cur,base,"ban")}</div></div>
     </div>
-    <h2 class="sec">Mapa a mapa<span class="hint">ataque × defesa + top 3</span></h2>
+    <h2 class="sec">Mapa a mapa<span class="hint">ataque × defesa · toque pra ver o top 3 de cada lado</span></h2>
     ${opsNote}
-    <div class="maps">${cards}</div>`;
+    ${main.length?`<div class="maps">${main.map(row).join("")}</div>`:""}
+    ${short.length?`<h3 class="grp">Poucas partidas<small>menos de 4 partidas: indício, não veredito</small></h3><div class="maps">${short.map(row).join("")}</div>`:""}`;
 }
 
 /* ---------- OPERADORES ---------- */
@@ -1372,7 +1400,7 @@ function openHelp(){
     <div class="legrow"><b>°</b> amostra pequena — indicativo (mapa com menos de 4 partidas · operador com menos de 8 rounds)</div>
     <div class="legrow"><b class="cdef">■</b> defesa · <b class="catk">■</b> ataque</div>
     <div class="legrow"><b class="cgold">%</b> verde ≥55 · amarelo 50–54 · vermelho &lt;50</div>
-    <div class="legrow"><b>${ic("map")}</b> Mapas: priorize = win% ≥55 · neutro 40–54 · banir &lt;40 (conta só a season escolhida)</div>
+    <div class="legrow"><b>${ic("map")}</b> Mapas: priorize = vitórias ≥55% · neutro 40–54% · banir &lt;40% (conta só a season escolhida)</div>
     <div class="legrow"><b>${ic("swap")}</b> troque a season pelo seletor no topo pra comparar épocas</div>
     <div class="legrow"><b class="cnt">▲</b> cinza: mudou o estilo ou a contagem, não o resultado (nem bom nem ruim)</div>
     <div class="legrow"><b>${ic("coach")}</b> Coach: o plano pra próxima sessão, sua meta e o que os rounds mostram — os cards marcados "no plano" são os que valem olhar durante o jogo</div>
