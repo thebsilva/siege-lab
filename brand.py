@@ -49,6 +49,36 @@ def favicon_href():
     return "data:image/svg+xml," + urllib.parse.quote(standalone_svg(), safe="")
 
 
+# --- emblema de patente (hexágono com o algarismo romano da divisão) ---------------------------------------------
+EMB_OUT = "24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5"
+EMB_INN = "24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3"
+EMB_HL = "5.81,13.5 24,3 42.19,13.5 24,24"
+ROMAN = ["", "I", "II", "III", "IV", "V"]
+EMB_FONT = "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif"
+
+
+def emblem_body(color, div, champ=False):
+    """Miolo do emblema (grade 48×48). O app tem o gêmeo em JS (emblemBody) lendo estas mesmas constantes."""
+    label = "★" if champ else (ROMAN[div] if 0 <= div < len(ROMAN) else "")
+    return (f'<polygon points="{EMB_OUT}" fill="{color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>'
+            f'<polygon points="{EMB_HL}" fill="rgba(255,255,255,.15)"/>'
+            f'<polygon points="{EMB_INN}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>'
+            '<text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" '
+            f'font-size="{18 if champ else 16}" font-weight="800" text-anchor="middle" dominant-baseline="central" '
+            f'font-family="{EMB_FONT}">{label}</text>')
+
+
+def emblem(color, div, champ=False, size=52):
+    return (f'<svg class="remb" width="{size}" height="{size}" viewBox="0 0 48 48" aria-hidden="true">'
+            f'{emblem_body(color, div, champ)}</svg>')
+
+
+def js_parts():
+    """Geometria que o JS do app precisa (emblema e card de compartilhar): uma fonte só, injetada no HTML."""
+    return {"logo": {"tile": TILE, "glyph": GLYPH, "ink": INK, "top": GOLD_TOP, "bot": GOLD_BOT},
+            "emb": {"out": EMB_OUT, "inn": EMB_INN, "hl": EMB_HL}}
+
+
 # --- PNGs (Pillow) -----------------------------------------------------------
 def _arc(cx, cy, r, a0, a1, n=28):
     return [(cx + r * math.cos(math.radians(a0 + (a1 - a0) * i / n)),

@@ -92,21 +92,28 @@ def head_meta(title, desc, url):
     ])
 
 
-def rank_py(rp):
+RANK_TIERS = [("Cobre", 1000, "#b06a4b"), ("Bronze", 1500, "#b5762f"), ("Prata", 2000, "#9fb0bf"),
+              ("Ouro", 2500, "#f4c20d"), ("Platina", 3000, "#37cfc0"), ("Esmeralda", 3500, "#2ecc71"),
+              ("Diamante", 4000, "#6aa9ff")]
+
+
+def rank_parts(rp):
+    """(nome, cor, divisão 1–5, campeão?) — a mesma regra do rankInfo() do app."""
     if rp is None:
-        return ("—", "#8b919c")
+        return ("—", "#8b919c", 0, False)
     if rp >= 4500:
-        return ("Campeão", "#e0447a")
-    T = [("Cobre", 1000, "#b06a4b"), ("Bronze", 1500, "#b5762f"), ("Prata", 2000, "#9fb0bf"),
-         ("Ouro", 2500, "#f4c20d"), ("Platina", 3000, "#37cfc0"), ("Esmeralda", 3500, "#2ecc71"),
-         ("Diamante", 4000, "#6aa9ff")]
-    t = T[0]
-    for x in T:
+        return ("Campeão", "#e0447a", 0, True)
+    t = RANK_TIERS[0]
+    for x in RANK_TIERS:
         if rp >= x[1]:
             t = x
     div = max(1, min(5, 5 - ((rp - t[1]) // 100)))
-    R = ["", "I", "II", "III", "IV", "V"]
-    return (f"{t[0]} {R[div]}", t[2])
+    return (f"{t[0]} {brand.ROMAN[div]}", t[2], div, False)
+
+
+def rank_py(rp):
+    name, color, _, _ = rank_parts(rp)
+    return (name, color)
 
 
 def load_names(dirs):
@@ -144,7 +151,7 @@ def build_player(pdir, names=None):
     latest = max(snaps, key=lambda s: s.get("seasonOrder", 0))
     k = latest.get("kpis", {})
     curRP = k.get("latestRP") if k.get("latestRP") is not None else k.get("peakRP")
-    rk, color = rank_py(curRP)
+    rk, color, rdiv, rchamp = rank_parts(curRP)
     slug = profile.get("slug", "player")
     title = "SIEGE·LAB — " + str(profile.get("name"))
     rp_txt = f"{curRP or 0:,}".replace(",", ".")
@@ -154,6 +161,8 @@ def build_player(pdir, names=None):
             .replace("__HEAD__", head_meta(title, desc, SITE_URL + slug + ".html"))
             .replace("__TITLE__", _html.escape(title))
             .replace("__SPRITE__", sprite())
+            .replace("__TOKENS__", TOKENS_CSS)
+            .replace("__BRAND__", json.dumps(brand.js_parts(), ensure_ascii=False))
             .replace("__DATA__", json.dumps(snaps, ensure_ascii=False))
             .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False))
             .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False))
@@ -170,50 +179,81 @@ def build_player(pdir, names=None):
     rw = sum(1 for m in rm if m.get("w")); rl = len(rm) - rw
     rnet = sum(m.get("rp", 0) for m in rm)
     return {"slug": profile.get("slug"), "name": profile.get("name"), "season": latest.get("season"),
-            "rank": rk, "color": color, "curRP": curRP or 0, "wr": k.get("winRate"), "kd": k.get("kd"),
+            "rank": rk, "color": color, "div": rdiv, "champ": rchamp, "curRP": curRP or 0, "wr": k.get("winRate"), "kd": k.get("kd"),
             "matches": k.get("matches"), "defMain": dmain.get("name"), "defWr": dmain.get("wr") or 0,
             "atkMain": amain.get("name"), "atkWr": amain.get("wr") or 0,
             "rw": rw, "rl": rl, "rnet": rnet, "hasRecent": len(rm) > 0}
+
+
+def _lum(hex_color):
+    h = hex_color.lstrip("#")
+    f = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    r, g, b = (f(int(h[i:i + 2], 16) / 255) for i in (0, 2, 4))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def text_on_panel(hex_color, bg="#14161c", want=4.5):
+    """Clareia a cor (mistura com branco) até o texto pequeno ter contraste ≥ 4,5:1 sobre o card — a cor da patente
+    (Cobre, por ex.) fica escura demais pra letra miúda; o emblema continua com a cor cheia."""
+    h = hex_color.lstrip("#")
+    rgb = [int(h[i:i + 2], 16) for i in (0, 2, 4)]
+    lb = _lum(bg)
+    for step in range(21):
+        k = step / 20
+        c = "#%02x%02x%02x" % tuple(round(v + (255 - v) * k) for v in rgb)
+        if (_lum(c) + 0.05) / (lb + 0.05) >= want:
+            return c
+    return "#ffffff"
 
 
 def write_index(cards):
     import html as _h
     esc = lambda s: _h.escape(str(s))
     dec = lambda v: f"{v:.2f}".replace(".", ",")
+    mil = lambda n: f"{n:,}".replace(",", ".")                    # 2.702 (milhar com ponto)
     msg = lambda n: ("+" if n > 0 else ("−" if n < 0 else "")) + str(abs(n))   # menos de verdade
+    ico = lambda name: f'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{name}"/></svg>'
     cards = sorted(cards, key=lambda c: (c.get("curRP") or 0), reverse=True)
     chips = ""
     if cards:
         kd = max(cards, key=lambda c: c.get("kd") or 0)
         dfn = max(cards, key=lambda c: c.get("defWr") or 0)
-        sup = [("🎯", "Maior K/D", kd["name"], dec(kd['kd'])),
-               ("🛡", "Melhor defesa", dfn["name"], f"{dfn['defMain']} · {dfn['defWr']:.0f}%")]
+        # (ícone, cor semântica, rótulo, jogador, valor): dourado = marca · laranja = defesa · verde = bom · vermelho = ruim
+        sup = [("target", "k-gold", "Maior K/D", kd["name"], dec(kd["kd"])),
+               ("shield", "k-def", "Melhor defesa", dfn["name"], f"{dfn['defMain']} · {dfn['defWr']:.0f}%")]
         rec = [c for c in cards if c.get("hasRecent")]
         if rec:
             best = max(rec, key=lambda c: c["rw"] - c["rl"])
             cold = min(rec, key=lambda c: c["rw"] - c["rl"])
-            sup.append(("🔥", "Melhor forma", best["name"], f"{best['rw']}V-{best['rl']}D nas últimas"))
-            sup.append(("🧊", "Em maré fria", cold["name"], f"{cold['rw']}V-{cold['rl']}D · {msg(cold['rnet'])} RP"))
+            sup.append(("flame", "k-play", "Melhor forma", best["name"], f"{best['rw']}V-{best['rl']}D nas últimas"))
+            sup.append(("snow", "k-ban", "Em maré fria", cold["name"], f"{cold['rw']}V-{cold['rl']}D · {msg(cold['rnet'])} RP"))
         chips = "".join(
-            f'<div class="sup"><div class="sup-l">{ico} {esc(lbl)}</div>'
+            f'<div class="sup {cls}"><div class="sup-l"><span class="sup-i">{ico(name)}</span><span>{esc(lbl)}</span></div>'
             f'<div class="sup-n">{esc(nm)}</div><div class="sup-v">{esc(v)}</div></div>'
-            for ico, lbl, nm, v in sup)
+            for name, cls, lbl, nm, v in sup)
     rows = ""
     for i, c in enumerate(cards, 1):
-        pill = (f'<span class="rf {"up" if c["rw"] >= c["rl"] else "dn"}">últimas {c["rw"]}V-{c["rl"]}D</span>'
-                if c.get("hasRecent") else "")
+        form = (f'<b class="{"up" if c["rw"] >= c["rl"] else "dn"}">{c["rw"]}V-{c["rl"]}D</b>'
+                if c.get("hasRecent") else '<b class="mu">—</b>')
         rows += (
-            f'<a class="prow2" href="{esc(c["slug"])}.html">'
-            f'<div class="ppos">{i}</div>'
-            f'<div class="pmain"><div class="pnm">{esc(c["name"])}</div>'
-            f'<div class="psub">{c["wr"]:.0f}% vitórias · K/D {dec(c["kd"])} · {esc(c["season"])} {pill}</div></div>'
-            f'<div class="prk" style="background:{c["color"]}22;color:{c["color"]}">{esc(c["rank"])}</div></a>')
+            f'<li><a class="prow2" href="{esc(c["slug"])}.html">'
+            f'<span class="ppos" aria-hidden="true">{i}</span>'
+            f'<span class="pemb">{brand.emblem(c["color"], c["div"], c["champ"], 40)}</span>'
+            f'<span class="pwho"><span class="pnm">{esc(c["name"])}</span>'
+            f'<span class="prn" style="--c:{text_on_panel(c["color"])}">{esc(c["rank"])}</span></span>'
+            f'<span class="prp"><b>{mil(c["curRP"])}</b><i>RP</i></span>'
+            f'<span class="pgo" aria-hidden="true">{ico("chev")}</span>'
+            f'<span class="pst"><span class="stc"><i>vitórias</i><b>{c["wr"]:.0f}%</b></span>'
+            f'<span class="stc"><i>K/D</i><b>{dec(c["kd"])}</b></span>'
+            f'<span class="stc"><i>últimas</i>{form}</span>'
+            f'<span class="stc"><i>season</i><b class="mu">{esc(c["season"])}</b></span></span></a></li>')
     out = os.path.join(OUT_DIR, "index.html")
     desc = "O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores)."
     with open(out, "w", encoding="utf-8") as fh:
         fh.write(INDEX_TEMPLATE
                  .replace("__HEAD__", head_meta("SIEGE·LAB — Squad", desc, SITE_URL))
-                 .replace("__SPRITE__", sprite())
+                 .replace("__TOKENS__", TOKENS_CSS)
+                 .replace("__SPRITE__", sprite({"target", "shield", "flame", "snow", "chev"}))
                  .replace("__CHIPS__", chips).replace("__ROWS__", rows))
     print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
 
@@ -237,73 +277,7 @@ def main():
         print("  (Pillow não instalado: apple-touch-icon.png e og.png não foram regenerados)")
 
 
-INDEX_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a0b0e">
-<title>SIEGE·LAB — Squad</title>
-__HEAD__
-<style>
-  :root{--bg:#0a0b0e;--panel:#14161c;--panel2:#1a1d24;--line:#262a33;--txt:#e7e9ec;--muted:#8b919c;--gold:#f4c20d;--play:#34d399;--ban:#f0513f}
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-       -webkit-font-smoothing:antialiased;min-height:100vh;padding:30px 18px 60px}
-  .wrap{max-width:660px;margin:0 auto}
-  .top{display:flex;align-items:center;gap:13px;margin-bottom:4px}
-  .logo{width:46px;height:46px;flex:none;filter:drop-shadow(0 0 12px rgba(244,194,13,.3))}
-  h1{font-size:22px;letter-spacing:.5px} h1 em{font-style:normal;color:var(--gold)}
-  .sub{color:var(--muted);font-size:13px;margin:4px 0 24px}
-  h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:22px 0 11px;display:flex;align-items:center;gap:9px}
-  h2::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:2px}
-  .sups{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .sup{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px 14px}
-  .sup-l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-  .sup-n{font-size:16px;font-weight:800;margin-top:5px}
-  .sup-v{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
-  .prow2{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;
-         background:var(--panel);padding:14px 16px;margin-bottom:10px;transition:border-color .15s,transform .1s}
-  .prow2:hover{border-color:var(--gold);transform:translateY(-1px)}
-  .ppos{width:24px;height:24px;flex:none;border-radius:7px;background:#1d2129;border:1px solid #2b303a;display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}
-  .prow2:first-of-type .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
-  .pmain{flex:1;min-width:0}
-  .pnm{font-size:17px;font-weight:800}
-  .psub{color:var(--muted);font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-  .rf{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#1d2129;border:1px solid #2b303a}
-  .rf.up{color:var(--play);border-color:rgba(52,211,153,.4)} .rf.dn{color:var(--ban);border-color:rgba(240,81,63,.4)}
-  .prk{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;flex:none}
-  .foot{color:#5c626d;font-size:11px;text-align:center;margin-top:26px;line-height:1.6}
-  @media(max-width:440px){.sups{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-__SPRITE__
-  <div class="wrap">
-    <div class="top"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg><h1>SIEGE<em>·</em>LAB</h1></div>
-    <div class="sub">O squad · ranqueada R6 · toque num jogador pra abrir a análise completa</div>
-    <h2>Destaques do grupo</h2>
-    <div class="sups">__CHIPS__</div>
-    <h2>Ranking por RP</h2>
-    __ROWS__
-    <div class="foot">Cada jogador abre o app completo: início, coach, mapas, operadores, squad e evolução.<br>Dados de r6.tracker.network.</div>
-  </div>
-</body>
-</html>
-"""
-
-
-TEMPLATE = r"""<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a0b0e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>__TITLE__</title>
-__HEAD__
-<style>
-  :root{
+TOKENS_CSS = r""":root{
     /* superfícies e linhas */
     --bg:#0a0b0e; --panel:#14161c; --panel2:#1a1d24; --inset:#101218; --chip:#1d2129; --chipline:#2b303a; --track:#20242c;
     --line:#262a33; --hair:#1f232b;
@@ -325,7 +299,131 @@ __HEAD__
     /* raios: 4 no total */
     --r-1:6px; --r-2:10px; --r-3:14px; --r-pill:999px;
     --nav-h:64px;
+  }"""
+
+
+INDEX_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<title>SIEGE·LAB — Squad</title>
+__HEAD__
+<style>
+  __TOKENS__
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.45;
+       min-height:100vh;padding:28px 16px calc(48px + env(safe-area-inset-bottom));position:relative}
+  /* quadro de tática (o mesmo da prévia do link): grade fina e brilho dourado que somem pra baixo */
+  body::before{content:"";position:absolute;left:0;right:0;top:0;height:440px;z-index:-1;pointer-events:none;
+       background:radial-gradient(560px 280px at 14% 0,rgba(244,194,13,.14),transparent 72%),
+                  linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px,
+                  linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px;
+       -webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent)}
+  .wrap{max-width:820px;margin:0 auto}
+  .ic{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em}
+
+  .hero{display:flex;align-items:center;gap:14px}
+  .logo{width:56px;height:56px;flex:none;filter:drop-shadow(0 0 14px rgba(244,194,13,.32))}
+  h1{font-size:var(--fs-6);font-weight:800;letter-spacing:.06em;line-height:1.05} h1 em{font-style:normal;color:var(--gold)}
+  .tag{color:var(--muted);font-size:var(--fs-3);margin-top:5px}
+
+  h2{font-size:var(--fs-3);letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:9px}
+  h2::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:var(--r-1);flex:none}
+  h2 .hint{margin-left:auto;font-size:var(--fs-2);letter-spacing:.4px;text-transform:none;font-weight:500}
+  @media(max-width:539px){ h2{flex-wrap:wrap;row-gap:2px} h2 .hint{flex:1 0 100%;margin-left:13px} }
+
+  /* destaques do grupo */
+  .sups{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sup{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:12px 14px;min-width:0}
+  .sup-l{display:flex;align-items:center;gap:8px;font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:var(--ls-caps);font-weight:700;line-height:1.2}
+  .sup-i{width:26px;height:26px;flex:none;border-radius:var(--r-1);display:grid;place-items:center;background:var(--tint);color:var(--ink)}
+  .sup-i .ic{width:15px;height:15px}
+  .sup-n{font-size:var(--fs-4);font-weight:800;margin-top:10px;overflow-wrap:anywhere}
+  .sup-v{font-size:var(--fs-3);color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
+  .k-gold{--tint:rgba(244,194,13,.14);--ink:var(--gold)} .k-def{--tint:rgba(249,115,22,.14);--ink:var(--def)}
+  .k-play{--tint:rgba(52,211,153,.14);--ink:var(--play)} .k-ban{--tint:rgba(240,81,63,.14);--ink:var(--ban-t)}
+
+  /* ranking */
+  .rank{list-style:none;display:grid;gap:10px}
+  .prow2{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;grid-template-areas:"pos emb who rp go" "st st st st st";
+         align-items:center;column-gap:12px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:var(--r-3);
+         background:var(--panel);padding:14px 14px 12px;transition:border-color .15s,transform .1s}
+  .prow2:hover{border-color:var(--gold)} .prow2:active{transform:scale(.99)}
+  .prow2:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .rank li:first-child .prow2{border-color:rgba(244,194,13,.4)}
+  .ppos{grid-area:pos;width:24px;height:24px;border-radius:var(--r-1);background:var(--chip);border:1px solid var(--chipline);display:grid;place-items:center;
+        font-weight:800;font-size:var(--fs-3);color:var(--muted);font-variant-numeric:tabular-nums}
+  .rank li:first-child .ppos{background:var(--gold);color:#111;border-color:var(--gold)}
+  .pemb{grid-area:emb;display:flex;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45))}
+  .pwho{grid-area:who;min-width:0}
+  .pnm{display:block;font-size:var(--fs-5);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+  .prn{display:block;font-size:var(--fs-3);font-weight:700;color:var(--c);margin-top:2px}
+  .prp{grid-area:rp;text-align:right;line-height:1.1;min-width:58px}
+  .prp b{display:block;font-size:var(--fs-5);font-weight:800;font-variant-numeric:tabular-nums}
+  .prp i{font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .pgo{grid-area:go;display:flex;color:var(--muted)} .pgo .ic{width:18px;height:18px;transform:rotate(-90deg)}
+  .prow2:hover .pgo{color:var(--gold)}
+  .pst{grid-area:st;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr) minmax(0,1.3fr) minmax(0,1fr);gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--hair);font-variant-numeric:tabular-nums}
+  .stc{min-width:0}
+  .stc i{display:block;font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .stc b{display:block;margin-top:2px;font-size:var(--fs-4);font-weight:800;white-space:nowrap}
+  .stc b.up{color:var(--play)} .stc b.dn{color:var(--ban-t)} .stc b.mu{color:var(--muted);font-weight:700}
+  @media(max-width:359px){
+    .prow2{column-gap:8px;padding:12px 12px 10px}
+    .ppos{width:20px;height:20px;font-size:var(--fs-2)}
+    .pemb .remb{width:34px;height:34px} .pgo{display:none}
+    .pst{gap:6px} .stc b{font-size:var(--fs-3)}
+    .sup{padding:10px 12px}
   }
+  @media(min-width:540px){ .pst{max-width:460px} }
+  @media(min-width:640px){
+    body{padding-top:48px}
+    .logo{width:68px;height:68px} h1{font-size:var(--fs-7)} .tag{font-size:var(--fs-4)}
+    .sups{grid-template-columns:repeat(4,1fr)}
+  }
+  @media(min-width:768px){      /* a linha vira uma faixa só: número da mini-tabela precisa de ~60 px por coluna */
+    .prow2{grid-template-columns:auto auto minmax(0,1fr) minmax(0,1.6fr) auto auto;grid-template-areas:"pos emb who st rp go";padding:14px 18px;column-gap:16px}
+    .pst{margin:0;padding:0;border-top:0;gap:12px;max-width:none}
+  }
+  .foot{color:var(--muted);font-size:var(--fs-2);text-align:center;margin-top:30px;line-height:1.6}
+  @media(prefers-reduced-motion:reduce){ .prow2{transition:none} }
+</style>
+</head>
+<body>
+__SPRITE__
+<main class="wrap">
+  <header class="hero">
+    <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg>
+    <div><h1>SIEGE<em>·</em>LAB</h1><p class="tag">O squad · ranqueada R6</p></div>
+  </header>
+  <section>
+    <h2>Destaques do grupo</h2>
+    <div class="sups">__CHIPS__</div>
+  </section>
+  <section>
+    <h2>Ranking por RP<span class="hint">toque num jogador pra abrir a análise completa</span></h2>
+    <ol class="rank">__ROWS__</ol>
+  </section>
+  <p class="foot">Cada jogador abre o app completo: início, coach, mapas, operadores, squad e evolução.<br>Dados de r6.tracker.network.</p>
+</main>
+</body>
+</html>
+"""
+
+
+TEMPLATE = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>__TITLE__</title>
+__HEAD__
+<style>
+  __TOKENS__
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{background:var(--bg);color:var(--txt);font-family:var(--font);
        -webkit-font-smoothing:antialiased;line-height:1.45;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
@@ -564,22 +662,20 @@ __HEAD__
   .rnote.up{color:#a6e8c9;background:rgba(52,211,153,.07)} .rnote.up i{color:var(--play)}
   .rnote.dn{color:#f3a99f;background:rgba(240,81,63,.07)} .rnote.dn i{color:var(--ban)}
   .rnote b{color:var(--txt);font-weight:600}
-  .sharecard{border:1px solid var(--line);border-radius:var(--r-3);background:linear-gradient(160deg,#1a1d24,#0b0d11);
-       padding:22px 18px 18px;text-align:center;position:relative;overflow:hidden;margin:6px 0 14px}
-  .sharecard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 0%,rgba(244,194,13,.12),transparent)}
-  .scbrand{display:flex;align-items:center;justify-content:center;gap:8px;font-size:var(--fs-4);position:relative} .scbrand b{font-weight:800;letter-spacing:1px} .scbrand i{font-style:normal;color:var(--gold)}
-  .sclogo{width:24px;height:24px;flex:none}
-  .scemb{margin:12px 0 6px;position:relative} .scemb .remb{filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-  .scname{font-size:var(--fs-6);font-weight:800;position:relative}
-  .scrank{font-size:var(--fs-3);font-weight:700;margin-top:2px;position:relative}
-  .scstats{display:flex;justify-content:center;gap:26px;margin:16px 0 4px;position:relative}
-  .scstats b{display:block;font-size:var(--fs-6);font-weight:800;font-variant-numeric:tabular-nums}
-  .scstats span{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-  .scfoot{font-size:var(--fs-2);color:var(--muted);margin-top:14px;position:relative}
+  /* COMPARTILHAR: o card é uma imagem 4:5 (SVG); a largura respeita a altura da folha pra caber sem rolar */
+  .sharecard{width:min(100%,max(150px,calc((80vh - 262px - env(safe-area-inset-bottom,0px))*.8)));aspect-ratio:4/5;margin:6px auto 14px;border-radius:var(--r-3);overflow:hidden;
+       border:1px solid var(--line);background:var(--bg)}
+  .sharecard svg{display:block;width:100%;height:100%}
   .shint{font-size:var(--fs-3);color:var(--muted);text-align:center;margin-bottom:12px}
-  .btn-share{width:100%;padding:12px;border-radius:var(--r-2);border:1px solid var(--gold);background:rgba(244,194,13,.12);
-       color:var(--gold);font-weight:800;font-size:var(--fs-4);cursor:pointer}
+  .shbtns{display:grid;gap:8px}
+  .btn-share{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;padding:0 14px;border-radius:var(--r-2);
+       border:1px solid var(--gold);background:rgba(244,194,13,.12);color:var(--gold);font:inherit;font-weight:800;font-size:var(--fs-4);cursor:pointer}
   .btn-share:active{transform:scale(.98)}
+  .btn-share:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .btn-share[hidden]{display:none}
+  .btn-share.pri{background:var(--gold);color:#111}
+  .btn-share.sec{border-color:var(--line);background:var(--panel);color:var(--txt)}
+  .btn-share:disabled{opacity:.6;cursor:default}
 
   /* OPERADORES */
   .ops{display:grid;grid-template-columns:1fr;gap:12px}
@@ -845,6 +941,7 @@ const SNAPSHOTS = __DATA__;
 const PLAYER = __PLAYER__;
 const PLAYBOOK = __PLAYBOOK__;
 const NAMES = __NAMES__;              // slug -> nome de quem é do squad
+const BRAND = __BRAND__;              // geometria do logo e do emblema (brand.py): card de compartilhar e rankEmblem
 
 /* ---------- base ---------- */
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -883,21 +980,19 @@ function rankInfo(rp){
   const div=Math.max(1,Math.min(5,5-Math.floor((rp-t.s)/100)));
   return {name:`${t.n} ${ROM[div]}`,tier:t.n,color:t.c,div};
 }
-function rankEmblem(color, div, champ, size){
-  size = size||52;
-  const R=["","I","II","III","IV","V"];
+function emblemBody(color, div, champ){      // miolo do emblema (grade 48×48): o card de compartilhar reaproveita
+  const R=["","I","II","III","IV","V"], E=BRAND.emb;
   const label = champ ? "★" : (R[div]||"");
-  const out="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5";
-  const inn="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3";
-  const hl="5.81,13.5 24,3 42.19,13.5 24,24";
-  return `<svg class="remb" width="${size}" height="${size}" viewBox="0 0 48 48" aria-hidden="true">
-    <polygon points="${out}" fill="${color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>
-    <polygon points="${hl}" fill="rgba(255,255,255,.15)"/>
-    <polygon points="${inn}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>
+  return `<polygon points="${E.out}" fill="${color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>
+    <polygon points="${E.hl}" fill="rgba(255,255,255,.15)"/>
+    <polygon points="${E.inn}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>
     <text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke"
       font-size="${champ?18:16}" font-weight="800" text-anchor="middle" dominant-baseline="central"
-      font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">${label}</text>
-  </svg>`;
+      font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">${label}</text>`;
+}
+function rankEmblem(color, div, champ, size){
+  size = size||52;
+  return `<svg class="remb" width="${size}" height="${size}" viewBox="0 0 48 48" aria-hidden="true">${emblemBody(color,div,champ)}</svg>`;
 }
 
 function delta(c,p,dec=0,cnt=false){     // seta = quanto mudou; toque mostra "antes → agora". cnt = contagem (partidas): cinza, nem bom nem ruim
@@ -1791,26 +1886,94 @@ function openHelp(){
     <div class="legrow"><b>${ic("medal")}</b> Operadores: toque em qualquer operador (mains, hard breach ou tabela) pra abrir a ficha completa</div>
     <div class="legrow"><b>${ic("squad")}</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
 }
-function openShare(){
+/* ---------- COMPARTILHAR ----------
+   O card é uma imagem 4:5 (1080×1350, o que o WhatsApp mostra inteiro). Uma string SVG só: é a prévia na folha e a fonte do PNG.
+   SVG puro (sem foreignObject nem <use> externo): o logo e o emblema entram como desenho, e o PNG sai igual ao que se vê. */
+const SC_W=1080, SC_H=1350;
+function shareSVG(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);
-  const rm=active.recentMatches||[]; const w=rm.filter(m=>m.w).length, l=rm.length-w;
-  const card=`<div class="sharecard">
-    <div class="scbrand"><svg class="sclogo" viewBox="0 0 64 64" aria-hidden="true"><use href="#sl-logo"/></svg><b>SIEGE<i>·</i>LAB</b></div>
-    <div class="scemb">${rankEmblem(rk.color,rk.div,rk.champ,90)}</div>
-    <div class="scname">${esc(PLAYER.name)}</div>
-    <div class="scrank" style="color:${rk.color}">${rk.name} · ${curRP.toLocaleString('pt-BR')} RP</div>
-    <div class="scstats">
-      <div><b>${k.winRate.toFixed(0)}%</b><span>vitórias</span></div>
-      <div><b>${fx(k.kd,2)}</b><span>K/D</span></div>
-      ${rm.length?`<div><b>${w}-${l}</b><span>últimas</span></div>`:""}
-    </div>
-    <div class="scfoot">${esc(active.season)} · thebsilva.github.io/siege-lab</div>
-  </div>`;
-  openSheet(`<h3>Compartilhar</h3>${card}
-    <div class="shint">Tire um print do card e mande no grupo</div>
-    ${navigator.share?`<button class="btn-share" id="doshare">Compartilhar o link</button>`:`<button class="btn-share" id="docopy">Copiar o link</button>`}`);
-  const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:"SIEGE·LAB — "+PLAYER.name,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
+  const rm=active.recentMatches||[], w=rm.filter(m=>m.w).length, l=rm.length-w;
+  const L=BRAND.logo, X0=96, X1=SC_W-96, IW=X1-X0, CX=SC_W/2;
+  const F="-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif";
+  const rpTxt=curRP!=null?curRP.toLocaleString("pt-BR"):"—";
+  const nm=String(PLAYER.name||""), nmFs=Math.round(Math.max(56,Math.min(104,840/(Math.max(6,nm.length)*.6))));
+  const m=44, c=96, r=56, W=SC_W, H=SC_H;   // moldura: dois cantos cortados e dois arredondados, como a placa do logo
+  const frame=`M${m+r} ${m}H${W-m-c}L${W-m} ${m+c}V${H-m-r}A${r} ${r} 0 0 1 ${W-m-r} ${H-m}H${m+c}L${m} ${H-m-c}V${m+r}A${r} ${r} 0 0 1 ${m+r} ${m}Z`;
+  const stats=[{v:`${k.winRate.toFixed(0)}<tspan font-size="46">%</tspan>`,l:"vitórias"},{v:fx(k.kd,2),l:"K/D"}];
+  if(rm.length) stats.push({v:`${w}<tspan font-size="60" fill="#34d399">V</tspan><tspan font-size="60" fill="#8b919c">-</tspan>${l}<tspan font-size="60" fill="#ff6b5a">D</tspan>`,l:`últimas ${rm.length}`,wt:1.4});
+  const tot=stats.reduce((a,s)=>a+(s.wt||1),0); let ax=X0;      // a coluna da forma recente é mais larga ("10V-10D" tem 7 caracteres)
+  const cols=stats.map((s,i)=>{ const cw=IW*(s.wt||1)/tot, cx=ax+cw/2, edge=ax; ax+=cw;
+    return `<text x="${cx}" y="962" font-size="78" font-weight="800" fill="#e7e9ec" text-anchor="middle">${s.v}</text>
+    <text x="${cx}" y="1010" font-size="30" font-weight="700" fill="#8b919c" letter-spacing="3" text-anchor="middle">${s.l.toUpperCase()}</text>`
+    +(i?`<path d="M${edge} 902V1014" stroke="#262a33" stroke-width="2"/>`:""); }).join("");
+  const n=rm.length, gap=8, pw=n?(IW-(n-1)*gap)/n:0;
+  const pips=n?rm.slice().reverse().map((x,i)=>`<rect x="${(X0+i*(pw+gap)).toFixed(1)}" y="1062" width="${pw.toFixed(1)}" height="52" rx="8" fill="${x.w?"#34d399":"#f0513f"}"${x.w?"":' fill-opacity=".85"'}/>`).join("")
+    +`<text x="${X0}" y="1156" font-size="26" fill="#8b919c">mais antiga</text><text x="${X1}" y="1156" font-size="26" fill="#8b919c" text-anchor="end">mais recente</text>`:"";
+  const alt=`Card de ${nm}: ${rk.name}, ${rpTxt} RP, ${k.winRate.toFixed(0)}% de vitórias, K/D ${fx(k.kd,2)}`+(n?`, últimas ${w}V-${l}D`:"");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${F}" role="img" aria-label="${esc(alt)}">
+  <title>${esc(alt)}</title>
+  <defs>
+    <linearGradient id="sc-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14161c"/><stop offset="1" stop-color="#0a0b0e"/></linearGradient>
+    <radialGradient id="sc-glow" cx="${CX}" cy="410" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f4c20d" stop-opacity=".2"/><stop offset="1" stop-color="#f4c20d" stop-opacity="0"/></radialGradient>
+    <pattern id="sc-grid" width="54" height="54" patternUnits="userSpaceOnUse"><path d="M54 0H0V54" fill="none" stroke="#fff" stroke-opacity=".035" stroke-width="2"/></pattern>
+    <linearGradient id="sc-lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${L.top}"/><stop offset="1" stop-color="${L.bot}"/></linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#sc-bg)"/>
+  <rect width="${W}" height="${H}" fill="url(#sc-grid)"/>
+  <rect width="${W}" height="${H}" fill="url(#sc-glow)"/>
+  <path d="${frame}" fill="none" stroke="#2b303a" stroke-width="3"/>
+  <g transform="translate(${X0} 96) scale(1.1875)"><path d="${L.tile}" fill="url(#sc-lg)"/><path d="${L.glyph}" fill="${L.ink}" fill-rule="evenodd"/></g>
+  <text x="${X0+98}" y="150" font-size="46" font-weight="800" letter-spacing="3" fill="#e7e9ec">SIEGE<tspan fill="#f4c20d">·</tspan>LAB</text>
+  <text x="${X1}" y="148" font-size="28" font-weight="700" letter-spacing="2" fill="#8b919c" text-anchor="end">${esc(active.season)} · Ranked</text>
+  <svg x="${CX-190}" y="214" width="380" height="380" viewBox="0 0 48 48">${emblemBody(rk.color,rk.div,rk.champ)}</svg>
+  <text x="${CX}" y="728" font-size="${nmFs}" font-weight="800" fill="#e7e9ec" text-anchor="middle">${esc(nm)}</text>
+  <text x="${CX}" y="796" font-size="44" font-weight="700" fill="${rk.color}" text-anchor="middle">${esc(rk.name)}<tspan fill="#cfd3d8" font-weight="600"> · ${rpTxt} RP</tspan></text>
+  <path d="M${X0} 852H${X1}" stroke="#262a33" stroke-width="2"/>
+  ${cols}
+  ${pips}
+  <text x="${CX}" y="1240" font-size="32" font-weight="700" fill="#f4c20d" text-anchor="middle">thebsilva.github.io/siege-lab</text>
+</svg>`;
+}
+function svgToPng(svg){      // SVG -> canvas -> PNG 1080×1350. Tudo local (data: URI), nada de rede
+  return new Promise((ok,fail)=>{
+    const img=new Image();
+    img.onload=()=>{ try{
+      const cv=document.createElement("canvas"); cv.width=SC_W; cv.height=SC_H;
+      cv.getContext("2d").drawImage(img,0,0,SC_W,SC_H);
+      cv.toBlob(b=>b?ok(b):fail(new Error("png")),"image/png");
+    }catch(e){ fail(e); } };
+    img.onerror=()=>fail(new Error("svg"));
+    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+  });
+}
+function openShare(){
+  const svg=shareSVG();
+  const fname=`siege-lab-${PLAYER.slug||"card"}-${active.season}.png`.toLowerCase();
+  const title="SIEGE·LAB — "+PLAYER.name;
+  openSheet(`<h3>Compartilhar</h3><div class="sharecard">${svg}</div>
+    <div class="shint" id="shint">Tire um print do card e mande no grupo</div>
+    <div class="shbtns">
+      <button class="btn-share pri" id="doimg" disabled>${ic("image")} Preparando imagem…</button>
+      ${navigator.share?`<button class="btn-share sec" id="doshare">${ic("link")} Compartilhar o link</button>`:`<button class="btn-share sec" id="docopy">${ic("link")} Copiar o link</button>`}
+    </div>`);
+  const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:title,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
   const c=document.getElementById("docopy"); if(c) c.onclick=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(location.href); c.innerHTML=ic("check")+" Link copiado"; };
+  // a imagem já nasce pronta: o toque em "Compartilhar imagem" chama share() na hora (o navegador exige o gesto do usuário)
+  svgToPng(svg).then(blob=>{
+    const btn=document.getElementById("doimg"); if(!btn) return;           // folha já fechada ou trocada
+    let file=null; try{ file=new File([blob],fname,{type:"image/png"}); }catch(e){}
+    const hint=document.getElementById("shint");
+    btn.disabled=false;
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+      btn.innerHTML=ic("image")+" Compartilhar imagem";
+      if(hint) hint.textContent="Mande a imagem no grupo, ou só o link";
+      btn.onclick=()=>navigator.share({files:[file],title:title}).catch(()=>{});
+    }else{
+      btn.innerHTML=ic("image")+" Baixar imagem";
+      if(hint) hint.textContent="Baixe a imagem (ou tire um print do card) e mande no grupo";
+      btn.onclick=()=>{ const u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download=fname; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); };
+    }
+  }).catch(()=>{ const btn=document.getElementById("doimg"); if(btn) btn.hidden=true; });
 }
 const bg=document.getElementById("sheetbg"), sh=document.getElementById("sheet");
 function openSheet(html){ sh.innerHTML='<div class="grab"></div>'+html; bg.classList.add("open"); sh.classList.add("open"); }

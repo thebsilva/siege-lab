@@ -282,22 +282,20 @@
   .rnote.up{color:#a6e8c9;background:rgba(52,211,153,.07)} .rnote.up i{color:var(--play)}
   .rnote.dn{color:#f3a99f;background:rgba(240,81,63,.07)} .rnote.dn i{color:var(--ban)}
   .rnote b{color:var(--txt);font-weight:600}
-  .sharecard{border:1px solid var(--line);border-radius:var(--r-3);background:linear-gradient(160deg,#1a1d24,#0b0d11);
-       padding:22px 18px 18px;text-align:center;position:relative;overflow:hidden;margin:6px 0 14px}
-  .sharecard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 0%,rgba(244,194,13,.12),transparent)}
-  .scbrand{display:flex;align-items:center;justify-content:center;gap:8px;font-size:var(--fs-4);position:relative} .scbrand b{font-weight:800;letter-spacing:1px} .scbrand i{font-style:normal;color:var(--gold)}
-  .sclogo{width:24px;height:24px;flex:none}
-  .scemb{margin:12px 0 6px;position:relative} .scemb .remb{filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-  .scname{font-size:var(--fs-6);font-weight:800;position:relative}
-  .scrank{font-size:var(--fs-3);font-weight:700;margin-top:2px;position:relative}
-  .scstats{display:flex;justify-content:center;gap:26px;margin:16px 0 4px;position:relative}
-  .scstats b{display:block;font-size:var(--fs-6);font-weight:800;font-variant-numeric:tabular-nums}
-  .scstats span{font-size:var(--fs-1);color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-  .scfoot{font-size:var(--fs-2);color:var(--muted);margin-top:14px;position:relative}
+  /* COMPARTILHAR: o card é uma imagem 4:5 (SVG); a largura respeita a altura da folha pra caber sem rolar */
+  .sharecard{width:min(100%,max(150px,calc((80vh - 262px - env(safe-area-inset-bottom,0px))*.8)));aspect-ratio:4/5;margin:6px auto 14px;border-radius:var(--r-3);overflow:hidden;
+       border:1px solid var(--line);background:var(--bg)}
+  .sharecard svg{display:block;width:100%;height:100%}
   .shint{font-size:var(--fs-3);color:var(--muted);text-align:center;margin-bottom:12px}
-  .btn-share{width:100%;padding:12px;border-radius:var(--r-2);border:1px solid var(--gold);background:rgba(244,194,13,.12);
-       color:var(--gold);font-weight:800;font-size:var(--fs-4);cursor:pointer}
+  .shbtns{display:grid;gap:8px}
+  .btn-share{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;padding:0 14px;border-radius:var(--r-2);
+       border:1px solid var(--gold);background:rgba(244,194,13,.12);color:var(--gold);font:inherit;font-weight:800;font-size:var(--fs-4);cursor:pointer}
   .btn-share:active{transform:scale(.98)}
+  .btn-share:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .btn-share[hidden]{display:none}
+  .btn-share.pri{background:var(--gold);color:#111}
+  .btn-share.sec{border-color:var(--line);background:var(--panel);color:var(--txt)}
+  .btn-share:disabled{opacity:.6;cursor:default}
 
   /* OPERADORES */
   .ops{display:grid;grid-template-columns:1fr;gap:12px}
@@ -563,6 +561,7 @@ const SNAPSHOTS = [{"date": "2026-07-17", "season": "Y10S4", "seasonOrder": 40, 
 const PLAYER = {"name": "SuperAllfa", "platform": "psn", "slug": "superallfa", "goal": {"rp": 3000, "label": "Platina", "set": "2026-10-09"}};
 const PLAYBOOK = {"_nota": "Biblioteca compartilhada: motivo por operador (função — vale em qualquer mapa) + quais pegar por mapa. A dica de estratégia por mapa é gerada no app a partir dos dados do jogador (ataque x defesa).", "operators": {"Bandit": {"side": "def", "why": "Eletrifica as reforçadas — nega o hard breach e força o ataque a abrir de outro jeito."}, "Kaid": {"side": "def", "why": "Eletrifica de longe, inclusive teto e hatch — trava o que o Bandit não alcança."}, "Mute": {"side": "def", "why": "Jammer mata drone e bloqueia carga térmica — atrasa a informação do ataque."}, "Aruni": {"side": "def", "why": "Portões laser fecham rota e hatch sem você precisar segurar a posição."}, "Azami": {"side": "def", "why": "Kiba tapa buraco na hora — fecha entrada aberta e cria posição de retake."}, "Valkyrie": {"side": "def", "why": "Câmeras dão intel de fora e do site — sustenta roam e retake."}, "Echo": {"side": "def", "why": "Yokai nega o plant e atordoa quem entra, sem expor você."}, "Maestro": {"side": "def", "why": "Evil Eye segura ângulo longo e nega plant com dano contínuo."}, "Melusi": {"side": "def", "why": "Banshee atrasa a entrada e denuncia rush sem custar posicionamento."}, "Smoke": {"side": "def", "why": "Gás nega plant e limpa entrada apertada — o melhor 'não passa' do jogo."}, "Mira": {"side": "def", "why": "Janela espelho cria ângulo que não dá pra duelar de fora."}, "Castle": {"side": "def", "why": "Barricada blindada obriga o ataque a gastar utilidade e tempo."}, "Rook": {"side": "def", "why": "Placas de armadura sobem a sobrevivência do time inteiro no site."}, "Doc": {"side": "def", "why": "Revive à distância — segura o site sozinho e desfaz a troca do ataque."}, "Jäger": {"side": "def", "why": "ADS come granada e flash — segura o site contra utilidade de entrada."}, "Wamai": {"side": "def", "why": "Discos puxam a granada pra longe — protege o site como o Jäger."}, "Thorn": {"side": "def", "why": "Razorbloom pune entrada e retake em espaço apertado."}, "Lesion": {"side": "def", "why": "Gu mines atrasam e revelam o push sem custo nenhum."}, "Kapkan": {"side": "def", "why": "Armadilha em porta e janela pune entrada rápida."}, "Frost": {"side": "def", "why": "Armadilha derruba quem entra por janela — troca garantida."}, "Caveira": {"side": "def", "why": "Interroga e revela o time todo — vira o round no 1vX."}, "Solis": {"side": "def", "why": "Detecta eletrônico sem drone — acha Twitch, Zero e utilidade escondida."}, "Sentry": {"side": "def", "why": "Base sólida: barricada blindada e arma limpa — serve em qualquer site."}, "Skopós": {"side": "def", "why": "Drone duplo cobre dois ângulos ao mesmo tempo — intel e pick fácil."}, "Tubarão": {"side": "def", "why": "Slow quebra o timing da entrada e neutraliza utilidade elétrica."}, "Fenrir": {"side": "def", "why": "Névoa cega o site e quebra o push coordenado."}, "Warden": {"side": "def", "why": "Enxerga através de fumaça e flash — o anti-plant sob smoke."}, "Goyo": {"side": "def", "why": "Escudo incendiário nega plant e fecha entrada com fogo."}, "Vigil": {"side": "def", "why": "Some dos drones — roam seguro pra pegar o ataque por trás."}, "Alibi": {"side": "def", "why": "Clones denunciam por onde o ataque está entrando."}, "Clash": {"side": "def", "why": "Escudo com choque segura corredor e atrasa o avanço."}, "Ela": {"side": "def", "why": "Minas de concussão atrasam e desorientam a entrada."}, "Oryx": {"side": "def", "why": "Atravessa parede e reposiciona rápido — ótimo pra retake."}, "Pulse": {"side": "def", "why": "Detecta batimento — entrega o posicionamento do ataque pelo chão."}, "Thunderbird": {"side": "def", "why": "Cura automática no site — sustenta a defesa em troca longa."}, "Mozzie": {"side": "def", "why": "Rouba o drone do ataque e vira a intel contra eles."}, "Thatcher": {"side": "atk", "why": "EMP mata Bandit, Kaid e Jäger — abre a janela pro hard breach acontecer."}, "Thermite": {"side": "atk", "why": "Carga térmica abre a reforçada — a entrada principal do ataque."}, "Hibana": {"side": "atk", "why": "Abre reforçada à distância — hard breach mais seguro que o Thermite."}, "Ace": {"side": "atk", "why": "Abre reforçada em sequência e sozinho — hard breach flexível."}, "Maverick": {"side": "atk", "why": "Maçarico faz buraco cirúrgico — abre ângulo sem escancarar a parede."}, "Twitch": {"side": "atk", "why": "Drone de choque destrói a utilidade da defesa antes do push."}, "Iana": {"side": "atk", "why": "Réplica faz o intel sem arriscar o corpo — você entra já sabendo."}, "Ying": {"side": "atk", "why": "Candelas cegam o site inteiro — a entrada mais forte do jogo."}, "Zofia": {"side": "atk", "why": "Concussão e impacto na mesma mão — entra e limpa sozinha."}, "Ash": {"side": "atk", "why": "Breach à distância e velocidade pra tomar espaço primeiro."}, "Sledge": {"side": "atk", "why": "Marreta abre rotação e ângulo de graça — flexível em qualquer site."}, "Buck": {"side": "atk", "why": "Escopeta no cano abre chão e teto — pressão vertical em qualquer mapa."}, "Fuze": {"side": "atk", "why": "Cargas limpam o site por parede e chão — tira o anchor da posição."}, "Nomad": {"side": "atk", "why": "Airjab trava o roam e protege as costas do time."}, "Jackal": {"side": "atk", "why": "Rastreia pegada — caça roamer e limpa o fora antes do push."}, "Dokkaebi": {"side": "atk", "why": "Toca o celular da defesa e derruba as câmeras deles."}, "Lion": {"side": "atk", "why": "Scan congela a defesa por 2s — a janela pro time avançar junto."}, "Capitão": {"side": "atk", "why": "Flecha incendiária nega plant e a de fumaça cobre a travessia."}, "Glaz": {"side": "atk", "why": "Mira térmica enxerga pela fumaça — o pick de distância longa."}, "Blackbeard": {"side": "atk", "why": "Escudo na arma ganha o duelo de janela e ângulo aberto."}, "IQ": {"side": "atk", "why": "Enxerga eletrônico — acha Bandit e Kaid pra liberar o hard breach."}, "Ram": {"side": "atk", "why": "BU-GI destrói chão e utilidade — abre vertical muito rápido."}, "Striker": {"side": "atk", "why": "Base sólida no ataque: impacto e flash — funciona em qualquer site."}, "Rauora": {"side": "atk", "why": "Cria plataforma e linha nova — ângulo que a defesa não está esperando."}, "Deimos": {"side": "atk", "why": "Revela um alvo, mas denuncia você também — só use com o time junto."}, "Brava": {"side": "atk", "why": "Rouba câmera e gadget da defesa e vira contra eles."}, "Grim": {"side": "atk", "why": "Enxame marca quem atravessa — intel contínuo durante o push."}, "Osa": {"side": "atk", "why": "Escudo transparente cria cobertura pra tomar espaço aberto."}, "Amaru": {"side": "atk", "why": "Gancho entra por janela e hatch — quebra o ângulo segurado."}, "Kali": {"side": "atk", "why": "Lança destrói gadget e abre buraco à distância."}, "Zero": {"side": "atk", "why": "Câmeras através da parede — intel sem gastar drone."}, "Finka": {"side": "atk", "why": "Boost cura e estabiliza a mira — sustenta o push travado."}, "Montagne": {"side": "atk", "why": "Escudo total abre espaço e dá intel seguro pro time."}, "Flores": {"side": "atk", "why": "Drone explosivo destrói gadget e abre ângulo à distância."}, "Gridlock": {"side": "atk", "why": "Trax nega a rotação e o retake da defesa."}, "Nøkk": {"side": "atk", "why": "Some das câmeras — flanqueia sem ser visto."}, "Denari": {"side": "atk", "why": "Holograma cria informação falsa e puxa o duelo no seu tempo."}, "Solid Snake": {"side": "atk", "why": "Intel e entrada no mesmo pacote — coringa pra qualquer site."}, "Blitz": {"side": "atk", "why": "Flash no escudo — quebra o ângulo que está te segurando."}}, "default": {"def": ["Bandit", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "maps": {"Oregon": {"def": ["Aruni", "Bandit", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Ying"]}, "Consulate": {"def": ["Aruni", "Bandit", "Mira"], "atk": ["Thatcher", "Twitch", "Thermite"]}, "Border": {"def": ["Azami", "Bandit", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Ying"]}, "Bank": {"def": ["Aruni", "Kaid", "Echo"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "Kafe Dostoyevsky": {"def": ["Kaid", "Aruni", "Mira"], "atk": ["Thatcher", "Hibana", "Ying"]}, "Clubhouse": {"def": ["Bandit", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Sledge"]}, "Chalet": {"def": ["Bandit", "Aruni", "Smoke"], "atk": ["Thatcher", "Thermite", "Buck"]}, "Coastline": {"def": ["Mira", "Bandit", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Ying"]}, "Villa": {"def": ["Bandit", "Aruni", "Echo"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "Kanal": {"def": ["Kaid", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "Lair": {"def": ["Bandit", "Aruni", "Echo"], "atk": ["Thatcher", "Ace", "Twitch"]}, "Nighthaven Labs": {"def": ["Bandit", "Azami", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Iana"]}, "Fortress": {"def": ["Kaid", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Ace", "Twitch"]}, "Outback": {"def": ["Bandit", "Aruni", "Echo"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "Skyscraper": {"def": ["Bandit", "Azami", "Valkyrie"], "atk": ["Thatcher", "Thermite", "Ying"]}, "Theme Park": {"def": ["Kaid", "Aruni", "Echo"], "atk": ["Thatcher", "Thermite", "Twitch"]}, "Emerald Plains": {"def": ["Bandit", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Ace", "Twitch"]}, "Calypso Casino": {"def": ["Bandit", "Aruni", "Valkyrie"], "atk": ["Thatcher", "Ace", "Iana"]}}};
 const NAMES = {"brunoprufer": "BrunoPrufer", "laprufer": "laprufer", "superallfa": "SuperAllfa"};              // slug -> nome de quem é do squad
+const BRAND = {"logo": {"tile": "M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z", "glyph": "M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z", "ink": "#0a0b0e", "top": "#ffd23a", "bot": "#eeb400"}, "emb": {"out": "24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5", "inn": "24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3", "hl": "5.81,13.5 24,3 42.19,13.5 24,24"}};              // geometria do logo e do emblema (brand.py): card de compartilhar e rankEmblem
 
 /* ---------- base ---------- */
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -601,21 +600,19 @@ function rankInfo(rp){
   const div=Math.max(1,Math.min(5,5-Math.floor((rp-t.s)/100)));
   return {name:`${t.n} ${ROM[div]}`,tier:t.n,color:t.c,div};
 }
-function rankEmblem(color, div, champ, size){
-  size = size||52;
-  const R=["","I","II","III","IV","V"];
+function emblemBody(color, div, champ){      // miolo do emblema (grade 48×48): o card de compartilhar reaproveita
+  const R=["","I","II","III","IV","V"], E=BRAND.emb;
   const label = champ ? "★" : (R[div]||"");
-  const out="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5";
-  const inn="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3";
-  const hl="5.81,13.5 24,3 42.19,13.5 24,24";
-  return `<svg class="remb" width="${size}" height="${size}" viewBox="0 0 48 48" aria-hidden="true">
-    <polygon points="${out}" fill="${color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>
-    <polygon points="${hl}" fill="rgba(255,255,255,.15)"/>
-    <polygon points="${inn}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>
+  return `<polygon points="${E.out}" fill="${color}" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/>
+    <polygon points="${E.hl}" fill="rgba(255,255,255,.15)"/>
+    <polygon points="${E.inn}" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/>
     <text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke"
       font-size="${champ?18:16}" font-weight="800" text-anchor="middle" dominant-baseline="central"
-      font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">${label}</text>
-  </svg>`;
+      font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">${label}</text>`;
+}
+function rankEmblem(color, div, champ, size){
+  size = size||52;
+  return `<svg class="remb" width="${size}" height="${size}" viewBox="0 0 48 48" aria-hidden="true">${emblemBody(color,div,champ)}</svg>`;
 }
 
 function delta(c,p,dec=0,cnt=false){     // seta = quanto mudou; toque mostra "antes → agora". cnt = contagem (partidas): cinza, nem bom nem ruim
@@ -1509,26 +1506,94 @@ function openHelp(){
     <div class="legrow"><b>${ic("medal")}</b> Operadores: toque em qualquer operador (mains, hard breach ou tabela) pra abrir a ficha completa</div>
     <div class="legrow"><b>${ic("squad")}</b> Squad: seu resultado sozinho × com cada amigo daqui</div>`);
 }
-function openShare(){
+/* ---------- COMPARTILHAR ----------
+   O card é uma imagem 4:5 (1080×1350, o que o WhatsApp mostra inteiro). Uma string SVG só: é a prévia na folha e a fonte do PNG.
+   SVG puro (sem foreignObject nem <use> externo): o logo e o emblema entram como desenho, e o PNG sai igual ao que se vê. */
+const SC_W=1080, SC_H=1350;
+function shareSVG(){
   const k=active.kpis, curRP=(k.latestRP!=null?k.latestRP:k.peakRP), rk=rankInfo(curRP);
-  const rm=active.recentMatches||[]; const w=rm.filter(m=>m.w).length, l=rm.length-w;
-  const card=`<div class="sharecard">
-    <div class="scbrand"><svg class="sclogo" viewBox="0 0 64 64" aria-hidden="true"><use href="#sl-logo"/></svg><b>SIEGE<i>·</i>LAB</b></div>
-    <div class="scemb">${rankEmblem(rk.color,rk.div,rk.champ,90)}</div>
-    <div class="scname">${esc(PLAYER.name)}</div>
-    <div class="scrank" style="color:${rk.color}">${rk.name} · ${curRP.toLocaleString('pt-BR')} RP</div>
-    <div class="scstats">
-      <div><b>${k.winRate.toFixed(0)}%</b><span>vitórias</span></div>
-      <div><b>${fx(k.kd,2)}</b><span>K/D</span></div>
-      ${rm.length?`<div><b>${w}-${l}</b><span>últimas</span></div>`:""}
-    </div>
-    <div class="scfoot">${esc(active.season)} · thebsilva.github.io/siege-lab</div>
-  </div>`;
-  openSheet(`<h3>Compartilhar</h3>${card}
-    <div class="shint">Tire um print do card e mande no grupo</div>
-    ${navigator.share?`<button class="btn-share" id="doshare">Compartilhar o link</button>`:`<button class="btn-share" id="docopy">Copiar o link</button>`}`);
-  const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:"SIEGE·LAB — "+PLAYER.name,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
+  const rm=active.recentMatches||[], w=rm.filter(m=>m.w).length, l=rm.length-w;
+  const L=BRAND.logo, X0=96, X1=SC_W-96, IW=X1-X0, CX=SC_W/2;
+  const F="-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif";
+  const rpTxt=curRP!=null?curRP.toLocaleString("pt-BR"):"—";
+  const nm=String(PLAYER.name||""), nmFs=Math.round(Math.max(56,Math.min(104,840/(Math.max(6,nm.length)*.6))));
+  const m=44, c=96, r=56, W=SC_W, H=SC_H;   // moldura: dois cantos cortados e dois arredondados, como a placa do logo
+  const frame=`M${m+r} ${m}H${W-m-c}L${W-m} ${m+c}V${H-m-r}A${r} ${r} 0 0 1 ${W-m-r} ${H-m}H${m+c}L${m} ${H-m-c}V${m+r}A${r} ${r} 0 0 1 ${m+r} ${m}Z`;
+  const stats=[{v:`${k.winRate.toFixed(0)}<tspan font-size="46">%</tspan>`,l:"vitórias"},{v:fx(k.kd,2),l:"K/D"}];
+  if(rm.length) stats.push({v:`${w}<tspan font-size="60" fill="#34d399">V</tspan><tspan font-size="60" fill="#8b919c">-</tspan>${l}<tspan font-size="60" fill="#ff6b5a">D</tspan>`,l:`últimas ${rm.length}`,wt:1.4});
+  const tot=stats.reduce((a,s)=>a+(s.wt||1),0); let ax=X0;      // a coluna da forma recente é mais larga ("10V-10D" tem 7 caracteres)
+  const cols=stats.map((s,i)=>{ const cw=IW*(s.wt||1)/tot, cx=ax+cw/2, edge=ax; ax+=cw;
+    return `<text x="${cx}" y="962" font-size="78" font-weight="800" fill="#e7e9ec" text-anchor="middle">${s.v}</text>
+    <text x="${cx}" y="1010" font-size="30" font-weight="700" fill="#8b919c" letter-spacing="3" text-anchor="middle">${s.l.toUpperCase()}</text>`
+    +(i?`<path d="M${edge} 902V1014" stroke="#262a33" stroke-width="2"/>`:""); }).join("");
+  const n=rm.length, gap=8, pw=n?(IW-(n-1)*gap)/n:0;
+  const pips=n?rm.slice().reverse().map((x,i)=>`<rect x="${(X0+i*(pw+gap)).toFixed(1)}" y="1062" width="${pw.toFixed(1)}" height="52" rx="8" fill="${x.w?"#34d399":"#f0513f"}"${x.w?"":' fill-opacity=".85"'}/>`).join("")
+    +`<text x="${X0}" y="1156" font-size="26" fill="#8b919c">mais antiga</text><text x="${X1}" y="1156" font-size="26" fill="#8b919c" text-anchor="end">mais recente</text>`:"";
+  const alt=`Card de ${nm}: ${rk.name}, ${rpTxt} RP, ${k.winRate.toFixed(0)}% de vitórias, K/D ${fx(k.kd,2)}`+(n?`, últimas ${w}V-${l}D`:"");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${F}" role="img" aria-label="${esc(alt)}">
+  <title>${esc(alt)}</title>
+  <defs>
+    <linearGradient id="sc-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14161c"/><stop offset="1" stop-color="#0a0b0e"/></linearGradient>
+    <radialGradient id="sc-glow" cx="${CX}" cy="410" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f4c20d" stop-opacity=".2"/><stop offset="1" stop-color="#f4c20d" stop-opacity="0"/></radialGradient>
+    <pattern id="sc-grid" width="54" height="54" patternUnits="userSpaceOnUse"><path d="M54 0H0V54" fill="none" stroke="#fff" stroke-opacity=".035" stroke-width="2"/></pattern>
+    <linearGradient id="sc-lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${L.top}"/><stop offset="1" stop-color="${L.bot}"/></linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#sc-bg)"/>
+  <rect width="${W}" height="${H}" fill="url(#sc-grid)"/>
+  <rect width="${W}" height="${H}" fill="url(#sc-glow)"/>
+  <path d="${frame}" fill="none" stroke="#2b303a" stroke-width="3"/>
+  <g transform="translate(${X0} 96) scale(1.1875)"><path d="${L.tile}" fill="url(#sc-lg)"/><path d="${L.glyph}" fill="${L.ink}" fill-rule="evenodd"/></g>
+  <text x="${X0+98}" y="150" font-size="46" font-weight="800" letter-spacing="3" fill="#e7e9ec">SIEGE<tspan fill="#f4c20d">·</tspan>LAB</text>
+  <text x="${X1}" y="148" font-size="28" font-weight="700" letter-spacing="2" fill="#8b919c" text-anchor="end">${esc(active.season)} · Ranked</text>
+  <svg x="${CX-190}" y="214" width="380" height="380" viewBox="0 0 48 48">${emblemBody(rk.color,rk.div,rk.champ)}</svg>
+  <text x="${CX}" y="728" font-size="${nmFs}" font-weight="800" fill="#e7e9ec" text-anchor="middle">${esc(nm)}</text>
+  <text x="${CX}" y="796" font-size="44" font-weight="700" fill="${rk.color}" text-anchor="middle">${esc(rk.name)}<tspan fill="#cfd3d8" font-weight="600"> · ${rpTxt} RP</tspan></text>
+  <path d="M${X0} 852H${X1}" stroke="#262a33" stroke-width="2"/>
+  ${cols}
+  ${pips}
+  <text x="${CX}" y="1240" font-size="32" font-weight="700" fill="#f4c20d" text-anchor="middle">thebsilva.github.io/siege-lab</text>
+</svg>`;
+}
+function svgToPng(svg){      // SVG -> canvas -> PNG 1080×1350. Tudo local (data: URI), nada de rede
+  return new Promise((ok,fail)=>{
+    const img=new Image();
+    img.onload=()=>{ try{
+      const cv=document.createElement("canvas"); cv.width=SC_W; cv.height=SC_H;
+      cv.getContext("2d").drawImage(img,0,0,SC_W,SC_H);
+      cv.toBlob(b=>b?ok(b):fail(new Error("png")),"image/png");
+    }catch(e){ fail(e); } };
+    img.onerror=()=>fail(new Error("svg"));
+    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+  });
+}
+function openShare(){
+  const svg=shareSVG();
+  const fname=`siege-lab-${PLAYER.slug||"card"}-${active.season}.png`.toLowerCase();
+  const title="SIEGE·LAB — "+PLAYER.name;
+  openSheet(`<h3>Compartilhar</h3><div class="sharecard">${svg}</div>
+    <div class="shint" id="shint">Tire um print do card e mande no grupo</div>
+    <div class="shbtns">
+      <button class="btn-share pri" id="doimg" disabled>${ic("image")} Preparando imagem…</button>
+      ${navigator.share?`<button class="btn-share sec" id="doshare">${ic("link")} Compartilhar o link</button>`:`<button class="btn-share sec" id="docopy">${ic("link")} Copiar o link</button>`}
+    </div>`);
+  const s=document.getElementById("doshare"); if(s) s.onclick=()=>navigator.share({title:title,text:"Minha análise de R6 no SIEGE·LAB",url:location.href}).catch(()=>{});
   const c=document.getElementById("docopy"); if(c) c.onclick=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(location.href); c.innerHTML=ic("check")+" Link copiado"; };
+  // a imagem já nasce pronta: o toque em "Compartilhar imagem" chama share() na hora (o navegador exige o gesto do usuário)
+  svgToPng(svg).then(blob=>{
+    const btn=document.getElementById("doimg"); if(!btn) return;           // folha já fechada ou trocada
+    let file=null; try{ file=new File([blob],fname,{type:"image/png"}); }catch(e){}
+    const hint=document.getElementById("shint");
+    btn.disabled=false;
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+      btn.innerHTML=ic("image")+" Compartilhar imagem";
+      if(hint) hint.textContent="Mande a imagem no grupo, ou só o link";
+      btn.onclick=()=>navigator.share({files:[file],title:title}).catch(()=>{});
+    }else{
+      btn.innerHTML=ic("image")+" Baixar imagem";
+      if(hint) hint.textContent="Baixe a imagem (ou tire um print do card) e mande no grupo";
+      btn.onclick=()=>{ const u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download=fname; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); };
+    }
+  }).catch(()=>{ const btn=document.getElementById("doimg"); if(btn) btn.hidden=true; });
 }
 const bg=document.getElementById("sheetbg"), sh=document.getElementById("sheet");
 function openSheet(html){ sh.innerHTML='<div class="grab"></div>'+html; bg.classList.add("open"); sh.classList.add("open"); }
