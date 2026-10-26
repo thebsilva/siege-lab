@@ -1,0 +1,12 @@
+{"season":43,"keys":["map","roundsPlayed","roundsWon","kills","deaths"],"ops":{
+"Ash":[["Border",1,0,1,1],["Chalet",6,4,4,4],["Consulate",2,2,2,1],["Bank",4,2,4,2],["Clubhouse",8,2,7,7],["Theme Park",3,1,6,1],["Calypso Casino",8,3,4,6],["Coastline",8,3,6,6],["Villa",9,4,9,6],["Kafe Dostoyevsky",7,2,4,5],["Skyscraper",3,2,1,1],["Nighthaven Labs",11,9,10,4],["Lair",6,3,5,4]],
+"Thorn":[["Fortress",6,3,7,4],["Lair",3,2,4,2],["Kafe Dostoyevsky",4,3,5,3],["Consulate",2,2,2,0],["Clubhouse",19,10,16,14],["Skyscraper",1,1,2,1],["Calypso Casino",6,5,6,2],["Nighthaven Labs",4,2,2,2],["Border",2,2,3,0],["Bank",1,1,1,1],["Villa",4,3,5,1],["Chalet",5,4,2,4],["Coastline",3,1,2,2]],
+"Sentry":[["Chalet",2,0,2,2],["Coastline",3,0,0,3],["Kafe Dostoyevsky",5,3,2,3],["Calypso Casino",3,2,4,1],["Bank",4,4,5,1],["Villa",16,8,19,10],["Clubhouse",11,3,9,9],["Theme Park",1,1,0,0],["Nighthaven Labs",5,3,9,2],["Lair",1,1,0,0],["Border",1,0,0,1]],
+"Twitch":[["Kafe Dostoyevsky",18,10,23,11],["Skyscraper",4,2,3,2],["Clubhouse",1,0,0,1],["Villa",4,1,4,3],["Chalet",1,0,0,1],["Border",2,1,2,2],["Theme Park",3,0,3,3],["Consulate",1,0,0,1],["Lair",4,2,4,2],["Calypso Casino",1,0,0,1],["Fortress",3,0,2,2],["Nighthaven Labs",2,0,0,2],["Coastline",7,7,11,3]],
+"Kaid":[["Fortress",3,3,2,2],["Nighthaven Labs",2,2,2,2],["Coastline",4,3,3,2],["Border",2,1,0,2],["Kafe Dostoyevsky",4,3,6,1],["Villa",5,5,7,3],["Bank",1,1,4,0],["Clubhouse",8,4,3,6],["Lair",9,3,11,7],["Chalet",6,2,4,4]],
+"Striker":[["Villa",4,1,3,3],["Fortress",3,2,4,1],["Skyscraper",5,4,7,2],["Kafe Dostoyevsky",1,0,2,1],["Calypso Casino",2,1,0,2],["Clubhouse",5,3,4,3],["Lair",7,3,9,4],["Nighthaven Labs",6,3,6,4],["Chalet",3,2,5,2],["Bank",6,3,3,4]],
+"Zofia":[["Calypso Casino",6,4,7,5],["Nighthaven Labs",3,2,1,2],["Theme Park",1,0,2,1],["Fortress",2,2,3,0],["Lair",2,0,0,2],["Chalet",2,2,1,0],["Kafe Dostoyevsky",3,0,0,3],["Villa",5,2,6,3],["Skyscraper",1,1,3,0],["Bank",1,1,1,0],["Clubhouse",7,1,5,5],["Border",1,1,1,0]],
+"IQ":[["Lair",4,2,3,1],["Clubhouse",1,0,0,1],["Border",1,1,0,1],["Bank",5,2,4,5],["Villa",6,2,6,5],["Chalet",15,7,18,10],["Theme Park",1,0,1,1]],
+"Goyo":[["Calypso Casino",2,1,2,2],["Skyscraper",1,0,1,1],["Kafe Dostoyevsky",2,1,2,1],["Chalet",1,0,0,1],["Coastline",3,2,0,2],["Bank",5,1,3,4],["Villa",6,4,1,5],["Nighthaven Labs",2,0,1,2],["Clubhouse",1,0,0,1],["Lair",2,0,0,2],["Border",3,1,3,2],["Theme Park",3,3,3,0]],
+"Nomad":[["Border",8,4,11,6],["Bank",2,2,2,0],["Skyscraper",5,0,1,5],["Theme Park",2,0,1,2],["Kafe Dostoyevsky",2,1,2,2],["Villa",5,1,2,5]]
+}}

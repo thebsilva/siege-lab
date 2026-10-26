@@ -47,10 +47,10 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 - Mapa sem entrada no playbook cai no `default`.
 - **Pendente/upgrade:** callouts específicos por site exigem uma rodada de pesquisa por mapa antes de entrar.
 
-## Jogadores carregados (coleta de 14/10/2026, os três completos: kill feed + mapas por operador)
-- **superallfa** — Y11S3 (em andamento, Ouro I, 2.900 RP) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
-- **laprufer** — Y11S3 (em andamento, Platina I; sem jogos desde 05/10) · Y11S2 (fechada) · Y11S1.
-- **brunoprufer** — Y11S3 (em andamento, Esmeralda IV) · Y11S2 (fechada) · Y11S1.
+## Jogadores carregados (coleta de 26/10/2026, os três completos: kill feed + mapas por operador)
+- **superallfa** — Y11S3 (em andamento, Ouro III, 2.744 RP; pico 2.915) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
+- **laprufer** — Y11S3 (em andamento, Platina I, 3.488 RP; pico novo 3.560) · Y11S2 (fechada) · Y11S1.
+- **brunoprufer** — Y11S3 (em andamento, Esmeralda V, 3.555 RP; pico novo 3.687) · Y11S2 (fechada) · Y11S1.
 - Os três têm, na Y11S3, o kill feed das partidas (diagnóstico round a round no Coach) e o mapa de cada um dos
   10 operadores mais jogados (card do mapa com o histórico real do jogador). Season fechada segue só com os números do tracker.
 
