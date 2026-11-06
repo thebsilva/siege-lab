@@ -206,7 +206,7 @@ def text_on_panel(hex_color, bg="#14161c", want=4.5):
     return "#ffffff"
 
 
-def write_index(cards):
+def write_index(cards, avg=None):
     import html as _h
     esc = lambda s: _h.escape(str(s))
     dec = lambda v: f"{v:.2f}".replace(".", ",")
@@ -247,6 +247,15 @@ def write_index(cards):
             f'<span class="stc"><i>K/D</i><b>{dec(c["kd"])}</b></span>'
             f'<span class="stc"><i>últimas</i>{form}</span>'
             f'<span class="stc"><i>season</i><b class="mu">{esc(c["season"])}</b></span></span></a></li>')
+    avg_html = ""
+    if avg:
+        avg_html = (
+            f'<a class="avglink" href="media.html">'
+            f'<span class="pemb">{brand.emblem(avg["color"], avg["div"], avg["champ"], 40)}</span>'
+            f'<span class="pwho"><span class="pnm">Média de nós {avg["n"]}</span>'
+            f'<span class="prn" style="--c:{text_on_panel(avg["color"])}">{esc(avg["rank"])} · o squad como um jogador só</span></span>'
+            f'<span class="prp"><b>{mil(avg["rp"])}</b><i>RP</i></span>'
+            f'<span class="pgo" aria-hidden="true">{ico("chev")}</span></a>')
     out = os.path.join(OUT_DIR, "index.html")
     desc = "O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores)."
     with open(out, "w", encoding="utf-8") as fh:
@@ -254,8 +263,150 @@ def write_index(cards):
                  .replace("__HEAD__", head_meta("SIEGE·LAB — Squad", desc, SITE_URL))
                  .replace("__TOKENS__", TOKENS_CSS)
                  .replace("__SPRITE__", sprite({"target", "shield", "flame", "snow", "chev"}))
-                 .replace("__CHIPS__", chips).replace("__ROWS__", rows))
+                 .replace("__CHIPS__", chips).replace("__ROWS__", rows).replace("__AVG__", avg_html))
     print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
+
+
+def write_media(dirs):
+    """docs/media.html — a média simples do squad, hoje e season a season.
+    Só entram as seasons em que TODOS os jogadores têm snapshot (Y10S4, só do superallfa, fica fora).
+    Por (jogador, season) vale o snapshot de data mais nova — a mesma regra do seletor do app.
+    Devolve o resumo da season atual pro card-link da landing (None se não der pra calcular)."""
+    import html as _h
+    esc = lambda s: _h.escape(str(s))
+    dec = lambda v: f"{v:.2f}".replace(".", ",")
+    pc1 = lambda v: f"{v:.1f}".replace(".", ",")
+    mil = lambda n: f"{round(n):,}".replace(",", ".")
+    sdelta = lambda n: ("+" if n > 0 else ("−" if n < 0 else "")) + mil(abs(round(n)))
+
+    players = []
+    for d in dirs:
+        pp = os.path.join(d, "profile.json")
+        if not os.path.exists(pp):
+            continue
+        with open(pp, encoding="utf-8") as fh:
+            prof = json.load(fh)
+        best = {}
+        for f in sorted(glob.glob(os.path.join(d, "*.json"))):
+            if os.path.basename(f) == "profile.json":
+                continue
+            with open(f, encoding="utf-8") as fh:
+                s = json.load(fh)
+            season = s.get("season")
+            if season and (season not in best or str(s.get("date", "")) > str(best[season].get("date", ""))):
+                best[season] = s
+        if best:
+            players.append({"slug": prof.get("slug"), "name": prof.get("name"), "bySeason": best})
+    if len(players) < 2:
+        return None
+    n = len(players)
+    common = sorted(set.intersection(*(set(p["bySeason"]) for p in players)),
+                    key=lambda se: max(p["bySeason"][se].get("seasonOrder", 0) for p in players))
+    if not common:
+        return None
+
+    rows = []
+    for season in common:
+        snaps = [p["bySeason"][season] for p in players]
+        ks = [s.get("kpis", {}) for s in snaps]
+        a = lambda key: sum(k.get(key) or 0 for k in ks) / n
+        # RP do jogador na season = latestRP, e peakRP quando o tracker não deu o final — a mesma regra do build_player
+        cur_rp = lambda k: k.get("latestRP") if k.get("latestRP") is not None else (k.get("peakRP") or 0)
+        rows.append({"season": season,
+                     "label": next((s.get("seasonLabel") for s in snaps if s.get("seasonLabel")), ""),
+                     "date": max(str(s.get("date", "")) for s in snaps),
+                     "ongoing": any("em andamento" in str(s.get("basis", "")) for s in snaps),
+                     "rp": sum(cur_rp(k) for k in ks) / n,
+                     "peak": a("peakRP"), "wr": a("winRate"),
+                     "kd": a("kd"), "matches": a("matches")})
+    cur = rows[-1]
+    rname, color, rdiv, rchamp = rank_parts(round(cur["rp"]))
+    data_br = "/".join(reversed(cur["date"].split("-"))) if cur["date"] else ""
+    nomes_l = [str(p["name"]) for p in players]
+    nomes = " e ".join([", ".join(nomes_l[:-1]), nomes_l[-1]]) if len(nomes_l) > 1 else nomes_l[0]
+
+    hero = (
+        f'<section><h2>A média hoje<span class="hint">{esc(cur["season"])}'
+        + (f' · {esc(cur["label"])}' if cur["label"] else "")
+        + f' · medição de {data_br}</span></h2>'
+        f'<div class="avgcard"><div class="avgtop">{brand.emblem(color, rdiv, rchamp, 64)}'
+        f'<div><div class="avgrp">{mil(cur["rp"])}<i>RP médio</i></div>'
+        f'<div class="avgrank" style="--c:{text_on_panel(color)}">{esc(rname)}</div></div></div>'
+        f'<p class="avgsub">Média simples de {esc(nomes)} — o squad como um jogador só.</p>'
+        f'<div class="avgstats">'
+        f'<div><i>vitórias</i><b>{pc1(cur["wr"])}%</b></div>'
+        f'<div><i>K/D</i><b>{dec(cur["kd"])}</b></div>'
+        f'<div><i>partidas por jogador</i><b>{mil(cur["matches"])}</b></div>'
+        f'<div><i>pico médio</i><b>{mil(cur["peak"])}</b></div>'
+        f'</div></div></section>')
+
+    cs = []
+    for p in players:
+        k = p["bySeason"][cur["season"]].get("kpis", {})
+        rp = k.get("latestRP") if k.get("latestRP") is not None else (k.get("peakRP") or 0)
+        pn, pc, pd, pch = rank_parts(rp)
+        cs.append({"slug": p["slug"], "name": p["name"], "rp": rp,
+                   "rank": pn, "color": pc, "div": pd, "champ": pch})
+    cs.sort(key=lambda p: -p["rp"])
+    vals = [p["rp"] for p in cs] + [cur["rp"]]
+    lo, hi = min(vals) - 120, max(vals) + 120
+    pos = lambda v: (v - lo) / (hi - lo) * 100
+    vrows = ""
+    for p in cs:
+        dv = p["rp"] - cur["rp"]
+        if round(dv) == 0:
+            dtx, dcls = "na média", "mu"
+        else:
+            dtx, dcls = f"{sdelta(dv)} vs média", ("up" if dv > 0 else "dn")
+        vrows += (
+            f'<li><a class="vrow" href="{esc(p["slug"])}.html" style="--c:{p["color"]}">'
+            f'<span class="vemb">{brand.emblem(p["color"], p["div"], p["champ"], 34)}</span>'
+            f'<span class="vnm"><b>{esc(p["name"])}</b><i style="--c:{text_on_panel(p["color"])}">{esc(p["rank"])}</i></span>'
+            f'<span class="vbar"><span class="vfill" style="width:{pos(p["rp"]):.1f}%"></span>'
+            f'<span class="vmark" style="left:{pos(cur["rp"]):.1f}%"></span></span>'
+            f'<span class="vrp"><b>{mil(p["rp"])}</b><i class="{dcls}">{dtx}</i></span>'
+            f'</a></li>')
+    vs = (f'<section><h2>Cada um contra a média<span class="hint">toque num jogador pra abrir a análise completa</span></h2>'
+          f'<ul class="vs">{vrows}</ul>'
+          f'<p class="vleg"><span class="mk"></span>A linha dourada marca a média: {mil(cur["rp"])} RP.</p></section>')
+
+    trs = ""
+    for i, r in enumerate(rows):
+        rn, rc, _, _ = rank_parts(round(r["rp"]))
+        dl = ""
+        if i > 0:
+            d = r["rp"] - rows[i - 1]["rp"]
+            if round(d) != 0:
+                dl = f'<span class="sdl {"up" if d > 0 else "dn"}">{sdelta(d)}</span>'
+        note = '<span class="snote">agora</span>' if r["ongoing"] else ""
+        trs += (f'<tr><td><span class="snm">{esc(r["season"])}</span>{note}</td>'
+                f'<td><b>{mil(r["rp"])}</b><span class="srk" style="--c:{text_on_panel(rc)}">{esc(rn)}</span>{dl}</td>'
+                f'<td>{pc1(r["wr"])}%</td><td>{dec(r["kd"])}</td><td>{mil(r["matches"])}</td></tr>')
+    seasons_html = (
+        f'<section><h2>Season a season<span class="hint">só as seasons que os {n} jogaram</span></h2>'
+        f'<div class="scard"><table class="stable">'
+        f'<thead><tr><th>Season</th><th>RP médio</th><th>Vitórias</th><th>K/D</th><th>Partidas</th></tr></thead>'
+        f'<tbody>{trs}</tbody></table></div>'
+        f'<p class="vleg">Partidas = média por jogador na season. RP médio = média do RP final de cada um (na season em andamento, o atual).</p></section>')
+
+    foot = (f'Média simples dos {n} jogadores · dados de r6.tracker.network<br>'
+            f'<a href="index.html">← O squad completo</a>')
+    title = f"SIEGE·LAB — Média de nós {n}"
+    desc = (f"A média do squad no R6 Siege: {rname} · {mil(cur['rp'])} RP · K/D {dec(cur['kd'])} — "
+            f"vitórias, pico e a evolução season a season dos {n} juntos.")
+    html = (MEDIA_TEMPLATE
+            .replace("__HEAD__", head_meta(title, desc, SITE_URL + "media.html"))
+            .replace("__TITLE__", _h.escape(title))
+            .replace("__TAG__", f"A média de nós {n} · ranqueada R6")
+            .replace("__TOKENS__", TOKENS_CSS)
+            .replace("__SPRITE__", sprite(set()))
+            .replace("__HERO__", hero).replace("__VS__", vs)
+            .replace("__SEASONS__", seasons_html).replace("__FOOT__", foot))
+    out = os.path.join(OUT_DIR, "media.html")
+    with open(out, "w", encoding="utf-8") as fh:
+        fh.write(html)
+    print(f"OK -> docs/media.html  (média {cur['season']}: {mil(cur['rp'])} RP {rname} · {n} jogadores · {', '.join(r['season'] for r in rows)})")
+    return {"rp": round(cur["rp"]), "rank": rname, "color": color, "div": rdiv, "champ": rchamp, "n": n}
 
 
 def main():
@@ -269,7 +420,8 @@ def main():
         if s:
             cards.append(s)
     cards.sort(key=lambda c: (c.get("wr") or 0), reverse=True)
-    write_index(cards)
+    avg = write_media(dirs)
+    write_index(cards, avg)
     try:
         brand.write_pngs(OUT_DIR)
         print("  png -> docs/apple-touch-icon.png, docs/og.png")
@@ -387,8 +539,16 @@ __HEAD__
     .prow2{grid-template-columns:auto auto minmax(0,1fr) minmax(0,1.6fr) auto auto;grid-template-areas:"pos emb who st rp go";padding:14px 18px;column-gap:16px}
     .pst{margin:0;padding:0;border-top:0;gap:12px;max-width:none}
   }
+  /* a média do squad (link pra media.html) */
+  .avglink{display:flex;align-items:center;gap:12px;margin-top:10px;text-decoration:none;color:inherit;
+           border:1px dashed var(--chipline);border-radius:var(--r-3);background:var(--inset);padding:12px 14px;
+           transition:border-color .15s,transform .1s}
+  .avglink:hover{border-color:var(--gold)} .avglink:active{transform:scale(.99)}
+  .avglink:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .avglink .pwho{flex:1 1 auto}
+  .avglink:hover .pgo{color:var(--gold)}
   .foot{color:var(--muted);font-size:var(--fs-2);text-align:center;margin-top:30px;line-height:1.6}
-  @media(prefers-reduced-motion:reduce){ .prow2{transition:none} }
+  @media(prefers-reduced-motion:reduce){ .prow2{transition:none} .avglink{transition:none} }
 </style>
 </head>
 <body>
@@ -405,8 +565,116 @@ __SPRITE__
   <section>
     <h2>Ranking por RP<span class="hint">toque num jogador pra abrir a análise completa</span></h2>
     <ol class="rank">__ROWS__</ol>
+    __AVG__
   </section>
   <p class="foot">Cada jogador abre o app completo: início, coach, mapas, operadores, squad e evolução.<br>Dados de r6.tracker.network.</p>
+</main>
+</body>
+</html>
+"""
+
+
+MEDIA_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<title>__TITLE__</title>
+__HEAD__
+<style>
+  __TOKENS__
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.45;
+       min-height:100vh;padding:28px 16px calc(48px + env(safe-area-inset-bottom));position:relative}
+  body::before{content:"";position:absolute;left:0;right:0;top:0;height:440px;z-index:-1;pointer-events:none;
+       background:radial-gradient(560px 280px at 14% 0,rgba(244,194,13,.14),transparent 72%),
+                  linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px,
+                  linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px;
+       -webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent)}
+  .wrap{max-width:820px;margin:0 auto}
+  .hero{display:flex;align-items:center;gap:14px}
+  .hero>a{display:flex;text-decoration:none}
+  .logo{width:56px;height:56px;flex:none;filter:drop-shadow(0 0 14px rgba(244,194,13,.32))}
+  h1{font-size:var(--fs-6);font-weight:800;letter-spacing:.06em;line-height:1.05;color:var(--txt)} h1 em{font-style:normal;color:var(--gold)}
+  .tag{color:var(--muted);font-size:var(--fs-3);margin-top:5px}
+  h2{font-size:var(--fs-3);letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:9px}
+  h2::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:var(--r-1);flex:none}
+  h2 .hint{margin-left:auto;font-size:var(--fs-2);letter-spacing:.4px;text-transform:none;font-weight:500}
+  @media(max-width:539px){ h2{flex-wrap:wrap;row-gap:2px} h2 .hint{flex:1 0 100%;margin-left:13px} }
+
+  /* o cartão da média */
+  .avgcard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:16px}
+  .avgtop{display:flex;align-items:center;gap:14px}
+  .avgtop svg{flex:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+  .avgrp{font-size:var(--fs-7);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05}
+  .avgrp i{font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted);margin-left:7px}
+  .avgrank{font-size:var(--fs-4);font-weight:800;color:var(--c);margin-top:3px}
+  .avgsub{color:var(--muted);font-size:var(--fs-3);margin-top:12px}
+  .avgstats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--hair);font-variant-numeric:tabular-nums}
+  .avgstats i{display:block;font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .avgstats b{display:block;margin-top:2px;font-size:var(--fs-5);font-weight:800}
+
+  /* cada um contra a média */
+  .vs{list-style:none;display:grid;gap:10px}
+  .vrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"emb nm rp" "bar bar bar";
+        align-items:center;column-gap:12px;row-gap:12px;border:1px solid var(--line);border-radius:var(--r-3);
+        background:var(--panel);padding:12px 14px;text-decoration:none;color:inherit;transition:border-color .15s,transform .1s}
+  .vrow:hover{border-color:var(--gold)} .vrow:active{transform:scale(.99)}
+  .vrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .vemb{grid-area:emb;display:flex;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45))}
+  .vnm{grid-area:nm;min-width:0}
+  .vnm b{display:block;font-size:var(--fs-4);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+  .vnm i{display:block;font-style:normal;font-size:var(--fs-2);font-weight:700;color:var(--c);margin-top:2px}
+  .vbar{grid-area:bar;position:relative;height:10px;border-radius:var(--r-pill);background:var(--track)}
+  .vfill{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill);background:var(--c);opacity:.85}
+  .vmark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--gold);border-radius:1px}
+  .vrp{grid-area:rp;text-align:right;line-height:1.15;font-variant-numeric:tabular-nums}
+  .vrp b{display:block;font-size:var(--fs-5);font-weight:800}
+  .vrp i{display:block;font-style:normal;font-size:var(--fs-2);font-weight:700;white-space:nowrap}
+  .vrp i.up{color:var(--play)} .vrp i.dn{color:var(--ban-t)} .vrp i.mu{color:var(--muted)}
+  @media(min-width:640px){ .vrow{grid-template-columns:auto minmax(0,.8fr) minmax(0,1.2fr) auto;grid-template-areas:"emb nm bar rp";padding:12px 16px} }
+  .vleg{color:var(--muted);font-size:var(--fs-2);margin-top:10px;line-height:1.5}
+  .vleg .mk{display:inline-block;width:10px;height:2px;background:var(--gold);border-radius:1px;vertical-align:middle;margin-right:5px}
+
+  /* season a season */
+  .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}
+  .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .stable th{font-size:var(--fs-1);text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--muted);font-weight:700;
+             text-align:right;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .stable td{padding:10px 8px;border-bottom:1px solid var(--hair);text-align:right;font-size:var(--fs-3);white-space:nowrap;vertical-align:top}
+  .stable th:first-child,.stable td:first-child{text-align:left;padding-left:2px}
+  .stable th:last-child,.stable td:last-child{padding-right:2px}
+  .stable tr:last-child td{border-bottom:0}
+  .stable b{font-weight:800;font-size:var(--fs-4)}
+  .snm{font-weight:800;font-size:var(--fs-3)}
+  .srk{display:block;font-size:var(--fs-2);font-weight:700;color:var(--c)}
+  .snote{display:block;font-size:var(--fs-2);color:var(--muted);font-weight:500}
+  .sdl{display:block;font-size:var(--fs-2);font-weight:700} .sdl.up{color:var(--play)} .sdl.dn{color:var(--ban-t)}
+  @media(max-width:379px){ .stable td,.stable th{padding:8px 5px} .stable td{font-size:var(--fs-2)} .stable b{font-size:var(--fs-3)} }
+
+  .foot{color:var(--muted);font-size:var(--fs-2);text-align:center;margin-top:30px;line-height:1.6}
+  .foot a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
+  .foot a:hover{color:var(--gold);border-color:var(--gold)}
+  @media(min-width:640px){
+    body{padding-top:48px}
+    .logo{width:68px;height:68px} h1{font-size:var(--fs-7)} .tag{font-size:var(--fs-4)}
+    .avgcard{padding:20px} .avgstats{grid-template-columns:repeat(4,1fr)}
+  }
+  @media(prefers-reduced-motion:reduce){ .vrow{transition:none} }
+</style>
+</head>
+<body>
+__SPRITE__
+<main class="wrap">
+  <header class="hero">
+    <a href="index.html" title="Ver o squad"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg></a>
+    <div><h1>SIEGE<em>·</em>LAB</h1><p class="tag">__TAG__</p></div>
+  </header>
+__HERO__
+__VS__
+__SEASONS__
+  <p class="foot">__FOOT__</p>
 </main>
 </body>
 </html>

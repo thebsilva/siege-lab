@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<title>SIEGE·LAB — Média de nós 3</title>
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A média do squad no R6 Siege: Platina III · 3.281 RP · K/D 1,04 — vitórias, pico e a evolução season a season dos 3 juntos.">
+<meta name="apple-mobile-web-app-title" content="SIEGE·LAB">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22slg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ffd23a%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23eeb400%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M14%200H46L64%2018V50A14%2014%200%200%201%2050%2064H18L0%2046V14A14%2014%200%200%201%2014%200Z%22%20fill%3D%22url%28%23slg%29%22%2F%3E%3Cpath%20d%3D%22M16%2012H42L48%2018V21H25V27.5H48V52H22L16%2046Z%20M25%2036.5V43H39V36.5Z%22%20fill%3D%22%230a0b0e%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SIEGE·LAB">
+<meta property="og:title" content="SIEGE·LAB — Média de nós 3">
+<meta property="og:description" content="A média do squad no R6 Siege: Platina III · 3.281 RP · K/D 1,04 — vitórias, pico e a evolução season a season dos 3 juntos.">
+<meta property="og:url" content="https://thebsilva.github.io/siege-lab/media.html">
+<meta property="og:image" content="https://thebsilva.github.io/siege-lab/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    /* superfícies e linhas */
+    --bg:#0a0b0e; --panel:#14161c; --panel2:#1a1d24; --inset:#101218; --chip:#1d2129; --chipline:#2b303a; --track:#20242c;
+    --line:#262a33; --hair:#1f232b;
+    /* texto: todos ≥ 4,5:1 sobre as superfícies acima */
+    --txt:#e7e9ec; --txt-2:#cfd3d8; --muted:#8b919c;
+    /* marca e semântica: verde = bom · amarelo = neutro · vermelho = ruim · azul = ataque · laranja = defesa · dourado = marca */
+    --gold:#f4c20d; --atk:#3b82f6; --def:#f97316; --play:#34d399; --neu:#facc15; --ban:#f0513f;
+    --atk-t:#6ea8fe; --ban-t:#ff6b5a; --neutral:#6b727e;   /* -t = versão clara pra TEXTO pequeno sobre fundo tingido; neutral = preenchimento de barra */
+    /* tipografia: 7 tamanhos */
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --fs-1:10px;    /* rótulo curto em CAIXA-ALTA */
+    --fs-2:11.5px;  /* legenda, nota, tag */
+    --fs-3:13px;    /* texto corrido e célula de tabela */
+    --fs-4:15px;    /* nome e título de card */
+    --fs-5:18px;    /* valor médio */
+    --fs-6:24px;    /* KPI */
+    --fs-7:32px;    /* herói e manchete */
+    --ls-caps:.08em;
+    /* raios: 4 no total */
+    --r-1:6px; --r-2:10px; --r-3:14px; --r-pill:999px;
+    --nav-h:64px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.45;
+       min-height:100vh;padding:28px 16px calc(48px + env(safe-area-inset-bottom));position:relative}
+  body::before{content:"";position:absolute;left:0;right:0;top:0;height:440px;z-index:-1;pointer-events:none;
+       background:radial-gradient(560px 280px at 14% 0,rgba(244,194,13,.14),transparent 72%),
+                  linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px,
+                  linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px;
+       -webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent)}
+  .wrap{max-width:820px;margin:0 auto}
+  .hero{display:flex;align-items:center;gap:14px}
+  .hero>a{display:flex;text-decoration:none}
+  .logo{width:56px;height:56px;flex:none;filter:drop-shadow(0 0 14px rgba(244,194,13,.32))}
+  h1{font-size:var(--fs-6);font-weight:800;letter-spacing:.06em;line-height:1.05;color:var(--txt)} h1 em{font-style:normal;color:var(--gold)}
+  .tag{color:var(--muted);font-size:var(--fs-3);margin-top:5px}
+  h2{font-size:var(--fs-3);letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:9px}
+  h2::before{content:"";width:4px;height:14px;background:var(--gold);border-radius:var(--r-1);flex:none}
+  h2 .hint{margin-left:auto;font-size:var(--fs-2);letter-spacing:.4px;text-transform:none;font-weight:500}
+  @media(max-width:539px){ h2{flex-wrap:wrap;row-gap:2px} h2 .hint{flex:1 0 100%;margin-left:13px} }
+
+  /* o cartão da média */
+  .avgcard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:16px}
+  .avgtop{display:flex;align-items:center;gap:14px}
+  .avgtop svg{flex:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+  .avgrp{font-size:var(--fs-7);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05}
+  .avgrp i{font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted);margin-left:7px}
+  .avgrank{font-size:var(--fs-4);font-weight:800;color:var(--c);margin-top:3px}
+  .avgsub{color:var(--muted);font-size:var(--fs-3);margin-top:12px}
+  .avgstats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--hair);font-variant-numeric:tabular-nums}
+  .avgstats i{display:block;font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .avgstats b{display:block;margin-top:2px;font-size:var(--fs-5);font-weight:800}
+
+  /* cada um contra a média */
+  .vs{list-style:none;display:grid;gap:10px}
+  .vrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"emb nm rp" "bar bar bar";
+        align-items:center;column-gap:12px;row-gap:12px;border:1px solid var(--line);border-radius:var(--r-3);
+        background:var(--panel);padding:12px 14px;text-decoration:none;color:inherit;transition:border-color .15s,transform .1s}
+  .vrow:hover{border-color:var(--gold)} .vrow:active{transform:scale(.99)}
+  .vrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .vemb{grid-area:emb;display:flex;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45))}
+  .vnm{grid-area:nm;min-width:0}
+  .vnm b{display:block;font-size:var(--fs-4);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+  .vnm i{display:block;font-style:normal;font-size:var(--fs-2);font-weight:700;color:var(--c);margin-top:2px}
+  .vbar{grid-area:bar;position:relative;height:10px;border-radius:var(--r-pill);background:var(--track)}
+  .vfill{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill);background:var(--c);opacity:.85}
+  .vmark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--gold);border-radius:1px}
+  .vrp{grid-area:rp;text-align:right;line-height:1.15;font-variant-numeric:tabular-nums}
+  .vrp b{display:block;font-size:var(--fs-5);font-weight:800}
+  .vrp i{display:block;font-style:normal;font-size:var(--fs-2);font-weight:700;white-space:nowrap}
+  .vrp i.up{color:var(--play)} .vrp i.dn{color:var(--ban-t)} .vrp i.mu{color:var(--muted)}
+  @media(min-width:640px){ .vrow{grid-template-columns:auto minmax(0,.8fr) minmax(0,1.2fr) auto;grid-template-areas:"emb nm bar rp";padding:12px 16px} }
+  .vleg{color:var(--muted);font-size:var(--fs-2);margin-top:10px;line-height:1.5}
+  .vleg .mk{display:inline-block;width:10px;height:2px;background:var(--gold);border-radius:1px;vertical-align:middle;margin-right:5px}
+
+  /* season a season */
+  .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}
+  .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .stable th{font-size:var(--fs-1);text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--muted);font-weight:700;
+             text-align:right;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .stable td{padding:10px 8px;border-bottom:1px solid var(--hair);text-align:right;font-size:var(--fs-3);white-space:nowrap;vertical-align:top}
+  .stable th:first-child,.stable td:first-child{text-align:left;padding-left:2px}
+  .stable th:last-child,.stable td:last-child{padding-right:2px}
+  .stable tr:last-child td{border-bottom:0}
+  .stable b{font-weight:800;font-size:var(--fs-4)}
+  .snm{font-weight:800;font-size:var(--fs-3)}
+  .srk{display:block;font-size:var(--fs-2);font-weight:700;color:var(--c)}
+  .snote{display:block;font-size:var(--fs-2);color:var(--muted);font-weight:500}
+  .sdl{display:block;font-size:var(--fs-2);font-weight:700} .sdl.up{color:var(--play)} .sdl.dn{color:var(--ban-t)}
+  @media(max-width:379px){ .stable td,.stable th{padding:8px 5px} .stable td{font-size:var(--fs-2)} .stable b{font-size:var(--fs-3)} }
+
+  .foot{color:var(--muted);font-size:var(--fs-2);text-align:center;margin-top:30px;line-height:1.6}
+  .foot a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
+  .foot a:hover{color:var(--gold);border-color:var(--gold)}
+  @media(min-width:640px){
+    body{padding-top:48px}
+    .logo{width:68px;height:68px} h1{font-size:var(--fs-7)} .tag{font-size:var(--fs-4)}
+    .avgcard{padding:20px} .avgstats{grid-template-columns:repeat(4,1fr)}
+  }
+  @media(prefers-reduced-motion:reduce){ .vrow{transition:none} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="slg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd23a"/><stop offset="1" stop-color="#eeb400"/></linearGradient></defs><symbol id="sl-logo" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z" fill="url(#slg)"/><path d="M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="#0a0b0e" fill-rule="evenodd"/></symbol><symbol id="sl-logo-mono" viewBox="0 0 64 64"><path d="M14 0H46L64 18V50A14 14 0 0 1 50 64H18L0 46V14A14 14 0 0 1 14 0Z M16 12H42L48 18V21H25V27.5H48V52H22L16 46Z M25 36.5V43H39V36.5Z" fill="currentColor" fill-rule="evenodd"/></symbol></svg>
+<main class="wrap">
+  <header class="hero">
+    <a href="index.html" title="Ver o squad"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg></a>
+    <div><h1>SIEGE<em>·</em>LAB</h1><p class="tag">A média de nós 3 · ranqueada R6</p></div>
+  </header>
+<section><h2>A média hoje<span class="hint">Y11S3 · Split Fire · medição de 06/11/2026</span></h2><div class="avgcard"><div class="avgtop"><svg class="remb" width="64" height="64" viewBox="0 0 48 48" aria-hidden="true"><polygon points="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5" fill="#37cfc0" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/><polygon points="5.81,13.5 24,3 42.19,13.5 24,24" fill="rgba(255,255,255,.15)"/><polygon points="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/><text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" font-size="16" font-weight="800" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">III</text></svg><div><div class="avgrp">3.281<i>RP médio</i></div><div class="avgrank" style="--c:#37cfc0">Platina III</div></div></div><p class="avgsub">Média simples de BrunoPrufer, laprufer e SuperAllfa — o squad como um jogador só.</p><div class="avgstats"><div><i>vitórias</i><b>47,1%</b></div><div><i>K/D</i><b>1,04</b></div><div><i>partidas por jogador</i><b>133</b></div><div><i>pico médio</i><b>3.420</b></div></div></div></section>
+<section><h2>Cada um contra a média<span class="hint">toque num jogador pra abrir a análise completa</span></h2><ul class="vs"><li><a class="vrow" href="brunoprufer.html" style="--c:#2ecc71"><span class="vemb"><svg class="remb" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><polygon points="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5" fill="#2ecc71" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/><polygon points="5.81,13.5 24,3 42.19,13.5 24,24" fill="rgba(255,255,255,.15)"/><polygon points="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/><text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" font-size="16" font-weight="800" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">IV</text></svg></span><span class="vnm"><b>BrunoPrufer</b><i style="--c:#2ecc71">Esmeralda IV</i></span><span class="vbar"><span class="vfill" style="width:89.6%"></span><span class="vmark" style="left:59.9%"></span></span><span class="vrp"><b>3.625</b><i class="up">+344 vs média</i></span></a></li><li><a class="vrow" href="laprufer.html" style="--c:#2ecc71"><span class="vemb"><svg class="remb" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><polygon points="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5" fill="#2ecc71" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/><polygon points="5.81,13.5 24,3 42.19,13.5 24,24" fill="rgba(255,255,255,.15)"/><polygon points="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/><text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" font-size="16" font-weight="800" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">V</text></svg></span><span class="vnm"><b>laprufer</b><i style="--c:#2ecc71">Esmeralda V</i></span><span class="vbar"><span class="vfill" style="width:79.7%"></span><span class="vmark" style="left:59.9%"></span></span><span class="vrp"><b>3.510</b><i class="up">+229 vs média</i></span></a></li><li><a class="vrow" href="superallfa.html" style="--c:#f4c20d"><span class="vemb"><svg class="remb" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><polygon points="24,3 5.81,13.5 5.81,34.5 24,45 42.19,34.5 42.19,13.5" fill="#f4c20d" stroke="rgba(0,0,0,.42)" stroke-width="1.3"/><polygon points="5.81,13.5 24,3 42.19,13.5 24,24" fill="rgba(255,255,255,.15)"/><polygon points="24,10.6 12.4,17.3 12.4,30.7 24,37.4 35.6,30.7 35.6,17.3" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="1.1"/><text x="24" y="25.5" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" font-size="16" font-weight="800" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif">III</text></svg></span><span class="vnm"><b>SuperAllfa</b><i style="--c:#f4c20d">Ouro III</i></span><span class="vbar"><span class="vfill" style="width:10.4%"></span><span class="vmark" style="left:59.9%"></span></span><span class="vrp"><b>2.708</b><i class="dn">−573 vs média</i></span></a></li></ul><p class="vleg"><span class="mk"></span>A linha dourada marca a média: 3.281 RP.</p></section>
+<section><h2>Season a season<span class="hint">só as seasons que os 3 jogaram</span></h2><div class="scard"><table class="stable"><thead><tr><th>Season</th><th>RP médio</th><th>Vitórias</th><th>K/D</th><th>Partidas</th></tr></thead><tbody><tr><td><span class="snm">Y11S1</span></td><td><b>3.681</b><span class="srk" style="--c:#2ecc71">Esmeralda IV</span></td><td>49,6%</td><td>1,04</td><td>476</td></tr><tr><td><span class="snm">Y11S2</span></td><td><b>3.236</b><span class="srk" style="--c:#37cfc0">Platina III</span><span class="sdl dn">−445</span></td><td>48,9%</td><td>1,12</td><td>269</td></tr><tr><td><span class="snm">Y11S3</span><span class="snote">agora</span></td><td><b>3.281</b><span class="srk" style="--c:#37cfc0">Platina III</span><span class="sdl up">+45</span></td><td>47,1%</td><td>1,04</td><td>133</td></tr></tbody></table></div><p class="vleg">Partidas = média por jogador na season. RP médio = média do RP final de cada um (na season em andamento, o atual).</p></section>
+  <p class="foot">Média simples dos 3 jogadores · dados de r6.tracker.network<br><a href="index.html">← O squad completo</a></p>
+</main>
+</body>
+</html>
