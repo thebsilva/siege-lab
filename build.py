@@ -276,6 +276,7 @@ def write_media(dirs):
     esc = lambda s: _h.escape(str(s))
     dec = lambda v: f"{v:.2f}".replace(".", ",")
     pc1 = lambda v: f"{v:.1f}".replace(".", ",")
+    pc0 = lambda v: f"{v:.0f}"
     mil = lambda n: f"{round(n):,}".replace(",", ".")
     sdelta = lambda n: ("+" if n > 0 else ("−" if n < 0 else "")) + mil(abs(round(n)))
 
@@ -370,6 +371,125 @@ def write_media(dirs):
           f'<ul class="vs">{vrows}</ul>'
           f'<p class="vleg"><span class="mk"></span>A linha dourada marca a média: {mil(cur["rp"])} RP.</p></section>')
 
+    # ---------- o squad de verdade: juntos, mapas e operadores (só a season atual) ----------
+    snapc = {p["slug"]: p["bySeason"][cur["season"]] for p in players}
+    slugs = [c["slug"] for c in cs]                       # a ordem da página: RP desc
+    def _nick(c, ln):
+        nm = str(c["name"])
+        while any(str(o["name"])[:ln].lower() == nm[:ln].lower() for o in cs if o is not c) and ln < len(nm):
+            ln += 1
+        return nm[:ln]
+    tag3 = {c["slug"]: _nick(c, 3) for c in cs}           # Bru, Lap, Sup
+    tag1 = {c["slug"]: _nick(c, 1).upper() for c in cs}   # B, L, S
+    tcolor = {c["slug"]: text_on_panel(c["color"]) for c in cs}
+
+    # quando jogamos juntos — squad do snapshot: trio + duplas sem o terceiro, conferidos entre perfis
+    sqd = {sl: (snapc[sl].get("squad") or {}) for sl in slugs}
+    combos, seen = [], set()
+    for a in slugs:
+        for b, wn in (sqd[a].get("perFriend") or {}).items():
+            if b not in snapc:
+                continue
+            key = frozenset((a, b))
+            if key in seen:
+                outro = (sqd[b].get("perFriend") or {}).get(a)
+                assert list(outro or ()) == list(wn), f"dupla {a}+{b} divergente entre perfis: {wn} × {outro}"
+                continue
+            seen.add(key)
+            combos.append({"who": f"{tag3[a]} + {tag3[b]}", "w": wn[0], "n": wn[1]})
+    combos.sort(key=lambda c: -c["n"])
+    trios = [tuple(sqd[sl].get("trio") or ()) for sl in slugs if sqd[sl].get("trio")]
+    if trios:
+        assert len(set(trios)) == 1, f"trio divergente entre perfis: {trios}"
+        quem_trio = "os três juntos" if n == 3 else f"os {n} juntos"
+        combos.insert(0, {"who": quem_trio, "w": trios[0][0], "n": trios[0][1]})
+    together_html = ""
+    if combos:
+        duos = ""
+        for cb in combos:
+            wr = cb["w"] / cb["n"] * 100 if cb["n"] else 0
+            plural = "partidas" if cb["n"] != 1 else "partida"
+            duos += (f'<div class="duo"><i>{esc(cb["who"])}</i>'
+                     f'<b class="{"up" if wr >= 50 else "dn"}">{cb["w"]}V-{cb["n"] - cb["w"]}D</b>'
+                     f'<span>{pc0(wr)}% · {cb["n"]} {plural}</span></div>')
+        together_html = (f'<section><h2>Quando jogamos juntos<span class="hint">dupla = só as partidas dos dois, sem o terceiro</span></h2>'
+                         f'<div class="duos">{duos}</div></section>')
+
+    # mapas do squad — vitórias de cada um reconstituídas do % e somadas (grupo = bolo, não média de taxas)
+    MIN_MAP = 6
+    magg = {}
+    for sl in slugs:
+        for m in snapc[sl].get("maps") or []:
+            mm = m.get("matches") or 0
+            if not mm:
+                continue
+            e = magg.setdefault(str(m["name"]).strip(), {"m": 0, "w": 0, "by": {}})
+            e["m"] += mm
+            e["w"] += round(mm * (m.get("seasonWR") or 0) / 100)
+            e["by"][sl] = ((m.get("seasonWR") or 0), mm)
+    mrows = []
+    for nome, e in magg.items():
+        assert e["w"] <= e["m"], f"mapa {nome}: wins {e['w']} > partidas {e['m']}"
+        assert e["m"] == sum(x[1] for x in e["by"].values()), f"mapa {nome}: soma por jogador não fecha"
+        mrows.append({"name": nome, "m": e["m"], "wr": e["w"] / e["m"] * 100, "by": e["by"], "small": e["m"] < MIN_MAP})
+    mrows.sort(key=lambda r: (r["small"], -r["wr"], -r["m"]))
+    maps_html = ""
+    if mrows:
+        solid = [r for r in mrows if not r["small"]]
+        pick = ""
+        if len(solid) >= 4:
+            pick = (f'<p class="mpick"><span class="up">Pra jogar: {esc(solid[0]["name"])} e {esc(solid[1]["name"])}.</span> '
+                    f'<span class="dn">Pra banir: {esc(solid[-1]["name"])} e {esc(solid[-2]["name"])}.</span></p>')
+        mth = "".join(f'<th style="--c:{tcolor[sl]}"><span class="who3">{esc(tag3[sl])}</span></th>' for sl in slugs)
+        mtr = ""
+        for r in mrows:
+            cells = ""
+            for sl in slugs:
+                w = r["by"].get(sl)
+                cells += (f'<td><b>{pc0(w[0])}%</b><span class="mn">{w[1]}</span></td>' if w else '<td><b class="mu">—</b></td>')
+            mtr += (f'<tr><td><span class="snm">{esc(r["name"])}{"°" if r["small"] else ""}</span></td>'
+                    f'<td><b>{pc0(r["wr"])}%</b><span class="mn">{r["m"]}</span></td>{cells}</tr>')
+        maps_html = (
+            f'<section><h2>Mapas do squad<span class="hint">vitórias do grupo somando os três · {esc(cur["season"])}</span></h2>'
+            + pick +
+            f'<div class="scard"><table class="stable mtable">'
+            f'<thead><tr><th>Mapa</th><th>Grupo</th>{mth}</tr></thead><tbody>{mtr}</tbody></table></div>'
+            f'<p class="vleg">Em cada célula, a taxa de vitórias e, abaixo, as partidas. ° = menos de {MIN_MAP} partidas do grupo: número frágil. '
+            f'O grupo soma partidas e vitórias dos três — não é média das taxas.</p></section>')
+
+    # operadores do squad — brutos do opsAll somados; "disputado" = main (top 3 do lado) de mais de um
+    oagg, mains = {}, {}
+    for sl in slugs:
+        ops = [o for o in (snapc[sl].get("opsAll") or []) if o.get("r")]
+        for o in ops:
+            e = oagg.setdefault((o.get("s"), str(o.get("n")).strip()), {"r": 0, "w": 0, "k": 0, "d": 0, "by": {}})
+            e["r"] += o["r"]; e["w"] += o.get("w") or 0; e["k"] += o.get("k") or 0; e["d"] += o.get("d") or 0
+            e["by"][sl] = e["by"].get(sl, 0) + o["r"]
+        for side in ("d", "a"):
+            for o in sorted([x for x in ops if x.get("s") == side], key=lambda x: -x["r"])[:3]:
+                mains.setdefault((side, str(o["n"]).strip()), []).append(sl)
+    for (side, nome), e in oagg.items():
+        assert e["w"] <= e["r"], f"op {nome}: rounds vencidos > jogados"
+        assert e["r"] == sum(e["by"].values()), f"op {nome}: soma por jogador não fecha"
+    def ops_table(side, titulo, cls):
+        top = sorted([(k[1], v) for k, v in oagg.items() if k[0] == side], key=lambda kv: -kv[1]["r"])[:10]
+        tr = ""
+        for nome, e in top:
+            quem = "".join(f'<span class="qi"><b style="--c:{tcolor[sl]}">{tag1[sl]}</b> {e["by"][sl]}</span>'
+                           for sl in slugs if sl in e["by"])
+            disp = '<span class="disp">disputado</span>' if len(mains.get((side, nome), [])) >= 2 else ""
+            tr += (f'<tr><td><span class="snm">{esc(nome)}</span>{disp}</td>'
+                   f'<td>{e["r"]}</td><td>{pc0(e["w"] / e["r"] * 100)}%</td><td>{dec(e["k"] / (e["d"] or 1))}</td>'
+                   f'<td class="oq">{quem}</td></tr>')
+        return (f'<div class="ocol"><h3 class="{cls}">{titulo}</h3><div class="scard"><table class="stable otable">'
+                f'<thead><tr><th>Operador</th><th>Rounds</th><th>Vitórias</th><th>K/D</th><th>Quem</th></tr></thead>'
+                f'<tbody>{tr}</tbody></table></div></div>')
+    ops_html = (
+        f'<section><h2>Operadores do squad<span class="hint">os 10 mais jogados somando os três · {esc(cur["season"])}</span></h2>'
+        f'<div class="ops2">{ops_table("d", "Defesa", "sdef")}{ops_table("a", "Ataque", "satk")}</div>'
+        f'<p class="vleg">Rounds, vitórias e K/D somam os três; em "quem", os rounds de cada um. '
+        f'<span class="disp">disputado</span> = está entre os 3 mais jogados de mais de um — operador é um por time, alguém cede.</p></section>')
+
     trs = ""
     for i, r in enumerate(rows):
         rn, rc, _, _ = rank_parts(round(r["rp"]))
@@ -393,7 +513,7 @@ def write_media(dirs):
             f'<a href="index.html">← O squad completo</a>')
     title = f"SIEGE·LAB — Média de nós {n}"
     desc = (f"A média do squad no R6 Siege: {rname} · {mil(cur['rp'])} RP · K/D {dec(cur['kd'])} — "
-            f"vitórias, pico e a evolução season a season dos {n} juntos.")
+            f"juntos e em dupla, mapas e operadores do grupo, e a evolução season a season dos {n}.")
     html = (MEDIA_TEMPLATE
             .replace("__HEAD__", head_meta(title, desc, SITE_URL + "media.html"))
             .replace("__TITLE__", _h.escape(title))
@@ -401,6 +521,7 @@ def write_media(dirs):
             .replace("__TOKENS__", TOKENS_CSS)
             .replace("__SPRITE__", sprite(set()))
             .replace("__HERO__", hero).replace("__VS__", vs)
+            .replace("__TOGETHER__", together_html).replace("__MAPS__", maps_html).replace("__OPS__", ops_html)
             .replace("__SEASONS__", seasons_html).replace("__FOOT__", foot))
     out = os.path.join(OUT_DIR, "media.html")
     with open(out, "w", encoding="utf-8") as fh:
@@ -637,6 +758,30 @@ __HEAD__
   .vleg{color:var(--muted);font-size:var(--fs-2);margin-top:10px;line-height:1.5}
   .vleg .mk{display:inline-block;width:10px;height:2px;background:var(--gold);border-radius:1px;vertical-align:middle;margin-right:5px}
 
+  /* quando jogamos juntos */
+  .duos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .duo{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:12px 14px;min-width:0}
+  .duo i{display:block;font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;color:var(--muted);line-height:1.35}
+  .duo b{display:block;font-size:var(--fs-5);font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .duo b.up{color:var(--play)} .duo b.dn{color:var(--ban-t)}
+  .duo span{display:block;font-size:var(--fs-2);color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums}
+
+  /* mapas e operadores do squad */
+  .mpick{font-size:var(--fs-3);margin:-2px 0 12px;line-height:1.6}
+  .mpick .up{color:var(--play);font-weight:700} .mpick .dn{color:var(--ban-t);font-weight:700}
+  .mn{display:block;font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
+  .who3{color:var(--c)}
+  .mtable td:first-child{white-space:normal;min-width:86px}
+  .ops2{display:grid;gap:16px}
+  .ocol h3{font-size:var(--fs-2);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:800;margin:0 0 8px}
+  .ocol h3.sdef{color:var(--def)} .ocol h3.satk{color:var(--atk-t)}
+  .otable td:first-child{white-space:normal}
+  .oq{color:var(--txt-2)} .oq b{font-weight:800;color:var(--c)}
+  .oq .qi{display:block;line-height:1.4;font-size:var(--fs-2)}
+  .disp{display:block;width:max-content;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;font-weight:700;
+        color:var(--gold);border:1px solid rgba(244,194,13,.4);border-radius:var(--r-pill);padding:1px 7px;margin-top:3px}
+  .vleg .disp{display:inline-block;margin-top:0;vertical-align:1px}
+
   /* season a season */
   .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}
   .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -660,7 +805,9 @@ __HEAD__
     body{padding-top:48px}
     .logo{width:68px;height:68px} h1{font-size:var(--fs-7)} .tag{font-size:var(--fs-4)}
     .avgcard{padding:20px} .avgstats{grid-template-columns:repeat(4,1fr)}
+    .duos{grid-template-columns:repeat(4,1fr)}
   }
+  @media(min-width:768px){ .ops2{grid-template-columns:1fr 1fr} }
   @media(prefers-reduced-motion:reduce){ .vrow{transition:none} }
 </style>
 </head>
@@ -673,6 +820,9 @@ __SPRITE__
   </header>
 __HERO__
 __VS__
+__TOGETHER__
+__MAPS__
+__OPS__
 __SEASONS__
   <p class="foot">__FOOT__</p>
 </main>
