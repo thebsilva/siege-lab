@@ -415,6 +415,33 @@ def write_media(dirs):
         together_html = (f'<section><h2>Quando jogamos juntos<span class="hint">dupla = só as partidas dos dois, sem o terceiro</span></h2>'
                          f'<div class="duos">{duos}</div></section>')
 
+    # a fila do grupo — o que a ranqueada dá pra cada um (coach.lobby: randoms, nível do lobby, carry)
+    lob = {sl: ((snapc[sl].get("coach") or {}).get("lobby") or {}) for sl in slugs}
+    lrows = ""
+    for sl in slugs:
+        L = lob[sl]
+        if not L or (L.get("hold", [0, 0])[1] + L.get("fold", [0, 0])[1]) < 10:
+            continue
+        ew = L.get("rpEdgeWith")
+        edge_txt = "—" if ew is None else (f'<b class="dn">{mil(-ew)} acima</b>' if ew < 0 else f'<b class="up">{mil(ew)} abaixo</b>')
+        h, f2, t, nt = L["hold"], L["fold"], L["meTop"], L["meNotTop"]
+        share = round(100 * t[1] / (t[1] + nt[1])) if (t[1] + nt[1]) else 0
+        lrows += (f'<tr><td><span class="snm">{esc(tag3[sl])}</span></td>'
+                  f'<td>{edge_txt}</td>'
+                  f'<td>{dec(L["randomKD"][2])}</td>'
+                  f'<td><b>{pc0(100 * h[0] / h[1] if h[1] else 0)}%</b><span class="mn">{h[1]}</span></td>'
+                  f'<td><b>{pc0(100 * f2[0] / f2[1] if f2[1] else 0)}%</b><span class="mn">{f2[1]}</span></td>'
+                  f'<td><b>{share}%</b><span class="mn">vence {pc0(100 * t[0] / t[1] if t[1] else 0)}%</span></td></tr>')
+    if lrows:
+        together_html += (
+            f'<section><h2>A fila do grupo<span class="hint">aleatórios, nível do lobby e carry · {esc(cur["season"])}</span></h2>'
+            f'<div class="scard"><table class="stable mtable">'
+            f'<thead><tr><th>Jogador</th><th>Lobby com o squad</th><th>K/D dos aleatórios</th>'
+            f'<th>Time segura</th><th>Time cai</th><th>Top de abates</th></tr></thead><tbody>{lrows}</tbody></table></div>'
+            f'<p class="vleg">Lobby com o squad = RP médio dos outros 9 contra o seu, nas partidas com alguém do grupo: a fila junta nivela por cima — '
+            f'quem está abaixo joga de suporte, quem está acima carrega. Time segura = os aleatórios do time fecham K/D ≥ 1 '
+            f'(e aí o grupo vence quase sempre; quando caem, quase nunca). Top de abates = % das partidas em que o jogador fecha como maior fragger do time, e as vitórias quando fecha.</p></section>')
+
     # mapas do squad — vitórias de cada um reconstituídas do % e somadas (grupo = bolo, não média de taxas)
     MIN_MAP = 6
     magg = {}
@@ -1631,10 +1658,12 @@ function pickCell(m, side){            // o melhor de cada lado, na linha fechad
     :`<p class="empty">—</p>`}</div>`;
 }
 function mapTip(m){
+  const tac=(((PLAYBOOK.maps||{})[m.name]||{}).tip||"");
   const a=m.atkWR||0, d=m.defWR||0, diff=a-d;
-  if(diff<=-8) return `Seu ataque aqui é o ponto fraco: ${a.toFixed(0)}% contra ${d.toFixed(0)}% na defesa. Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`;
-  if(diff>=8) return `Sua defesa aqui é o ponto fraco: ${d.toFixed(0)}% contra ${a.toFixed(0)}% no ataque. Não segure passivo: atrase com roam e jogue o retake.`;
-  return `Lados equilibrados (atk ${a.toFixed(0)}% / def ${d.toFixed(0)}%). O round se decide na primeira troca — entre junto.`;
+  const mine=diff<=-8?`Seu ataque aqui é o ponto fraco: ${a.toFixed(0)}% contra ${d.toFixed(0)}% na defesa. Gaste utilidade pra abrir — EMP e hard breach — e entre junto, não em pinga-pinga.`
+    :diff>=8?`Sua defesa aqui é o ponto fraco: ${d.toFixed(0)}% contra ${a.toFixed(0)}% no ataque. Não segure passivo: atrase com roam e jogue o retake.`
+    :`Lados equilibrados (atk ${a.toFixed(0)}% / def ${d.toFixed(0)}%). O round se decide na primeira troca — entre junto.`;
+  return tac?`${tac} Nos seus números: ${mine.charAt(0).toLowerCase()+mine.slice(1)}`:mine;
 }
 function formaRecente(){
   const ms=active.recentMatches;
@@ -2163,6 +2192,31 @@ function coachCards(cur){
       `Você entra com <b>${nf(t.meRP)}</b> RP; com você, o time tem média de <b>${nf(avg)}</b>. O K/D dos colegas fica abaixo do dos inimigos porque o seu não entra nessa conta; com você, o time todo mata quase o mesmo que o inimigo.${def-atk>=5?` Onde o round escapa é no ataque: <b>${atk}%</b> de rounds vencidos, contra ${def}% na defesa.`:""}`,
       "Colegas = os outros 4 do seu time, sem você. RP de antes da partida.","teams");
   }
+  if(c&&c.lobby&&(c.lobby.hold[1]+c.lobby.fold[1])>=10){
+    const L=c.lobby, hp=pf(L.hold[0],L.hold[1]), fp=pf(L.fold[0],L.fold[1]);
+    const rk=L.randomKD, rfk=L.randomFK, efk=L.enemyFK;
+    const tp=pf(L.meTop[0],L.meTop[1]), ntp=pf(L.meNotTop[0],L.meNotTop[1]), tshare=pf(L.meTop[1],L.meTop[1]+L.meNotTop[1]);
+    const edge=v=>v==null?"—":(v>=0?`<b>${nf(v)}</b> RP abaixo de você`:`<b>${nf(-v)}</b> RP acima de você`);
+    const fr=Object.entries(L.friends||{}).sort((a,b)=>b[1].n-a[1].n);
+    const frRows=fr.map(([s,f])=>`<tr><td>${esc(NAMES[s]||s)}</td><td><b>${pf(f.w,f.n)}%</b> <small>${f.w} de ${f.n}</small></td><td><b>${fx(f.kd,2)}</b> <small>${f.k}×${f.d}</small></td><td>${(f.fk+f.fd)?`${pf(f.fk,f.fk+f.fd)}% <small>${f.fk} de ${f.fk+f.fd}</small>`:"—"}</td><td>${f.clutch}</td></tr>`).join("");
+    const frHtml=fr.length?`<div class="sub2">O squad nas partidas com você</div>
+      <table class="ctable"><tr><th>Amigo</th><th>Vitórias</th><th>K/D</th><th>1º duelo</th><th>Clutch</th></tr>${frRows}</table>`:"";
+    let read=`O seu resultado anda colado em quem a fila te dá: time que segura (K/D dos aleatórios ≥ 1) vence <b>${hp}%</b>; time que cai, <b>${fp}%</b>. Não dá pra escolher random — dá pra escolher fila.`;
+    if(L.rpEdgeWith!=null&&L.rpEdgeWith<=-250) read+=` E na fila com o squad o lobby fica <b>~${nf(-L.rpEdgeWith)} RP acima</b> de você${L.rpEdgeSolo!=null?` (sozinho: ${L.rpEdgeSolo>=0?nf(L.rpEdgeSolo)+" abaixo":nf(-L.rpEdgeSolo)+" acima"})`:""}: seu K/D cair ali é esperado — jogue de suporte (drone, info, troca garantida) e deixe o duelo cru com quem está no nível do lobby.`;
+    else if(L.rpEdgeWith!=null&&L.rpEdgeWith>=100) read+=` Na fila com o squad o lobby fica <b>~${nf(L.rpEdgeWith)} RP abaixo</b> de você: o carry é seu — pegue entry e duelo, não espere.`;
+    if(tshare>=30&&L.meTop[1]>=15) read+=` Você fecha como top de abates do time em ${tshare}% das partidas — quando fecha, vence ${tp}% (contra ${ntp}%).`;
+    K.lobby=fcard("Quem joga com você",pair([`${hp}%`,"time segura"],[`${fp}%`,"time cai"]),"vitórias quando os aleatórios do seu time fecham K/D ≥ 1 × quando não",
+      `<table class="ctable"><tr><th>Medida</th><th>Aliados aleatórios</th><th>Inimigos</th></tr>
+        <tr><td>K/D</td><td><b>${fx(rk[2],2)}</b> <small>${nf(rk[0])}×${nf(rk[1])}</small></td><td><b>${c.teams?fx(c.teams.enemiesKD,2):"—"}</b></td></tr>
+        <tr><td>1º duelo vencido</td><td><b>${(rfk[0]+rfk[1])?pf(rfk[0],rfk[0]+rfk[1])+"%":"—"}</b></td><td><b>${(efk[0]+efk[1])?pf(efk[0],efk[0]+efk[1])+"%":"—"}</b></td></tr></table>
+      <div class="sub2">A fila que você pega</div>
+      <table class="ctable"><tr><th>Fila</th><th>Nível do lobby</th></tr>
+        ${L.rpEdgeWith!=null?`<tr><td>Com o squad</td><td>${edge(L.rpEdgeWith)}</td></tr>`:""}
+        ${L.rpEdgeSolo!=null?`<tr><td>Sozinho</td><td>${edge(L.rpEdgeSolo)}</td></tr>`:""}
+        <tr><td>Você é o top de abates</td><td><b>${tshare}%</b> das partidas · vence ${tp}% <small>(não sendo: ${ntp}%)</small></td></tr></table>
+      ${frHtml}`,
+      read,"Aleatórios = os do seu time que não são do squad. Nível do lobby = RP médio dos outros 9, antes da partida. K/D dos amigos medido só nas partidas com você.","lobby");
+  }
   if(c&&c.pressure&&c.pressure.mine[1]>=15&&c.pressure.theirs[1]>=15){
     const a=c.pressure.mine, b=c.pressure.theirs;
     const pa=pf(a[0],a[1]), pb=pf(b[0],b[1]);
@@ -2175,6 +2229,19 @@ function coachCards(cur){
         <tr><td>Match point deles</td><td><b>${pb}%</b> <small>${b[0]} de ${b[1]}</small></td></tr></table>`,
       `${lead} Com match point seu, jogue o round mais simples do dia: utilidade toda, zero herói — é o round que time nervoso joga pior.`,
       "Match point = um time com 3 rounds a favor e o outro com até 2 (no overtime, com 4).","pressure");
+  }
+  if(c&&c.decisive&&c.decisive.part[1]>=15){
+    const D=c.decisive, pc=pf(D.part[0],D.part[1]), pn=pf(D.partNormal[0],D.partNormal[1]), pr=D.partRef[1]?pf(D.partRef[0],D.partRef[1]):null;
+    const wf=pf(D.withFace[0],D.withFace[1]), nfc=pf(D.noFace[0],D.noFace[1]), diff=pc-pn;
+    let read = diff<=-10||(pr!=null&&pc-pr<=-8)
+      ? `No round que vale a partida você some um pouco: entra no feed em <b>${pc}%</b> deles${diff<=-10?`, contra ${pn}% num round comum`:""}${pr!=null?`, e os bons jogadores das mesmas partidas entram em <b>${pr}%</b>`:""}. Não dar a cara no decisivo é deixar o 5v5 virar 4v5 sem você no duelo.`
+      : pr!=null&&pc>=pr
+      ? `Presença não é o seu problema: você entra no feed em <b>${pc}%</b> dos rounds decisivos — acima dos bons jogadores (${pr}%) e igual ao seu round comum (${pn}%). A pergunta passa a ser a <b>qualidade</b> do duelo: segundo homem, troca garantida, utilidade antes do corpo.`
+      : `Sua presença no round decisivo (<b>${pc}%</b>) é quase a de round comum (${pn}%)${pr!=null?`, um pouco abaixo dos bons (${pr}%)`:""}. Dar a cara não é correr pro abate — é estar no duelo certo, com troca garantida.`;
+    K.decisive=fcard("Dar a cara no round decisivo",pair([`${pc}%`,"round decisivo"],[`${pn}%`,"round comum"]),"rounds em que você entra no kill feed (abate ou morte): decisivos × comuns",
+      bars([["Você — decisivo",pc,`${D.part[0]} de ${D.part[1]}`,1],["Você — comum",pn,`${D.partNormal[0]} de ${D.partNormal[1]}`]].concat(pr!=null?[["Bons — decisivo",pr,`${D.partRef[0]} de ${nf(D.partRef[1])}`]]:[])),
+      read,
+      `Decisivo = match point (de qualquer lado) ou overtime. O round "sem você no feed" vence mais (${nfc}% × ${wf}%) porque não aparecer significa que você sobreviveu — em geral round que o seu time fechou sem precisar do seu duelo. Não leia como "é melhor sumir": o juiz é o placar de vivos na hora de entrar.`,"decisive");
   }
   if(c&&c.trades&&c.trades.mateDeaths>0&&c.trades.myDeaths>0){
     const t=c.trades, me=pf(t.byMe,t.mateDeaths), mates=pf(t.byMe+t.byOthers,t.mateDeaths), per=Math.round(100*t.byOthers/t.mateDeaths/3), mt=pf(t.meTraded,t.myDeaths);
@@ -2218,8 +2285,8 @@ function coachCards(cur){
 }
 const COACH_GRUPOS=[                   // por momento do jogo: dentro do round → na partida → entre partidas
   ["No round","o que acontece dentro de cada round",["states","trades","lastAlive","hardBreach","killTiming","noKill","clutch","postClutch"]],
-  ["Na partida","placar, pressão e o mesmo inimigo",["pressure","score","rival"]],
-  ["Entre partidas","sequência, tendência, fila, times e seu estilo",["tilt","trend","squad","teams","style"]]
+  ["Na partida","placar, pressão e o mesmo inimigo",["pressure","decisive","score","rival"]],
+  ["Entre partidas","sequência, tendência, fila, times e seu estilo",["tilt","trend","squad","lobby","teams","style"]]
 ];
 function trendBlock(cur){
   const t=cur.coach&&cur.coach.trend;
@@ -2265,9 +2332,19 @@ function tiltCard(cur){
     if(G[3][1]>=8&&pf(pre[0],pre[1])-pf(G[3][0],G[3][1])>=12)
       read+=` Da <b>4ª em diante</b> cai pra ${pf(G[3][0],G[3][1])}% — sessão longa não paga.`;
   }
+  let hh="";
+  const H=t.hours;
+  if(H){
+    const FX=[["tarde","Tarde (12h–18h)"],["noite","Noite (18h–0h)"],["madrugada","Madrugada (0h–6h)"],["manha","Manhã (6h–12h)"]];
+    const rows=FX.filter(([k])=>H[k][1]>=4).map(([k,l])=>`<tr><td>${l}</td><td><b>${pf(H[k][0],H[k][1])}%</b> <small>${H[k][0]} de ${H[k][1]}</small></td></tr>`).join("");
+    if(rows) hh=`<div class="sub2">Vitórias pelo horário</div><table class="ctable"><tr><th>Faixa</th><th>Vitórias</th></tr>${rows}</table>`;
+    const md=H.madrugada, nt=H.noite;
+    if(md[1]>=8&&nt[1]>=15&&pf(nt[0],nt[1])-pf(md[0],md[1])>=15)
+      read+=` E a <b>madrugada</b> cobra caro: ${md[0]} de ${md[1]} (${pf(md[0],md[1])}%), contra ${pf(nt[0],nt[1])}% à noite — depois da meia-noite, o RP vai embora.`;
+  }
   return card({k:"tilt",title:"Sequência · depois de perder",head:solo(big,1),cap:"a partida seguinte, na mesma sessão",
-    body:bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]],"partida seguinte vencida")+bg,
-    read,note:`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas.`});
+    body:bars([["Depois de derrota",l,`${lw} de ${ln}`,1],["Depois de vitória",w,`${ww} de ${wn}`]],"partida seguinte vencida")+bg+hh,
+    read,note:`Sessão = partidas com menos de 75 min entre uma e outra. ${t.sessions} sessões, ${t.matches} partidas. Horário local (UTC−3).`});
 }
 function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach que mostra o dado por trás ("" = nenhum)
   const c=cur.coach, s=cur.style, R=[];
@@ -2291,7 +2368,7 @@ function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach 
     }
   }
   const bans=(cur.maps||[]).filter(m=>m.matches>=4&&m.seasonWR<40).sort((x,y)=>x.seasonWR-y.seasonWR);
-  if(bans.length){ const m=bans[0]; rule("","ban","ban",`Bane ${esc(m.name)}.`,`${m.seasonWR.toFixed(0)}% em ${m.matches} partidas.${m.note?" "+esc(m.note):""}`); }
+  if(bans.length){ const m=bans[0], tip=(((PLAYBOOK.maps||{})[m.name]||{}).tip||""); rule("","ban","ban",`Bane ${esc(m.name)}.`,`${m.seasonWR.toFixed(0)}% em ${m.matches} partidas.${m.note?" "+esc(m.note):""}${tip?" "+esc(tip):""}`); }
   const t=cur.tilt;
   if(t&&t.afterLoss[1]>=8&&pf(t.afterLoss[0],t.afterLoss[1])<45)
     rule("tilt","pause","ban","Perdeu duas seguidas? Pausa antes da próxima.",`Depois de uma derrota você venceu a seguinte só ${t.afterLoss[0]} de ${t.afterLoss[1]}.`);
@@ -2306,6 +2383,24 @@ function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach 
     const [q,sn]=sq, a=pf(q.together[0],q.together[1]), b=pf(q.solo[0],q.solo[1]);
     if(a-b>=8) rule("squad","squad","play","Jogue com o squad quando der.",`Na ${esc(sn.season)}: ${q.together[0]} de ${q.together[1]} juntos (${a}%); sozinho, ${q.solo[0]} de ${q.solo[1]} (${b}%).`);
   }
+  const H=t&&t.hours;
+  if(H&&H.madrugada[1]>=8&&H.noite[1]>=15&&pf(H.noite[0],H.noite[1])-pf(H.madrugada[0],H.madrugada[1])>=15)
+    rule("tilt","pause","ban","Depois da meia-noite, desliga.",
+      `De madrugada você venceu ${H.madrugada[0]} de ${H.madrugada[1]} (${pf(H.madrugada[0],H.madrugada[1])}%), contra ${pf(H.noite[0],H.noite[1])}% à noite. A última ranqueada do dia termina antes da meia-noite.`);
+  const D=c&&c.decisive;
+  if(D&&D.part[1]>=15){
+    const pc2=pf(D.part[0],D.part[1]), pn2=pf(D.partNormal[0],D.partNormal[1]), pr2=D.partRef[1]?pf(D.partRef[0],D.partRef[1]):null;
+    if(pc2-pn2<=-10||(pr2!=null&&pc2-pr2<=-8))
+      rule("decisive","target","play","No round decisivo, dê a cara.",
+        `Você entra no feed em ${pc2}% dos rounds decisivos${pc2-pn2<=-10?` (${pn2}% nos comuns)`:""}${pr2!=null?`; os bons jogadores das mesmas partidas, em ${pr2}%`:""}. Entre como segundo homem, com troca garantida — sumir no match point é jogar de 4.`);
+  }
+  const L=c&&c.lobby;
+  if(L&&L.rpEdgeWith!=null&&L.rpEdgeWith<=-250&&(L.hold[1]+L.fold[1])>=10)
+    rule("lobby","squad","play","Com o squad, jogue de suporte.",
+      `Nessa fila o lobby fica ~${nf(-L.rpEdgeWith)} RP acima de você. Não disputa duelo cru: drone, info, utilidade e troca garantida — o abate é de quem está no nível do lobby.`);
+  if(L&&L.rpEdgeWith!=null&&L.rpEdgeWith>=100&&pf(L.meTop[1],L.meTop[1]+L.meNotTop[1])>=30&&L.meTop[1]>=15)
+    rule("lobby","target","play","Na fila com o squad, o carry é seu.",
+      `O lobby fica ~${nf(L.rpEdgeWith)} RP abaixo de você e você já fecha como top de abates em ${pf(L.meTop[1],L.meTop[1]+L.meNotTop[1])}% das partidas (vencendo ${pf(L.meTop[0],L.meTop[1])}%). Pegue entry e duelo — não espere.`);
   return R;
 }
 function coachRules(cur,base){

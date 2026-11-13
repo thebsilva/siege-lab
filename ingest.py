@@ -282,6 +282,19 @@ def tilt_of(rows):
             "byGame": by_game}
 
 
+def hours_of(rows):
+    """Vitórias por faixa de horário local (America/Sao_Paulo, UTC-3): a régua do
+    'madrugada não paga'. Faixas: manhã 06-12, tarde 12-18, noite 18-24, madrugada 00-06."""
+    bands = {"manha": [0, 0], "tarde": [0, 0], "noite": [0, 0], "madrugada": [0, 0]}
+    for r in rows:
+        if not r.get("map"):
+            continue
+        h = (int(r["timestamp"][11:13]) - 3) % 24
+        b = bands["manha" if 6 <= h < 12 else "tarde" if 12 <= h < 18 else "noite" if 18 <= h < 24 else "madrugada"]
+        b[0] += r["win"]; b[1] += 1
+    return bands
+
+
 def squad_of(slug, rows, others):
     """Fila: partida jogada junto com alguém do squad = mesmo minuto de início + mesmo mapa.
     Cada modo vira [vitórias, partidas, abates, mortes, soma de RP]."""
@@ -374,6 +387,8 @@ def coach_of(path, side_of):
             if (enw == 3 and myw <= 2) or enw == 4:
                 c["mp_theirs"] += 1
                 c["mp_theirs_w"] += won
+            # round decisivo ("dar a cara"): match point de qualquer lado ou overtime
+            crucial = (myw == 3 and enw <= 2) or myw == 4 or (enw == 3 and myw <= 2) or enw == 4 or r >= 6
             # o round seguinte a um clutch (eu último vivo) e a qualquer derrota de round
             if prev_lost:
                 c["pc_any"] += 1
@@ -416,12 +431,16 @@ def coach_of(path, side_of):
             d_idx = 0
             reached = set()
             alive = set(range(10))
+            appeared = set()                     # quem entrou no feed (matou ou morreu): "deu a cara"
             last, first, alone_me, my_k, me_died = {}, {}, False, 0, False
             for j, (kc, vc) in enumerate(E):
                 if vc == "x":
                     continue
                 v = int(vc)
                 kk = int(kc) if kc != "x" else None
+                appeared.add(v)
+                if kk is not None:
+                    appeared.add(kk)
                 if kk == me:
                     my_k += 1
                     c["kills"] += 1
@@ -497,6 +516,18 @@ def coach_of(path, side_of):
             for stt in reached:
                 c[f"st_{stt}"] += 1
                 c[f"st_{stt}_won"] += won
+            # "dar a cara" no round decisivo × comum (você e a régua dos bons)
+            part = me in appeared
+            dk = "cr" if crucial else "nm"
+            c[dk] += 1
+            c[dk + "_p"] += part
+            if crucial:
+                k3 = "cr_p" if part else "cr_np"
+                c[k3 + "_n"] += 1
+                c[k3 + "_w"] += won
+                for i in good:
+                    ref["cr"] += 1
+                    ref["cr_p"] += i in appeared
             # último vivo / primeiro a morrer — você e a régua
             if T in last:
                 c[f"to1_{sd}"] += 1
@@ -541,6 +572,9 @@ def coach_of(path, side_of):
         "score": {"led20": [c["m_20_w"], c["m_20"]], "trail02": [c["m_02_w"], c["m_02"]],
                   "ot": [c["m_33_w"], c["m_33"]], "otRounds": [c["ot_rounds_won"], c["ot_rounds"]]},
         "pressure": {"mine": [c["mp_mine_w"], c["mp_mine"]], "theirs": [c["mp_theirs_w"], c["mp_theirs"]]},
+        "decisive": {"part": [c["cr_p"], c["cr"]], "partNormal": [c["nm_p"], c["nm"]],
+                     "partRef": [ref["cr_p"], ref["cr"]],
+                     "withFace": [c["cr_p_w"], c["cr_p_n"]], "noFace": [c["cr_np_w"], c["cr_np_n"]]},
         "postClutch": {"afterLost": [c["pc_L_w"], c["pc_L"]], "afterWon": [c["pc_W_w"], c["pc_W"]],
                        "afterAnyLost": [c["pc_any_w"], c["pc_any"]]},
         "noKill": {"alive": [c["nk_alive_w"], c["nk_alive"]], "died": [c["nk_died_w"], c["nk_died"]],
@@ -597,6 +631,97 @@ def ops_role(path):
     return {op: a for op, a in agg.items() if a[0] >= 10}
 
 
+# ---------------------------------------------------------------- lobby (randoms × squad × adversários)
+def friend_sigs(raws, date, sn):
+    """match_id -> {slug: (rp, delta, k, d)} do is_me no arquivo de rounds de cada jogador.
+    É a assinatura que localiza o amigo dentro do P de outro jogador na mesma partida."""
+    out = {}
+    for slug, raw in raws.items():
+        p = os.path.join(raw, f"{date}_s{sn}_rounds.jsonl")
+        if not os.path.exists(p):
+            continue
+        with open(p, encoding="utf-8") as fh:
+            for ln in fh:
+                if not ln.strip():
+                    continue
+                m = json.loads(ln)
+                me = next(pp for pp in m["P"] if pp[1] == 1)
+                out.setdefault(m["id"], {})[slug] = (me[2], me[3], me[4], me[5])
+    return out
+
+
+def lobby_of(path, slug, sigs):
+    """Quem joga COM a gente: K/D dos aliados aleatórios × dos adversários, K/D de cada
+    amigo nas partidas juntos, vitória quando os randoms seguram × quando não, carry
+    (top de abates do time) e o RP do lobby contra o seu. Tudo do campo P do kill feed:
+    P[i] = [time, is_me, rp, delta, k, d, a, fk, fd, clutch, ops]."""
+    c = collections.Counter()
+    friends = {}
+    rp_edge = []
+    with open(path, encoding="utf-8") as fh:
+        for ln in fh:
+            if not ln.strip():
+                continue
+            m = json.loads(ln)
+            P = m["P"]
+            me = next(i for i, p in enumerate(P) if p[1] == 1)
+            T = P[me][0]
+            mates = [i for i, p in enumerate(P) if p[0] == T and i != me]
+            ens = [i for i, p in enumerate(P) if p[0] != T]
+            myw = sum(1 for s in m["R"] if int(s.split(":")[0]) == T)
+            won = myw > len(m["R"]) - myw
+            # identifica amigos presentes nesta partida pela assinatura (rp, delta, k, d)
+            here = {s: sig for s, sig in sigs.get(m["id"], {}).items() if s != slug}
+            fidx, ambiguous = {}, False
+            for s, (rp, dl, k, d) in here.items():
+                cand = [i for i in mates if P[i][2] == rp and P[i][3] == dl
+                        and P[i][4] == k and P[i][5] == d]
+                if len(cand) == 1:
+                    fidx[cand[0]] = s
+                else:
+                    ambiguous = True
+            randoms = [i for i in mates if i not in fidx]
+            # amigos: K/D, entry e clutch nas partidas JUNTOS
+            for i, s in fidx.items():
+                f = friends.setdefault(s, [0] * 7)   # [vitórias, partidas, k, d, fk, fd, clutch]
+                f[0] += won; f[1] += 1
+                f[2] += P[i][4]; f[3] += P[i][5]; f[4] += P[i][7]; f[5] += P[i][8]; f[6] += P[i][9]
+            # randoms e adversários (partida com amigo não identificado fica fora dos randoms)
+            if not ambiguous and randoms:
+                rk = sum(P[i][4] for i in randoms); rd = sum(P[i][5] for i in randoms)
+                c["rand_k"] += rk; c["rand_d"] += rd
+                c["rand_fk"] += sum(P[i][7] for i in randoms)
+                c["rand_fd"] += sum(P[i][8] for i in randoms)
+                hold = "hold" if rk >= rd else "fold"
+                c[hold] += 1; c[hold + "_w"] += won
+            c["en_fk"] += sum(P[i][7] for i in ens)
+            c["en_fd"] += sum(P[i][8] for i in ens)
+            # carry: top de abates do time (empate conta)
+            top = P[me][4] >= max(P[i][4] for i in mates) if mates else True
+            k2 = "top" if top else "nottop"
+            c[k2] += 1; c[k2 + "_w"] += won
+            # RP do lobby × o seu (antes da partida)
+            pre = lambda p: p[2] - p[3] if p[2] is not None and p[3] is not None else None
+            mine = pre(P[me])
+            lob = [pre(P[i]) for i in range(10) if i != me and pre(P[i]) is not None]
+            if mine is not None and lob:
+                rp_edge.append((mine - statistics.mean(lob), bool(here)))
+    kd = lambda k, d: round(k / max(1, d), 2)
+    return {
+        "randomKD": [c["rand_k"], c["rand_d"], kd(c["rand_k"], c["rand_d"])],
+        "randomFK": [c["rand_fk"], c["rand_fd"]],
+        "enemyFK": [c["en_fk"], c["en_fd"]],
+        "hold": [c["hold_w"], c["hold"]], "fold": [c["fold_w"], c["fold"]],
+        "meTop": [c["top_w"], c["top"]], "meNotTop": [c["nottop_w"], c["nottop"]],
+        "rpEdge": round(statistics.mean([e for e, _ in rp_edge])) if rp_edge else None,
+        "rpEdgeWith": round(statistics.mean([e for e, w in rp_edge if w])) if any(w for _, w in rp_edge) else None,
+        "rpEdgeSolo": round(statistics.mean([e for e, w in rp_edge if not w])) if any(not w for _, w in rp_edge) else None,
+        "friends": {s: {"w": f[0], "n": f[1], "k": f[2], "d": f[3], "kd": kd(f[2], f[3]),
+                        "fk": f[4], "fd": f[5], "clutch": f[6]}
+                    for s, f in friends.items()},
+    }
+
+
 def main(date):
     side_all = side_table(PLAYERS)
     raws = {}
@@ -609,6 +734,7 @@ def main(date):
         p = os.path.join(raw, f"{date}_matches.json")
         if os.path.exists(p):
             match_keys[slug] = {(r["timestamp"][:16], r["map"]) for r in match_rows(p) if r.get("map")}
+    sigs_by_sn = {sn: friend_sigs(raws, date, sn) for sn in (CURRENT - 1, CURRENT)}
     for slug, raw in raws.items():
         ov = overview_rows(load(os.path.join(raw, f"{date}_overview.json")))
         mp = os.path.join(raw, f"{date}_matches.json")
@@ -641,11 +767,13 @@ def main(date):
                 snap["rpRate"] = rr
             if srows:
                 snap["tilt"] = tilt_of(srows)
+                snap["tilt"]["hours"] = hours_of(srows)
                 snap["squad"] = squad_of(slug, srows, match_keys)
             rounds = os.path.join(raw, f"{date}_s{sn}_rounds.jsonl")
             if os.path.exists(rounds):
                 snap["coach"] = coach_of(rounds, side_all)
                 snap["coach"]["opsRole"] = ops_role(rounds)
+                snap["coach"]["lobby"] = lobby_of(rounds, slug, sigs_by_sn[sn])
                 if srows:
                     snap["coach"]["trend"] = trend_of(srows, rounds)
             out = os.path.join(PLAYERS, slug, f"{date}_{code.lower()}.json")
