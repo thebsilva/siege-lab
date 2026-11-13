@@ -1,0 +1,3888 @@
+{
+  "date": "2026-11-13",
+  "season": "Y11S3",
+  "seasonOrder": 43,
+  "seasonLabel": "Split Fire",
+  "basis": "só Y11S3 (em andamento, até 12/11), ranqueada",
+  "kpis": {
+    "matches": 158,
+    "wins": 63,
+    "losses": 93,
+    "winRate": 39.9,
+    "kd": 0.88,
+    "peakRP": 2915,
+    "latestRP": 2448
+  },
+  "operatorsDef": [
+    {
+      "name": "Wamai",
+      "wr": 52,
+      "kd": 1.05,
+      "rounds": 180,
+      "tag": "main · 180 rds"
+    },
+    {
+      "name": "Tachanka",
+      "wr": 59,
+      "kd": 0.9,
+      "rounds": 17,
+      "tag": ""
+    },
+    {
+      "name": "Clash",
+      "wr": 55,
+      "kd": 0.36,
+      "rounds": 22,
+      "tag": ""
+    },
+    {
+      "name": "Kaid",
+      "wr": 47,
+      "kd": 0.8,
+      "rounds": 15,
+      "tag": ""
+    },
+    {
+      "name": "Bandit",
+      "wr": 50,
+      "kd": 1.71,
+      "rounds": 12,
+      "tag": ""
+    }
+  ],
+  "operatorsAtk": [
+    {
+      "name": "Twitch",
+      "wr": 60,
+      "kd": 1.67,
+      "rounds": 15,
+      "tag": "",
+      "star": true
+    },
+    {
+      "name": "Thatcher",
+      "wr": 52,
+      "kd": 1.54,
+      "rounds": 33,
+      "tag": ""
+    },
+    {
+      "name": "Rauora",
+      "wr": 48,
+      "kd": 1.21,
+      "rounds": 124,
+      "tag": "main · 124 rds"
+    },
+    {
+      "name": "Nomad",
+      "wr": 47,
+      "kd": 0.82,
+      "rounds": 19,
+      "tag": ""
+    },
+    {
+      "name": "Deimos",
+      "wr": 46,
+      "kd": 0.6,
+      "rounds": 76,
+      "tag": ""
+    }
+  ],
+  "operatorsCut": [
+    {
+      "name": "Mute",
+      "wr": 42,
+      "kd": 0.49,
+      "rounds": 78,
+      "tag": "78 rds"
+    },
+    {
+      "name": "Doc",
+      "wr": 40,
+      "kd": 0.84,
+      "rounds": 50,
+      "tag": "50 rds"
+    },
+    {
+      "name": "Thermite",
+      "wr": 39,
+      "kd": 0.96,
+      "rounds": 41,
+      "tag": "41 rds"
+    },
+    {
+      "name": "Ying",
+      "wr": 34,
+      "kd": 0.67,
+      "rounds": 35,
+      "tag": "35 rds"
+    },
+    {
+      "name": "Zero",
+      "wr": 35,
+      "kd": 0.54,
+      "rounds": 20,
+      "tag": "20 rds"
+    }
+  ],
+  "opsAll": [
+    {
+      "n": "Wamai",
+      "s": "d",
+      "r": 180,
+      "w": 93,
+      "k": 135,
+      "d": 129,
+      "a": 35,
+      "hs": 69,
+      "fb": 24,
+      "fd": 11,
+      "cw": 5,
+      "cl": 19,
+      "m": 104,
+      "mw": 48
+    },
+    {
+      "n": "Rauora",
+      "s": "a",
+      "r": 124,
+      "w": 59,
+      "k": 86,
+      "d": 71,
+      "a": 22,
+      "hs": 38,
+      "fb": 4,
+      "fd": 3,
+      "cw": 6,
+      "cl": 31,
+      "m": 66,
+      "mw": 32
+    },
+    {
+      "n": "Mute",
+      "s": "d",
+      "r": 78,
+      "w": 33,
+      "k": 32,
+      "d": 65,
+      "a": 20,
+      "hs": 20,
+      "fb": 5,
+      "fd": 8,
+      "cw": 2,
+      "cl": 8,
+      "m": 48,
+      "mw": 15
+    },
+    {
+      "n": "Deimos",
+      "s": "a",
+      "r": 76,
+      "w": 35,
+      "k": 36,
+      "d": 60,
+      "a": 12,
+      "hs": 21,
+      "fb": 4,
+      "fd": 5,
+      "cw": 1,
+      "cl": 6,
+      "m": 51,
+      "mw": 16
+    },
+    {
+      "n": "Doc",
+      "s": "d",
+      "r": 50,
+      "w": 20,
+      "k": 31,
+      "d": 37,
+      "a": 18,
+      "hs": 20,
+      "fb": 4,
+      "fd": 2,
+      "cw": 0,
+      "cl": 11,
+      "m": 37,
+      "mw": 12
+    },
+    {
+      "n": "Thermite",
+      "s": "a",
+      "r": 41,
+      "w": 16,
+      "k": 26,
+      "d": 27,
+      "a": 7,
+      "hs": 13,
+      "fb": 3,
+      "fd": 0,
+      "cw": 3,
+      "cl": 4,
+      "m": 32,
+      "mw": 10
+    },
+    {
+      "n": "Ying",
+      "s": "a",
+      "r": 35,
+      "w": 12,
+      "k": 18,
+      "d": 27,
+      "a": 6,
+      "hs": 11,
+      "fb": 0,
+      "fd": 2,
+      "cw": 0,
+      "cl": 8,
+      "m": 28,
+      "mw": 11
+    },
+    {
+      "n": "Thatcher",
+      "s": "a",
+      "r": 33,
+      "w": 17,
+      "k": 20,
+      "d": 13,
+      "a": 3,
+      "hs": 10,
+      "fb": 0,
+      "fd": 2,
+      "cw": 0,
+      "cl": 11,
+      "m": 26,
+      "mw": 15
+    },
+    {
+      "n": "Clash",
+      "s": "d",
+      "r": 22,
+      "w": 12,
+      "k": 5,
+      "d": 14,
+      "a": 1,
+      "hs": 4,
+      "fb": 0,
+      "fd": 2,
+      "cw": 0,
+      "cl": 1,
+      "m": 20,
+      "mw": 11
+    },
+    {
+      "n": "Zero",
+      "s": "a",
+      "r": 20,
+      "w": 7,
+      "k": 7,
+      "d": 13,
+      "a": 2,
+      "hs": 5,
+      "fb": 2,
+      "fd": 0,
+      "cw": 0,
+      "cl": 6,
+      "m": 14,
+      "mw": 4
+    },
+    {
+      "n": "Nomad",
+      "s": "a",
+      "r": 19,
+      "w": 9,
+      "k": 9,
+      "d": 11,
+      "a": 3,
+      "hs": 3,
+      "fb": 1,
+      "fd": 1,
+      "cw": 0,
+      "cl": 2,
+      "m": 11,
+      "mw": 5
+    },
+    {
+      "n": "Dokkaebi",
+      "s": "a",
+      "r": 19,
+      "w": 6,
+      "k": 6,
+      "d": 14,
+      "a": 2,
+      "hs": 3,
+      "fb": 1,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 13,
+      "mw": 2
+    },
+    {
+      "n": "Lion",
+      "s": "a",
+      "r": 17,
+      "w": 5,
+      "k": 9,
+      "d": 10,
+      "a": 2,
+      "hs": 2,
+      "fb": 2,
+      "fd": 0,
+      "cw": 1,
+      "cl": 4,
+      "m": 12,
+      "mw": 2
+    },
+    {
+      "n": "Tachanka",
+      "s": "d",
+      "r": 17,
+      "w": 10,
+      "k": 9,
+      "d": 10,
+      "a": 5,
+      "hs": 3,
+      "fb": 0,
+      "fd": 2,
+      "cw": 2,
+      "cl": 1,
+      "m": 12,
+      "mw": 10
+    },
+    {
+      "n": "Kaid",
+      "s": "d",
+      "r": 15,
+      "w": 7,
+      "k": 8,
+      "d": 10,
+      "a": 0,
+      "hs": 5,
+      "fb": 2,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 14,
+      "mw": 2
+    },
+    {
+      "n": "Twitch",
+      "s": "a",
+      "r": 15,
+      "w": 9,
+      "k": 10,
+      "d": 6,
+      "a": 4,
+      "hs": 5,
+      "fb": 0,
+      "fd": 2,
+      "cw": 0,
+      "cl": 1,
+      "m": 11,
+      "mw": 3
+    },
+    {
+      "n": "Rook",
+      "s": "d",
+      "r": 13,
+      "w": 6,
+      "k": 4,
+      "d": 9,
+      "a": 4,
+      "hs": 3,
+      "fb": 2,
+      "fd": 2,
+      "cw": 0,
+      "cl": 1,
+      "m": 8,
+      "mw": 4
+    },
+    {
+      "n": "Bandit",
+      "s": "d",
+      "r": 12,
+      "w": 6,
+      "k": 12,
+      "d": 7,
+      "a": 4,
+      "hs": 7,
+      "fb": 2,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 11,
+      "mw": 3
+    },
+    {
+      "n": "Osa",
+      "s": "a",
+      "r": 12,
+      "w": 8,
+      "k": 7,
+      "d": 6,
+      "a": 1,
+      "hs": 4,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 3,
+      "m": 5,
+      "mw": 3
+    },
+    {
+      "n": "Ace",
+      "s": "a",
+      "r": 11,
+      "w": 3,
+      "k": 11,
+      "d": 8,
+      "a": 2,
+      "hs": 6,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 4,
+      "m": 7,
+      "mw": 4
+    },
+    {
+      "n": "Skopós",
+      "s": "d",
+      "r": 8,
+      "w": 3,
+      "k": 8,
+      "d": 6,
+      "a": 2,
+      "hs": 6,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 7,
+      "mw": 1
+    },
+    {
+      "n": "Vigil",
+      "s": "d",
+      "r": 8,
+      "w": 1,
+      "k": 9,
+      "d": 8,
+      "a": 1,
+      "hs": 7,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 5,
+      "m": 8,
+      "mw": 2
+    },
+    {
+      "n": "Blackbeard",
+      "s": "a",
+      "r": 8,
+      "w": 4,
+      "k": 4,
+      "d": 5,
+      "a": 1,
+      "hs": 3,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 2,
+      "m": 7,
+      "mw": 3
+    },
+    {
+      "n": "Melusi",
+      "s": "d",
+      "r": 7,
+      "w": 2,
+      "k": 3,
+      "d": 6,
+      "a": 0,
+      "hs": 2,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 6,
+      "mw": 3
+    },
+    {
+      "n": "Capitão",
+      "s": "a",
+      "r": 7,
+      "w": 3,
+      "k": 3,
+      "d": 4,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 7,
+      "mw": 3
+    },
+    {
+      "n": "Tubarão",
+      "s": "d",
+      "r": 7,
+      "w": 2,
+      "k": 6,
+      "d": 6,
+      "a": 1,
+      "hs": 3,
+      "fb": 0,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 6,
+      "mw": 1
+    },
+    {
+      "n": "Thorn",
+      "s": "d",
+      "r": 7,
+      "w": 2,
+      "k": 6,
+      "d": 5,
+      "a": 3,
+      "hs": 4,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 6,
+      "mw": 3
+    },
+    {
+      "n": "Solid Snake",
+      "s": "a",
+      "r": 6,
+      "w": 4,
+      "k": 1,
+      "d": 4,
+      "a": 1,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 2
+    },
+    {
+      "n": "Solis",
+      "s": "d",
+      "r": 6,
+      "w": 1,
+      "k": 3,
+      "d": 5,
+      "a": 1,
+      "hs": 2,
+      "fb": 1,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 4,
+      "mw": 1
+    },
+    {
+      "n": "Lesion",
+      "s": "d",
+      "r": 5,
+      "w": 2,
+      "k": 2,
+      "d": 3,
+      "a": 2,
+      "hs": 1,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 5,
+      "mw": 3
+    },
+    {
+      "n": "Azami",
+      "s": "d",
+      "r": 5,
+      "w": 4,
+      "k": 1,
+      "d": 3,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 4,
+      "mw": 3
+    },
+    {
+      "n": "Glaz",
+      "s": "a",
+      "r": 5,
+      "w": 2,
+      "k": 2,
+      "d": 3,
+      "a": 2,
+      "hs": 2,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 2,
+      "m": 4,
+      "mw": 1
+    },
+    {
+      "n": "Echo",
+      "s": "d",
+      "r": 4,
+      "w": 2,
+      "k": 3,
+      "d": 2,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Maestro",
+      "s": "d",
+      "r": 4,
+      "w": 1,
+      "k": 2,
+      "d": 4,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 4,
+      "mw": 1
+    },
+    {
+      "n": "Pulse",
+      "s": "d",
+      "r": 4,
+      "w": 1,
+      "k": 0,
+      "d": 4,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 1,
+      "cw": 0,
+      "cl": 1,
+      "m": 4,
+      "mw": 1
+    },
+    {
+      "n": "Finka",
+      "s": "a",
+      "r": 3,
+      "w": 0,
+      "k": 1,
+      "d": 3,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Kapkan",
+      "s": "d",
+      "r": 3,
+      "w": 1,
+      "k": 2,
+      "d": 2,
+      "a": 1,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 1
+    },
+    {
+      "n": "Blitz",
+      "s": "a",
+      "r": 3,
+      "w": 2,
+      "k": 0,
+      "d": 2,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 2,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 2
+    },
+    {
+      "n": "Smoke",
+      "s": "d",
+      "r": 3,
+      "w": 3,
+      "k": 3,
+      "d": 2,
+      "a": 0,
+      "hs": 1,
+      "fb": 1,
+      "fd": 1,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 1
+    },
+    {
+      "n": "Noor",
+      "s": "d",
+      "r": 3,
+      "w": 1,
+      "k": 0,
+      "d": 3,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 1
+    },
+    {
+      "n": "Brava",
+      "s": "a",
+      "r": 3,
+      "w": 2,
+      "k": 3,
+      "d": 0,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 3,
+      "mw": 2
+    },
+    {
+      "n": "Caveira",
+      "s": "d",
+      "r": 3,
+      "w": 1,
+      "k": 3,
+      "d": 3,
+      "a": 1,
+      "hs": 1,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 3,
+      "mw": 2
+    },
+    {
+      "n": "Jäger",
+      "s": "d",
+      "r": 2,
+      "w": 0,
+      "k": 2,
+      "d": 2,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Zofia",
+      "s": "a",
+      "r": 2,
+      "w": 1,
+      "k": 4,
+      "d": 1,
+      "a": 2,
+      "hs": 3,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 2,
+      "mw": 2
+    },
+    {
+      "n": "Montagne",
+      "s": "a",
+      "r": 2,
+      "w": 0,
+      "k": 1,
+      "d": 2,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Amaru",
+      "s": "a",
+      "r": 1,
+      "w": 0,
+      "k": 1,
+      "d": 1,
+      "a": 0,
+      "hs": 1,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Ash",
+      "s": "a",
+      "r": 1,
+      "w": 1,
+      "k": 1,
+      "d": 1,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Aruni",
+      "s": "d",
+      "r": 1,
+      "w": 0,
+      "k": 0,
+      "d": 1,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Sentry",
+      "s": "d",
+      "r": 1,
+      "w": 0,
+      "k": 2,
+      "d": 1,
+      "a": 0,
+      "hs": 0,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Valkyrie",
+      "s": "d",
+      "r": 1,
+      "w": 1,
+      "k": 2,
+      "d": 0,
+      "a": 1,
+      "hs": 1,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Fuze",
+      "s": "a",
+      "r": 1,
+      "w": 0,
+      "k": 0,
+      "d": 1,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Buck",
+      "s": "a",
+      "r": 1,
+      "w": 1,
+      "k": 0,
+      "d": 0,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 1
+    },
+    {
+      "n": "Fenrir",
+      "s": "d",
+      "r": 1,
+      "w": 1,
+      "k": 1,
+      "d": 1,
+      "a": 1,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Iana",
+      "s": "a",
+      "r": 1,
+      "w": 1,
+      "k": 1,
+      "d": 0,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 1
+    },
+    {
+      "n": "Mira",
+      "s": "d",
+      "r": 1,
+      "w": 1,
+      "k": 1,
+      "d": 0,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 1
+    },
+    {
+      "n": "Hibana",
+      "s": "a",
+      "r": 1,
+      "w": 1,
+      "k": 0,
+      "d": 0,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 1
+    },
+    {
+      "n": "Kali",
+      "s": "a",
+      "r": 1,
+      "w": 1,
+      "k": 2,
+      "d": 0,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 1,
+      "cl": 0,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Flores",
+      "s": "a",
+      "r": 1,
+      "w": 0,
+      "k": 1,
+      "d": 0,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 1,
+      "mw": 0
+    }
+  ],
+  "maps": [
+    {
+      "name": "Calypso Casino",
+      "matches": 7,
+      "seasonWR": 85.7,
+      "kd": 0.85,
+      "atkWR": 50.0,
+      "defWR": 64.0,
+      "def": [
+        {
+          "name": "Mute",
+          "wr": 50,
+          "rounds": 12,
+          "kd": 0.67
+        },
+        {
+          "name": "Clash",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Thatcher",
+          "wr": 71,
+          "rounds": 7,
+          "kd": 1.33,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 20,
+          "rounds": 5,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Theme Park",
+      "matches": 3,
+      "seasonWR": 66.7,
+      "kd": 1.62,
+      "atkWR": 40.0,
+      "defWR": 77.8,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 88,
+          "rounds": 8,
+          "kd": 2.4
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.67,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Chalet",
+      "matches": 12,
+      "seasonWR": 50.0,
+      "kd": 0.96,
+      "atkWR": 50.0,
+      "defWR": 51.6,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 58,
+          "rounds": 12,
+          "kd": 0.7
+        },
+        {
+          "name": "Mute",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Zero",
+          "wr": 27,
+          "rounds": 11,
+          "kd": 0.5
+        },
+        {
+          "name": "Rauora",
+          "wr": 50,
+          "rounds": 8,
+          "kd": 2.67
+        },
+        {
+          "name": "Deimos",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "avoid": "Zero no ataque (27% em 11 rounds)."
+    },
+    {
+      "name": "Skyscraper",
+      "matches": 10,
+      "seasonWR": 50.0,
+      "kd": 1.25,
+      "atkWR": 46.7,
+      "defWR": 56.2,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 59,
+          "rounds": 22,
+          "kd": 1.36
+        },
+        {
+          "name": "Doc",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 48,
+          "rounds": 25,
+          "kd": 1.89
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Kanal",
+      "matches": 6,
+      "seasonWR": 50.0,
+      "kd": 0.84,
+      "atkWR": 55.6,
+      "defWR": 50.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 67,
+          "rounds": 6,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Thatcher",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 4.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Clubhouse",
+      "matches": 11,
+      "seasonWR": 45.5,
+      "kd": 1.16,
+      "atkWR": 48.4,
+      "defWR": 45.2,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 47,
+          "rounds": 19,
+          "kd": 1.83
+        },
+        {
+          "name": "Mute",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 69,
+          "rounds": 13,
+          "kd": 2.25
+        },
+        {
+          "name": "Ying",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thatcher",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "avoid": "Mute na defesa (33% em 6 rounds)."
+    },
+    {
+      "name": "Lair",
+      "matches": 7,
+      "seasonWR": 42.9,
+      "kd": 0.94,
+      "atkWR": 41.7,
+      "defWR": 50.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 1.6,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 1.33,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 67,
+          "rounds": 6,
+          "kd": 0.6,
+          "small": true
+        },
+        {
+          "name": "Thatcher",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 5,
+          "kd": 0.8,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 3.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Nighthaven Labs",
+      "matches": 7,
+      "seasonWR": 42.9,
+      "kd": 0.46,
+      "atkWR": 45.5,
+      "defWR": 50.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 67,
+          "rounds": 6,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 0.2,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 0.75,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 57,
+          "rounds": 7,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Consulate",
+      "matches": 10,
+      "seasonWR": 40.0,
+      "kd": 0.92,
+      "atkWR": 48.4,
+      "defWR": 48.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 60,
+          "rounds": 10,
+          "kd": 1.0
+        },
+        {
+          "name": "Mute",
+          "wr": 20,
+          "rounds": 5,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 57,
+          "rounds": 7,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 50,
+          "rounds": 6,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Fortress",
+      "matches": 13,
+      "seasonWR": 38.5,
+      "kd": 0.78,
+      "atkWR": 45.5,
+      "defWR": 47.6,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 67,
+          "rounds": 15,
+          "kd": 0.82
+        },
+        {
+          "name": "Mute",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Deimos",
+          "wr": 65,
+          "rounds": 17,
+          "kd": 1.09
+        },
+        {
+          "name": "Ying",
+          "wr": 40,
+          "rounds": 5,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Thatcher",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        }
+      ],
+      "avoid": "Mute na defesa (33% em 6 rounds)."
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "matches": 9,
+      "seasonWR": 33.3,
+      "kd": 0.86,
+      "atkWR": 47.6,
+      "defWR": 26.9,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 20,
+          "rounds": 5,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.25,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 45,
+          "rounds": 11,
+          "kd": 1.0
+        },
+        {
+          "name": "Deimos",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 1.5,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Wamai na defesa (33% em 6 rounds)."
+    },
+    {
+      "name": "Outback",
+      "matches": 3,
+      "seasonWR": 33.3,
+      "kd": 0.45,
+      "atkWR": 42.9,
+      "defWR": 44.4,
+      "def": [
+        {
+          "name": "Mute",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thatcher",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Border",
+      "matches": 10,
+      "seasonWR": 30.0,
+      "kd": 0.73,
+      "atkWR": 44.4,
+      "defWR": 38.2,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 14,
+          "rounds": 7,
+          "kd": 0.57,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 2.5,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.75,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "avoid": "Wamai na defesa (14% em 7 rounds)."
+    },
+    {
+      "name": "Villa",
+      "matches": 21,
+      "seasonWR": 28.6,
+      "kd": 1.0,
+      "atkWR": 36.4,
+      "defWR": 48.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 54,
+          "rounds": 26,
+          "kd": 1.29
+        },
+        {
+          "name": "Mute",
+          "wr": 62,
+          "rounds": 8,
+          "kd": 1.0
+        },
+        {
+          "name": "Doc",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.75,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 47,
+          "rounds": 19,
+          "kd": 1.0
+        },
+        {
+          "name": "Deimos",
+          "wr": 18,
+          "rounds": 11,
+          "kd": 0.88
+        },
+        {
+          "name": "Thermite",
+          "wr": 33,
+          "rounds": 9,
+          "kd": 0.57
+        },
+        {
+          "name": "Thatcher",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.5,
+          "small": true
+        }
+      ],
+      "avoid": "Deimos no ataque (18% em 11 rounds)."
+    },
+    {
+      "name": "Coastline",
+      "matches": 14,
+      "seasonWR": 28.6,
+      "kd": 0.79,
+      "atkWR": 42.2,
+      "defWR": 40.9,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 42,
+          "rounds": 19,
+          "kd": 0.67
+        },
+        {
+          "name": "Doc",
+          "wr": 71,
+          "rounds": 7,
+          "kd": 0.8,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 17,
+          "rounds": 6,
+          "kd": 0.4,
+          "small": true
+        },
+        {
+          "name": "Clash",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 36,
+          "rounds": 11,
+          "kd": 1.0
+        },
+        {
+          "name": "Deimos",
+          "wr": 38,
+          "rounds": 8,
+          "kd": 0.29
+        },
+        {
+          "name": "Thermite",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 5.0,
+          "small": true
+        },
+        {
+          "name": "Ying",
+          "wr": 0,
+          "rounds": 3,
+          "kd": 0.33,
+          "small": true
+        }
+      ],
+      "avoid": "Mute na defesa (17% em 6 rounds)."
+    },
+    {
+      "name": "Oregon",
+      "matches": 7,
+      "seasonWR": 28.6,
+      "kd": 0.52,
+      "atkWR": 47.1,
+      "defWR": 33.3,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 29,
+          "rounds": 7,
+          "kd": 0.33,
+          "small": true
+        },
+        {
+          "name": "Mute",
+          "wr": 33,
+          "rounds": 6,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Doc",
+          "wr": 25,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Rauora",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Deimos",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Zero",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Wamai na defesa (29% em 7 rounds)."
+    },
+    {
+      "name": "Bank",
+      "matches": 8,
+      "seasonWR": 25.0,
+      "kd": 1.0,
+      "atkWR": 33.3,
+      "defWR": 25.0,
+      "def": [
+        {
+          "name": "Wamai",
+          "wr": 11,
+          "rounds": 9,
+          "kd": 0.75
+        },
+        {
+          "name": "Doc",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ying",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Rauora",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "avoid": "Wamai na defesa (11% em 9 rounds)."
+    }
+  ],
+  "recentMatches": [
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 0.75,
+      "rp": -28
+    },
+    {
+      "map": "Outback",
+      "w": false,
+      "kd": 0.0,
+      "rp": -24
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 0.6,
+      "rp": -13
+    },
+    {
+      "map": "Border",
+      "w": false,
+      "kd": 0.25,
+      "rp": -32
+    },
+    {
+      "map": "Chalet",
+      "w": true,
+      "kd": 0.44,
+      "rp": 0
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": true,
+      "kd": 2.0,
+      "rp": 0
+    },
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 0.75,
+      "rp": -27
+    },
+    {
+      "map": "Oregon",
+      "w": false,
+      "kd": 0.25,
+      "rp": -22
+    },
+    {
+      "map": "Coastline",
+      "w": true,
+      "kd": 1.25,
+      "rp": 35
+    },
+    {
+      "map": "Villa",
+      "w": false,
+      "kd": 0.8,
+      "rp": -28
+    },
+    {
+      "map": "Consulate",
+      "w": true,
+      "kd": 0.75,
+      "rp": 36
+    },
+    {
+      "map": "Kafe Dostoyevsky",
+      "w": false,
+      "kd": 0.83,
+      "rp": 0
+    },
+    {
+      "map": "Kanal",
+      "w": false,
+      "kd": 1.5,
+      "rp": -24
+    },
+    {
+      "map": "Nighthaven Labs",
+      "w": false,
+      "kd": 0.2,
+      "rp": -25
+    },
+    {
+      "map": "Theme Park",
+      "w": false,
+      "kd": 0.71,
+      "rp": 0
+    },
+    {
+      "map": "Coastline",
+      "w": true,
+      "kd": 1.0,
+      "rp": 0
+    },
+    {
+      "map": "Nighthaven Labs",
+      "w": false,
+      "kd": 0.4,
+      "rp": -5
+    },
+    {
+      "map": "Fortress",
+      "w": false,
+      "kd": 0.5,
+      "rp": -28
+    },
+    {
+      "map": "Border",
+      "w": false,
+      "kd": 0.29,
+      "rp": -27
+    },
+    {
+      "map": "Kanal",
+      "w": true,
+      "kd": 2.0,
+      "rp": 30
+    }
+  ],
+  "style": {
+    "rounds": 940,
+    "roundWR": 45.3,
+    "fb": 67,
+    "fd": 52,
+    "openPct": 12.7,
+    "esr": 56.0,
+    "kpr": 0.6,
+    "dpr": 0.68,
+    "apr": 0.19,
+    "hs": 53.0,
+    "clutchW": 21,
+    "clutchL": 146,
+    "clutchPct": 17.8,
+    "clutchBy": [
+      [
+        10,
+        24
+      ],
+      [
+        7,
+        40
+      ],
+      [
+        3,
+        41
+      ],
+      [
+        0,
+        34
+      ],
+      [
+        0,
+        27
+      ]
+    ],
+    "multi": [
+      98,
+      26,
+      3,
+      0
+    ],
+    "multiRounds": 127,
+    "multiPct": 13.5,
+    "atkRoundWR": 44.6,
+    "atkRounds": [
+      209,
+      469
+    ],
+    "defRoundWR": 46.1,
+    "defRounds": [
+      217,
+      471
+    ]
+  },
+  "opsMaps": {
+    "Wamai": [
+      [
+        "Calypso Casino",
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        6,
+        2,
+        4,
+        4
+      ],
+      [
+        "Skyscraper",
+        22,
+        13,
+        19,
+        14
+      ],
+      [
+        "Clubhouse",
+        19,
+        9,
+        22,
+        12
+      ],
+      [
+        "Fortress",
+        15,
+        10,
+        9,
+        11
+      ],
+      [
+        "Nighthaven Labs",
+        6,
+        4,
+        2,
+        5
+      ],
+      [
+        "Coastline",
+        19,
+        8,
+        10,
+        15
+      ],
+      [
+        "Lair",
+        6,
+        3,
+        8,
+        5
+      ],
+      [
+        "Kanal",
+        6,
+        4,
+        0,
+        3
+      ],
+      [
+        "Theme Park",
+        8,
+        7,
+        12,
+        5
+      ],
+      [
+        "Bank",
+        9,
+        1,
+        6,
+        8
+      ],
+      [
+        "Chalet",
+        12,
+        7,
+        7,
+        10
+      ],
+      [
+        "Border",
+        7,
+        1,
+        4,
+        7
+      ],
+      [
+        "Oregon",
+        7,
+        2,
+        2,
+        6
+      ],
+      [
+        "Villa",
+        26,
+        14,
+        22,
+        17
+      ],
+      [
+        "Consulate",
+        10,
+        6,
+        6,
+        6
+      ]
+    ],
+    "Rauora": [
+      [
+        "Skyscraper",
+        25,
+        12,
+        17,
+        9
+      ],
+      [
+        "Fortress",
+        4,
+        1,
+        1,
+        3
+      ],
+      [
+        "Kafe Dostoyevsky",
+        11,
+        5,
+        8,
+        8
+      ],
+      [
+        "Coastline",
+        11,
+        4,
+        7,
+        7
+      ],
+      [
+        "Bank",
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        "Oregon",
+        3,
+        1,
+        2,
+        3
+      ],
+      [
+        "Villa",
+        19,
+        9,
+        12,
+        12
+      ],
+      [
+        "Border",
+        4,
+        2,
+        1,
+        2
+      ],
+      [
+        "Theme Park",
+        4,
+        1,
+        5,
+        3
+      ],
+      [
+        "Chalet",
+        8,
+        4,
+        8,
+        3
+      ],
+      [
+        "Nighthaven Labs",
+        7,
+        4,
+        5,
+        5
+      ],
+      [
+        "Lair",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Outback",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Calypso Casino",
+        3,
+        2,
+        2,
+        2
+      ],
+      [
+        "Consulate",
+        7,
+        4,
+        5,
+        5
+      ],
+      [
+        "Clubhouse",
+        13,
+        9,
+        9,
+        4
+      ]
+    ],
+    "Mute": [
+      [
+        "Skyscraper",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Coastline",
+        6,
+        1,
+        2,
+        5
+      ],
+      [
+        "Nighthaven Labs",
+        5,
+        2,
+        1,
+        5
+      ],
+      [
+        "Fortress",
+        6,
+        2,
+        2,
+        5
+      ],
+      [
+        "Clubhouse",
+        6,
+        2,
+        2,
+        6
+      ],
+      [
+        "Calypso Casino",
+        12,
+        6,
+        6,
+        9
+      ],
+      [
+        "Lair",
+        4,
+        3,
+        4,
+        3
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        1,
+        1,
+        4
+      ],
+      [
+        "Oregon",
+        6,
+        2,
+        4,
+        6
+      ],
+      [
+        "Border",
+        4,
+        2,
+        3,
+        4
+      ],
+      [
+        "Outback",
+        3,
+        2,
+        0,
+        3
+      ],
+      [
+        "Chalet",
+        5,
+        3,
+        1,
+        3
+      ],
+      [
+        "Consulate",
+        5,
+        1,
+        2,
+        4
+      ],
+      [
+        "Villa",
+        8,
+        5,
+        4,
+        4
+      ],
+      [
+        "Kanal",
+        3,
+        1,
+        0,
+        3
+      ]
+    ],
+    "Deimos": [
+      [
+        "Clubhouse",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Kanal",
+        4,
+        2,
+        1,
+        3
+      ],
+      [
+        "Nighthaven Labs",
+        4,
+        2,
+        1,
+        3
+      ],
+      [
+        "Chalet",
+        3,
+        2,
+        1,
+        2
+      ],
+      [
+        "Consulate",
+        6,
+        3,
+        2,
+        5
+      ],
+      [
+        "Border",
+        3,
+        2,
+        1,
+        3
+      ],
+      [
+        "Calypso Casino",
+        5,
+        1,
+        2,
+        5
+      ],
+      [
+        "Oregon",
+        3,
+        1,
+        0,
+        3
+      ],
+      [
+        "Villa",
+        11,
+        2,
+        7,
+        8
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        2,
+        3,
+        2
+      ],
+      [
+        "Outback",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Fortress",
+        17,
+        11,
+        12,
+        11
+      ],
+      [
+        "Theme Park",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Lair",
+        6,
+        4,
+        3,
+        5
+      ],
+      [
+        "Coastline",
+        8,
+        3,
+        2,
+        7
+      ]
+    ],
+    "Doc": [
+      [
+        "Skyscraper",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Consulate",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        5,
+        1,
+        4,
+        4
+      ],
+      [
+        "Nighthaven Labs",
+        4,
+        3,
+        3,
+        4
+      ],
+      [
+        "Coastline",
+        7,
+        5,
+        4,
+        5
+      ],
+      [
+        "Kanal",
+        3,
+        1,
+        3,
+        2
+      ],
+      [
+        "Fortress",
+        3,
+        0,
+        1,
+        3
+      ],
+      [
+        "Border",
+        5,
+        3,
+        5,
+        2
+      ],
+      [
+        "Villa",
+        4,
+        1,
+        3,
+        3
+      ],
+      [
+        "Clubhouse",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Oregon",
+        4,
+        1,
+        2,
+        3
+      ],
+      [
+        "Outback",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Lair",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Chalet",
+        5,
+        2,
+        2,
+        4
+      ],
+      [
+        "Calypso Casino",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Bank",
+        2,
+        0,
+        0,
+        2
+      ]
+    ],
+    "Thermite": [
+      [
+        "Border",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Oregon",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Kanal",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Consulate",
+        4,
+        1,
+        2,
+        3
+      ],
+      [
+        "Clubhouse",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        "Theme Park",
+        2,
+        1,
+        3,
+        1
+      ],
+      [
+        "Villa",
+        9,
+        3,
+        4,
+        7
+      ],
+      [
+        "Chalet",
+        2,
+        2,
+        1,
+        2
+      ],
+      [
+        "Lair",
+        3,
+        1,
+        3,
+        1
+      ],
+      [
+        "Coastline",
+        3,
+        2,
+        5,
+        1
+      ],
+      [
+        "Outback",
+        2,
+        2,
+        1,
+        0
+      ],
+      [
+        "Fortress",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Nighthaven Labs",
+        4,
+        2,
+        3,
+        3
+      ]
+    ],
+    "Ying": [
+      [
+        "Fortress",
+        5,
+        2,
+        3,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Consulate",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Calypso Casino",
+        3,
+        2,
+        1,
+        3
+      ],
+      [
+        "Bank",
+        3,
+        1,
+        1,
+        2
+      ],
+      [
+        "Theme Park",
+        2,
+        2,
+        0,
+        1
+      ],
+      [
+        "Clubhouse",
+        6,
+        2,
+        5,
+        5
+      ],
+      [
+        "Coastline",
+        3,
+        0,
+        1,
+        3
+      ],
+      [
+        "Lair",
+        5,
+        0,
+        4,
+        5
+      ],
+      [
+        "Skyscraper",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Border",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Chalet",
+        1,
+        0,
+        0,
+        1
+      ]
+    ],
+    "Thatcher": [
+      [
+        "Kafe Dostoyevsky",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Clubhouse",
+        3,
+        1,
+        0,
+        0
+      ],
+      [
+        "Outback",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Consulate",
+        2,
+        2,
+        3,
+        0
+      ],
+      [
+        "Lair",
+        6,
+        3,
+        2,
+        3
+      ],
+      [
+        "Fortress",
+        3,
+        1,
+        3,
+        2
+      ],
+      [
+        "Kanal",
+        4,
+        2,
+        4,
+        0
+      ],
+      [
+        "Villa",
+        3,
+        0,
+        1,
+        2
+      ],
+      [
+        "Chalet",
+        2,
+        2,
+        3,
+        0
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Calypso Casino",
+        7,
+        5,
+        4,
+        3
+      ]
+    ],
+    "Clash": [
+      [
+        "Chalet",
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        "Nighthaven Labs",
+        3,
+        1,
+        0,
+        3
+      ],
+      [
+        "Consulate",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Skyscraper",
+        3,
+        3,
+        0,
+        1
+      ],
+      [
+        "Calypso Casino",
+        5,
+        3,
+        1,
+        3
+      ],
+      [
+        "Coastline",
+        2,
+        2,
+        0,
+        0
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Fortress",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Clubhouse",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Villa",
+        4,
+        1,
+        3,
+        4
+      ]
+    ],
+    "Zero": [
+      [
+        "Consulate",
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        "Clubhouse",
+        2,
+        0,
+        1,
+        1
+      ],
+      [
+        "Border",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Villa",
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        "Chalet",
+        11,
+        3,
+        5,
+        10
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Oregon",
+        1,
+        1,
+        0,
+        0
+      ]
+    ]
+  },
+  "rpRate": {
+    "win": 35.5,
+    "loss": -24.5,
+    "n": 150
+  },
+  "tilt": {
+    "afterLoss": [
+      31,
+      72
+    ],
+    "afterWin": [
+      16,
+      48
+    ],
+    "sessions": 55,
+    "matches": 175,
+    "byGame": [
+      [
+        23,
+        55
+      ],
+      [
+        20,
+        43
+      ],
+      [
+        11,
+        29
+      ],
+      [
+        16,
+        48
+      ]
+    ],
+    "hours": {
+      "manha": [
+        2,
+        4
+      ],
+      "tarde": [
+        16,
+        39
+      ],
+      "noite": [
+        50,
+        121
+      ],
+      "madrugada": [
+        2,
+        11
+      ]
+    }
+  },
+  "squad": {
+    "solo": [
+      44,
+      91,
+      411,
+      323,
+      351
+    ],
+    "together": [
+      26,
+      84,
+      310,
+      492,
+      -486
+    ],
+    "with": {
+      "laprufer": 69,
+      "brunoprufer": 44
+    },
+    "n": 175,
+    "perFriend": {
+      "brunoprufer": [
+        5,
+        15
+      ],
+      "laprufer": [
+        12,
+        40
+      ]
+    },
+    "trio": [
+      9,
+      29
+    ]
+  },
+  "coach": {
+    "matches": 158,
+    "rounds": 958,
+    "lastAlive": {
+      "atk": [
+        96,
+        271
+      ],
+      "def": [
+        70,
+        291
+      ]
+    },
+    "lastAliveRef": {
+      "atk": [
+        173,
+        721
+      ],
+      "def": [
+        192,
+        744
+      ]
+    },
+    "firstDeath": {
+      "atk": [
+        41,
+        477
+      ],
+      "def": [
+        62,
+        481
+      ]
+    },
+    "firstDeathRef": {
+      "atk": [
+        257,
+        1651
+      ],
+      "def": [
+        272,
+        1600
+      ]
+    },
+    "alone": {
+      "atk": [
+        7,
+        96,
+        3.1
+      ],
+      "def": [
+        9,
+        70,
+        3.1
+      ]
+    },
+    "sideRounds": {
+      "atk": [
+        213,
+        477
+      ],
+      "def": [
+        224,
+        481
+      ]
+    },
+    "hardBreach": {
+      "with": [
+        133,
+        265
+      ],
+      "without": [
+        80,
+        212
+      ],
+      "self": [
+        20,
+        53
+      ]
+    },
+    "opening": {
+      "kill": [
+        292,
+        474
+      ],
+      "death": [
+        144,
+        483
+      ]
+    },
+    "multi": {
+      "twoPlus": [
+        79,
+        130
+      ],
+      "oneOrLess": [
+        358,
+        828
+      ]
+    },
+    "kills": {
+      "total": 577,
+      "lostRounds": 260,
+      "alone": 90,
+      "aloneLost": 69
+    },
+    "trades": {
+      "mateDeaths": 2807,
+      "byMe": 185,
+      "byOthers": 623,
+      "myDeaths": 635,
+      "meTraded": 176
+    },
+    "states": {
+      "5v4": [
+        292,
+        474
+      ],
+      "4v4": [
+        204,
+        486
+      ],
+      "4v5": [
+        145,
+        484
+      ],
+      "5v3": [
+        187,
+        228
+      ],
+      "3v5": [
+        46,
+        244
+      ],
+      "3v3": [
+        166,
+        378
+      ],
+      "2v2": [
+        127,
+        288
+      ]
+    },
+    "killTiming": {
+      "meEarly": [
+        132,
+        577
+      ],
+      "meLate": [
+        183,
+        577
+      ],
+      "refEarly": [
+        968,
+        3586
+      ],
+      "refLate": [
+        1123,
+        3586
+      ]
+    },
+    "score": {
+      "led20": [
+        29,
+        39
+      ],
+      "trail02": [
+        4,
+        49
+      ],
+      "ot": [
+        18,
+        41
+      ],
+      "otRounds": [
+        45,
+        102
+      ]
+    },
+    "pressure": {
+      "mine": [
+        63,
+        134
+      ],
+      "theirs": [
+        71,
+        165
+      ]
+    },
+    "decisive": {
+      "part": [
+        277,
+        319
+      ],
+      "partNormal": [
+        550,
+        639
+      ],
+      "partRef": [
+        975,
+        1042
+      ],
+      "withFace": [
+        106,
+        277
+      ],
+      "noFace": [
+        32,
+        42
+      ]
+    },
+    "postClutch": {
+      "afterLost": [
+        55,
+        126
+      ],
+      "afterWon": [
+        6,
+        15
+      ],
+      "afterAnyLost": [
+        187,
+        428
+      ]
+    },
+    "noKill": {
+      "alive": [
+        113,
+        131
+      ],
+      "died": [
+        112,
+        414
+      ],
+      "diedWithKill": [
+        53,
+        228
+      ]
+    },
+    "rival": {
+      "with": [
+        10,
+        38
+      ],
+      "without": [
+        54,
+        120
+      ]
+    },
+    "teams": {
+      "meRP": 2651,
+      "matesRP": 2898,
+      "enemiesRP": 2846,
+      "matesKD": 0.96,
+      "enemiesKD": 1.05,
+      "teamKills": 3288,
+      "enemyKills": 3461
+    },
+    "clutchBy": [
+      [
+        8,
+        21
+      ],
+      [
+        4,
+        38
+      ],
+      [
+        3,
+        42
+      ],
+      [
+        1,
+        36
+      ],
+      [
+        0,
+        29
+      ]
+    ],
+    "clutchByRef": [
+      [
+        40,
+        63
+      ],
+      [
+        35,
+        117
+      ],
+      [
+        9,
+        95
+      ],
+      [
+        3,
+        56
+      ],
+      [
+        2,
+        34
+      ]
+    ],
+    "refLabel": "outros jogadores com K/D 1,2+ nessas mesmas partidas",
+    "opsRole": {
+      "Wamai": [
+        180,
+        93,
+        51,
+        23,
+        37,
+        30,
+        139
+      ],
+      "Deimos": [
+        78,
+        36,
+        17,
+        11,
+        7,
+        7,
+        36
+      ],
+      "Dokkaebi": [
+        19,
+        6,
+        5,
+        1,
+        1,
+        1,
+        6
+      ],
+      "Rauora": [
+        124,
+        59,
+        53,
+        9,
+        12,
+        31,
+        86
+      ],
+      "Rook": [
+        13,
+        6,
+        4,
+        4,
+        2,
+        0,
+        5
+      ],
+      "Mute": [
+        78,
+        33,
+        13,
+        14,
+        5,
+        11,
+        33
+      ],
+      "Doc": [
+        52,
+        22,
+        15,
+        5,
+        10,
+        7,
+        34
+      ],
+      "Ying": [
+        35,
+        12,
+        8,
+        3,
+        2,
+        8,
+        18
+      ],
+      "Zero": [
+        20,
+        7,
+        7,
+        0,
+        2,
+        4,
+        7
+      ],
+      "Twitch": [
+        15,
+        9,
+        9,
+        3,
+        2,
+        4,
+        10
+      ],
+      "Nomad": [
+        19,
+        9,
+        8,
+        1,
+        4,
+        3,
+        10
+      ],
+      "Unknown": [
+        13,
+        8,
+        13,
+        0,
+        0,
+        0,
+        0
+      ],
+      "Thatcher": [
+        33,
+        17,
+        20,
+        3,
+        1,
+        13,
+        20
+      ],
+      "Kaid": [
+        15,
+        7,
+        5,
+        1,
+        3,
+        1,
+        8
+      ],
+      "Osa": [
+        12,
+        8,
+        6,
+        1,
+        1,
+        3,
+        7
+      ],
+      "Bandit": [
+        12,
+        6,
+        5,
+        1,
+        4,
+        2,
+        12
+      ],
+      "Clash": [
+        22,
+        12,
+        8,
+        2,
+        0,
+        2,
+        5
+      ],
+      "Thermite": [
+        41,
+        16,
+        14,
+        3,
+        6,
+        8,
+        27
+      ],
+      "Tachanka": [
+        17,
+        10,
+        7,
+        2,
+        1,
+        4,
+        9
+      ],
+      "Lion": [
+        17,
+        5,
+        7,
+        0,
+        2,
+        3,
+        9
+      ],
+      "Ace": [
+        11,
+        3,
+        3,
+        0,
+        1,
+        4,
+        11
+      ]
+    },
+    "lobby": {
+      "randomKD": [
+        2251,
+        2374,
+        0.95
+      ],
+      "randomFK": [
+        336,
+        375
+      ],
+      "enemyFK": [
+        480,
+        473
+      ],
+      "hold": [
+        57,
+        70
+      ],
+      "fold": [
+        7,
+        87
+      ],
+      "meTop": [
+        12,
+        23
+      ],
+      "meNotTop": [
+        52,
+        135
+      ],
+      "rpEdge": -229,
+      "rpEdgeWith": -643,
+      "rpEdgeSolo": 101,
+      "friends": {
+        "laprufer": {
+          "w": 15,
+          "n": 54,
+          "k": 210,
+          "d": 266,
+          "kd": 0.79,
+          "fk": 21,
+          "fd": 26,
+          "clutch": 3
+        },
+        "brunoprufer": {
+          "w": 13,
+          "n": 39,
+          "k": 250,
+          "d": 179,
+          "kd": 1.4,
+          "fk": 50,
+          "fd": 27,
+          "clutch": 7
+        }
+      }
+    },
+    "trend": {
+      "last": {
+        "w": 4,
+        "n": 15,
+        "kd": 0.68,
+        "esr": [
+          5,
+          11
+        ],
+        "rp": -10.1
+      },
+      "rest": {
+        "w": 66,
+        "n": 160,
+        "kd": 0.9,
+        "esr": [
+          63,
+          109
+        ],
+        "rp": 0.1
+      }
+    }
+  }
+}

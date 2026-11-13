@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-06",
+  "date": "2026-11-13",
   "season": "Y11S2",
   "seasonOrder": 42,
   "seasonLabel": "System Override",
@@ -1436,7 +1436,25 @@
         9,
         13
       ]
-    ]
+    ],
+    "hours": {
+      "manha": [
+        0,
+        0
+      ],
+      "tarde": [
+        4,
+        5
+      ],
+      "noite": [
+        10,
+        14
+      ],
+      "madrugada": [
+        5,
+        10
+      ]
+    }
   },
   "squad": {
     "solo": [
