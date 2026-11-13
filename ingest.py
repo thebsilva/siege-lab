@@ -433,6 +433,11 @@ def coach_of(path, side_of):
             alive = set(range(10))
             appeared = set()                     # quem entrou no feed (matou ou morreu): "deu a cara"
             last, first, alone_me, my_k, me_died = {}, {}, False, 0, False
+            first_adv = first_adv_en = None      # 1ª vez (índice de morte) com vantagem numérica nossa / deles
+            best_adv = best_adv_en = 0           # maior vantagem numérica vista no round
+            my_kill_after = False                # matei DEPOIS de estarmos na frente
+            my_death_after = None                # None = não morri pós-vantagem; True = morri trocado; False = seco
+            team_dry_after = team_deaths_after = 0   # mortes do time pós-vantagem (secas / todas)
             for j, (kc, vc) in enumerate(E):
                 if vc == "x":
                     continue
@@ -452,6 +457,8 @@ def coach_of(path, side_of):
                     if alone_me:
                         c["kills_alone"] += 1
                         c["kills_alone_lost"] += not won
+                    if first_adv is not None:
+                        my_kill_after = True
                 if kk in good:
                     ref["kills"] += 1
                     if d_idx < 2:
@@ -461,20 +468,41 @@ def coach_of(path, side_of):
                 nxt = E[j + 1:j + 3]
                 if v in mates and kk in ens:
                     c["mate_deaths"] += 1
-                    if any(x[0] != "x" and int(x[0]) == me and x[1] != "x" and int(x[1]) == kk for x in nxt):
+                    tr_me = any(x[0] != "x" and int(x[0]) == me and x[1] != "x" and int(x[1]) == kk for x in nxt)
+                    tr_ot = any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt)
+                    if tr_me:
                         c["traded_by_me"] += 1
-                    elif any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt):
+                    elif tr_ot:
                         c["traded_by_others"] += 1
+                    if first_adv is not None:
+                        team_deaths_after += 1
+                        team_dry_after += not (tr_me or tr_ot)
                 if v == me and kk in ens:
                     c["my_deaths"] += 1
                     deaths_by[kk] += 1
-                    if any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt):
+                    tr = any(x[0] != "x" and int(x[0]) in mates and x[1] != "x" and int(x[1]) == kk for x in nxt)
+                    if tr:
                         c["me_traded"] += 1
+                    if first_adv is not None:
+                        team_deaths_after += 1
+                        team_dry_after += not tr
+                        my_death_after = tr
                 if v == me:
                     me_died = True
                 alive.discard(v)
                 d_idx += 1
-                stt = f"{sum(1 for i in team if i in alive)}v{sum(1 for i in ens if i in alive)}"
+                tn = sum(1 for i in team if i in alive)
+                en2 = sum(1 for i in ens if i in alive)
+                diff = tn - en2
+                if diff >= 1 and first_adv is None:
+                    first_adv = d_idx
+                if diff > best_adv:
+                    best_adv = diff
+                if diff <= -1 and first_adv_en is None:
+                    first_adv_en = d_idx
+                if -diff > best_adv_en:
+                    best_adv_en = -diff
+                stt = f"{tn}v{en2}"
                 if stt in STATES and stt not in reached:
                     reached.add(stt)
                 t = P[v][0]
@@ -528,6 +556,27 @@ def coach_of(path, side_of):
                 for i in good:
                     ref["cr"] += 1
                     ref["cr_p"] += i in appeared
+            # vantagem numérica: ficamos com mais vivos — convertemos? (e o espelho do inimigo)
+            if best_adv >= 1:
+                c["adv"] += 1
+                c["adv_w"] += won
+                if best_adv >= 2:
+                    c["adv2"] += 1
+                    c["adv2_w"] += won
+                if not won:
+                    c["advL"] += 1
+                    if my_death_after is not None:
+                        c["advL_died"] += 1
+                        c["advL_died_dry"] += my_death_after is False
+                    elif my_kill_after:
+                        c["advL_kill"] += 1
+                    else:
+                        c["advL_ghost"] += 1
+                    c["advL_team_deaths"] += team_deaths_after
+                    c["advL_team_dry"] += team_dry_after
+            if best_adv_en >= 1:
+                c["adve"] += 1
+                c["adve_w"] += not won
             # último vivo / primeiro a morrer — você e a régua
             if T in last:
                 c[f"to1_{sd}"] += 1
@@ -575,6 +624,11 @@ def coach_of(path, side_of):
         "decisive": {"part": [c["cr_p"], c["cr"]], "partNormal": [c["nm_p"], c["nm"]],
                      "partRef": [ref["cr_p"], ref["cr"]],
                      "withFace": [c["cr_p_w"], c["cr_p_n"]], "noFace": [c["cr_np_w"], c["cr_np_n"]]},
+        "advantage": {"any": [c["adv_w"], c["adv"]], "plus2": [c["adv2_w"], c["adv2"]],
+                      "enemy": [c["adve_w"], c["adve"]], "lost": c["advL"],
+                      "lostMe": {"ghost": c["advL_ghost"], "died": c["advL_died"],
+                                 "diedDry": c["advL_died_dry"], "kill": c["advL_kill"]},
+                      "lostTeamDeaths": [c["advL_team_dry"], c["advL_team_deaths"]]},
         "postClutch": {"afterLost": [c["pc_L_w"], c["pc_L"]], "afterWon": [c["pc_W_w"], c["pc_W"]],
                        "afterAnyLost": [c["pc_any_w"], c["pc_any"]]},
         "noKill": {"alive": [c["nk_alive_w"], c["nk_alive"]], "died": [c["nk_died_w"], c["nk_died"]],

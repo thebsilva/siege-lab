@@ -2243,6 +2243,31 @@ function coachCards(cur){
       read,
       `Decisivo = match point (de qualquer lado) ou overtime. O round "sem você no feed" vence mais (${nfc}% × ${wf}%) porque não aparecer significa que você sobreviveu — em geral round que o seu time fechou sem precisar do seu duelo. Não leia como "é melhor sumir": o juiz é o placar de vivos na hora de entrar.`,"decisive");
   }
+  if(c&&c.advantage&&c.advantage.any[1]>=20){
+    const A=c.advantage, pa=pf(A.any[0],A.any[1]), p2=A.plus2[1]?pf(A.plus2[0],A.plus2[1]):null, pe=A.enemy[1]?pf(A.enemy[0],A.enemy[1]):null;
+    const M=A.lostMe, N=A.lost, td=A.lostTeamDeaths;
+    const perda=N?`<div class="sub2">Os ${N} rounds jogados fora — você, depois de o time ficar na frente</div>
+      <table class="ctable"><tr><th>O que você fez</th><th>Rounds</th></tr>
+        <tr><td>Não entrou no feed (não deu a cara)</td><td><b>${M.ghost}</b> <small>${pf(M.ghost,N)}% deles</small></td></tr>
+        <tr><td>Morreu${M.died?` <small>(${M.diedDry} sem troca)</small>`:""}</td><td><b>${M.died}</b> <small>${pf(M.died,N)}% deles</small></td></tr>
+        <tr><td>Só matou</td><td><b>${M.kill}</b> <small>${pf(M.kill,N)}% deles</small></td></tr></table>`:"";
+    let read = pe!=null&&pe-pa>=6
+      ? `É este o "dar a cara" que pesa: vocês ficam na frente e devolvem. Com mais vivos, vocês fecham <b>${pa}%</b> do round — o inimigo, na mesma situação contra vocês, fecha <b>${pe}%</b>.`
+      : `Com mais vivos que o inimigo vocês fecham <b>${pa}%</b>${pe!=null?`, no nível do que o inimigo converte quando a vantagem é dele (${pe}%)`:""}.`;
+    if(N>=8){
+      read+=td[1]?` Nos ${N} jogados fora, <b>${td[0]} das ${td[1]} mortes</b> do seu time depois da vantagem foram secas, sem ninguém trocar — vantagem não se perde de uma vez, volta um 1v1 de cada vez.`:"";
+      read+=M.ghost>=Math.max(M.died,M.kill)
+        ? ` E em ${M.ghost} deles você não entrou em duelo nenhum: com +1 a hora de dar a cara é SUA — em dupla, com a troca garantida.`
+        : ` Com +1 o duelo é do seu time — mas em dupla: o primeiro segura o contato, o segundo fecha. 1v1 espalhado devolve a vantagem.`;
+    }
+    K.advantage=fcard("Vantagem jogada fora",pair([`${pa}%`,"vocês convertem"],[pe!=null?`${pe}%`:"—","o inimigo converte"]),
+      "rounds fechados depois de ficar com mais vivos × o que o inimigo fecha quando a vantagem é dele",
+      bars([["Vantagem de 1+ convertida",pa,`${A.any[0]} de ${A.any[1]}`,1]]
+        .concat(p2!=null?[["Vantagem de 2+ convertida",p2,`${A.plus2[0]} de ${A.plus2[1]}`]]:[])
+        .concat(pe!=null?[["O inimigo converte a dele",pe,`${A.enemy[0]} de ${A.enemy[1]}`]]:[]))+perda,
+      read,
+      `Vantagem = algum momento do round com mais vivos no seu time. Converter muito é o normal (quase todo round vencido passa por vantagem) — a régua honesta é o espelho: o que o inimigo converte quando a vantagem é dele, nas mesmas partidas.`,"advantage");
+  }
   if(c&&c.trades&&c.trades.mateDeaths>0&&c.trades.myDeaths>0){
     const t=c.trades, me=pf(t.byMe,t.mateDeaths), mates=pf(t.byMe+t.byOthers,t.mateDeaths), per=Math.round(100*t.byOthers/t.mateDeaths/3), mt=pf(t.meTraded,t.myDeaths);
     const quem=Math.abs(me-per)<=2?"como um colega médio":me>per?"mais que um colega médio":"menos que um colega médio";
@@ -2284,7 +2309,7 @@ function coachCards(cur){
   return K;
 }
 const COACH_GRUPOS=[                   // por momento do jogo: dentro do round → na partida → entre partidas
-  ["No round","o que acontece dentro de cada round",["states","trades","lastAlive","hardBreach","killTiming","noKill","clutch","postClutch"]],
+  ["No round","o que acontece dentro de cada round",["states","advantage","trades","lastAlive","hardBreach","killTiming","noKill","clutch","postClutch"]],
   ["Na partida","placar, pressão e o mesmo inimigo",["pressure","decisive","score","rival"]],
   ["Entre partidas","sequência, tendência, fila, times e seu estilo",["tilt","trend","squad","lobby","teams","style"]]
 ];
@@ -2393,6 +2418,17 @@ function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach 
     if(pc2-pn2<=-10||(pr2!=null&&pc2-pr2<=-8))
       rule("decisive","target","play","No round decisivo, dê a cara.",
         `Você entra no feed em ${pc2}% dos rounds decisivos${pc2-pn2<=-10?` (${pn2}% nos comuns)`:""}${pr2!=null?`; os bons jogadores das mesmas partidas, em ${pr2}%`:""}. Entre como segundo homem, com troca garantida — sumir no match point é jogar de 4.`);
+  }
+  const AV=c&&c.advantage;
+  if(AV&&AV.any[1]>=20&&AV.enemy[1]>=20){
+    const pa3=pf(AV.any[0],AV.any[1]), pe3=pf(AV.enemy[0],AV.enemy[1]);
+    if(pe3-pa3>=6){
+      const gsh=AV.lost?Math.round(100*AV.lostMe.ghost/AV.lost):0;
+      const det=gsh>=25?`Em ${AV.lostMe.ghost} dos ${AV.lost} jogados fora você nem entrou no duelo`
+        :`Nos ${AV.lost} jogados fora, ${AV.lostTeamDeaths[0]} de ${AV.lostTeamDeaths[1]} mortes do time depois da vantagem foram secas, sem troca`;
+      rule("advantage","target","play","Com vantagem numérica, feche em dupla.",
+        `Com mais vivos vocês convertem ${pa3}% do round — o inimigo, ${pe3}% quando a vantagem é dele. ${det}. Com +1: pares, troca garantida, zero 1v1 espalhado.`);
+    }
   }
   const L=c&&c.lobby;
   if(L&&L.rpEdgeWith!=null&&L.rpEdgeWith<=-250&&(L.hold[1]+L.fold[1])>=10)

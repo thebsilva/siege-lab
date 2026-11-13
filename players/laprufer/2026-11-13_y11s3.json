@@ -3464,6 +3464,31 @@
         33
       ]
     },
+    "advantage": {
+      "any": [
+        443,
+        673
+      ],
+      "plus2": [
+        393,
+        449
+      ],
+      "enemy": [
+        485,
+        681
+      ],
+      "lost": 230,
+      "lostMe": {
+        "ghost": 17,
+        "died": 210,
+        "diedDry": 181,
+        "kill": 3
+      },
+      "lostTeamDeaths": [
+        850,
+        1004
+      ]
+    },
     "postClutch": {
       "afterLost": [
         32,
