@@ -1,52 +1,53 @@
 {
-  "date": "2026-11-13",
+  "date": "2026-11-14",
   "season": "Y11S3",
   "seasonOrder": 43,
   "seasonLabel": "Split Fire",
-  "basis": "só Y11S3 (em andamento, até 13/11), ranqueada",
+  "basis": "só Y11S3 (em andamento, até 14/11), ranqueada",
   "kpis": {
-    "matches": 155,
-    "wins": 69,
-    "losses": 86,
-    "winRate": 44.5,
-    "kd": 0.79,
+    "matches": 163,
+    "wins": 73,
+    "losses": 90,
+    "winRate": 44.8,
+    "kd": 0.8,
     "peakRP": 3658,
-    "latestRP": 3241
+    "latestRP": 3232
   },
   "operatorsDef": [
     {
       "name": "Azami",
-      "wr": 54,
-      "kd": 0.43,
-      "rounds": 28,
-      "tag": ""
-    },
-    {
-      "name": "Wamai",
-      "wr": 53,
-      "kd": 0.46,
-      "rounds": 36,
-      "tag": ""
+      "wr": 55,
+      "kd": 0.58,
+      "rounds": 33,
+      "tag": "",
+      "star": true
     },
     {
       "name": "Valkyrie",
-      "wr": 49,
-      "kd": 0.79,
-      "rounds": 164,
-      "tag": "main · 164 rds"
+      "wr": 50,
+      "kd": 0.81,
+      "rounds": 171,
+      "tag": "main · 171 rds"
+    },
+    {
+      "name": "Wamai",
+      "wr": 51,
+      "kd": 0.48,
+      "rounds": 37,
+      "tag": ""
+    },
+    {
+      "name": "Bandit",
+      "wr": 47,
+      "kd": 0.88,
+      "rounds": 36,
+      "tag": ""
     },
     {
       "name": "Melusi",
       "wr": 48,
       "kd": 0.72,
       "rounds": 23,
-      "tag": ""
-    },
-    {
-      "name": "Bandit",
-      "wr": 45,
-      "kd": 0.83,
-      "rounds": 33,
       "tag": ""
     }
   ],
@@ -61,16 +62,16 @@
     },
     {
       "name": "Ram",
-      "wr": 51,
-      "kd": 1.04,
-      "rounds": 74,
+      "wr": 50,
+      "kd": 1.07,
+      "rounds": 78,
       "tag": ""
     },
     {
       "name": "Lion",
       "wr": 52,
-      "kd": 0.8,
-      "rounds": 27,
+      "kd": 0.86,
+      "rounds": 29,
       "tag": ""
     },
     {
@@ -81,11 +82,11 @@
       "tag": ""
     },
     {
-      "name": "Ash",
+      "name": "Flores",
       "wr": 47,
-      "kd": 0.72,
-      "rounds": 89,
-      "tag": "main · 89 rds"
+      "kd": 0.92,
+      "rounds": 19,
+      "tag": ""
     }
   ],
   "operatorsCut": [
@@ -98,96 +99,112 @@
     },
     {
       "name": "Striker",
-      "wr": 44,
-      "kd": 0.73,
-      "rounds": 32,
-      "tag": "32 rds"
+      "wr": 42,
+      "kd": 0.7,
+      "rounds": 33,
+      "tag": "33 rds"
     },
     {
       "name": "Thorn",
-      "wr": 44,
-      "kd": 0.78,
-      "rounds": 27,
-      "tag": "27 rds"
-    },
-    {
-      "name": "Goyo",
       "wr": 43,
-      "kd": 1.06,
-      "rounds": 21,
-      "tag": "21 rds"
+      "kd": 0.75,
+      "rounds": 28,
+      "tag": "28 rds"
     },
     {
-      "name": "Flores",
-      "wr": 44,
-      "kd": 0.77,
-      "rounds": 18,
-      "tag": "18 rds"
+      "name": "Twitch",
+      "wr": 43,
+      "kd": 0.67,
+      "rounds": 14,
+      "tag": "14 rds"
+    },
+    {
+      "name": "Nomad",
+      "wr": 38,
+      "kd": 0.67,
+      "rounds": 13,
+      "tag": "13 rds"
     }
   ],
   "opsAll": [
     {
       "n": "Valkyrie",
       "s": "d",
-      "r": 164,
-      "w": 81,
-      "k": 99,
-      "d": 125,
-      "a": 38,
-      "hs": 49,
-      "fb": 13,
+      "r": 171,
+      "w": 85,
+      "k": 105,
+      "d": 130,
+      "a": 40,
+      "hs": 53,
+      "fb": 14,
       "fd": 20,
       "cw": 0,
-      "cl": 12,
-      "m": 91,
-      "mw": 41
+      "cl": 13,
+      "m": 96,
+      "mw": 44
     },
     {
       "n": "Ash",
       "s": "a",
-      "r": 89,
+      "r": 90,
       "w": 42,
       "k": 49,
-      "d": 68,
+      "d": 69,
       "a": 19,
       "hs": 26,
       "fb": 3,
       "fd": 12,
       "cw": 0,
       "cl": 8,
-      "m": 63,
+      "m": 64,
       "mw": 25
     },
     {
       "n": "Ram",
       "s": "a",
-      "r": 74,
-      "w": 38,
-      "k": 56,
-      "d": 54,
-      "a": 16,
-      "hs": 36,
+      "r": 78,
+      "w": 39,
+      "k": 62,
+      "d": 58,
+      "a": 17,
+      "hs": 39,
       "fb": 7,
       "fd": 7,
       "cw": 1,
       "cl": 7,
-      "m": 47,
-      "mw": 19
+      "m": 51,
+      "mw": 21
     },
     {
       "n": "Wamai",
       "s": "d",
-      "r": 36,
+      "r": 37,
       "w": 19,
-      "k": 13,
-      "d": 28,
+      "k": 14,
+      "d": 29,
       "a": 7,
       "hs": 5,
       "fb": 2,
       "fd": 4,
       "cw": 0,
       "cl": 0,
-      "m": 23,
+      "m": 24,
+      "mw": 12
+    },
+    {
+      "n": "Bandit",
+      "s": "d",
+      "r": 36,
+      "w": 17,
+      "k": 21,
+      "d": 24,
+      "a": 6,
+      "hs": 14,
+      "fb": 0,
+      "fd": 4,
+      "cw": 1,
+      "cl": 0,
+      "m": 28,
       "mw": 12
     },
     {
@@ -207,100 +224,68 @@
       "mw": 17
     },
     {
-      "n": "Bandit",
-      "s": "d",
-      "r": 33,
-      "w": 15,
-      "k": 19,
-      "d": 23,
-      "a": 5,
-      "hs": 12,
-      "fb": 0,
-      "fd": 4,
-      "cw": 1,
-      "cl": 0,
-      "m": 26,
-      "mw": 10
-    },
-    {
       "n": "Striker",
       "s": "a",
-      "r": 32,
+      "r": 33,
       "w": 14,
       "k": 16,
-      "d": 22,
+      "d": 23,
       "a": 9,
       "hs": 7,
       "fb": 2,
       "fd": 3,
       "cw": 0,
       "cl": 1,
-      "m": 22,
-      "mw": 11
+      "m": 23,
+      "mw": 12
     },
     {
       "n": "Azami",
       "s": "d",
-      "r": 28,
-      "w": 15,
-      "k": 10,
-      "d": 23,
-      "a": 2,
-      "hs": 5,
+      "r": 33,
+      "w": 18,
+      "k": 15,
+      "d": 26,
+      "a": 3,
+      "hs": 7,
       "fb": 1,
       "fd": 1,
-      "cw": 2,
+      "cw": 3,
       "cl": 2,
-      "m": 24,
-      "mw": 13
+      "m": 27,
+      "mw": 14
+    },
+    {
+      "n": "Lion",
+      "s": "a",
+      "r": 29,
+      "w": 15,
+      "k": 18,
+      "d": 21,
+      "a": 6,
+      "hs": 6,
+      "fb": 3,
+      "fd": 0,
+      "cw": 0,
+      "cl": 2,
+      "m": 22,
+      "mw": 11
     },
     {
       "n": "Thorn",
       "s": "d",
-      "r": 27,
+      "r": 28,
       "w": 12,
       "k": 18,
-      "d": 23,
-      "a": 9,
+      "d": 24,
+      "a": 10,
       "hs": 5,
       "fb": 3,
       "fd": 3,
       "cw": 0,
       "cl": 2,
-      "m": 21,
+      "m": 22,
       "mw": 7
-    },
-    {
-      "n": "Lion",
-      "s": "a",
-      "r": 27,
-      "w": 14,
-      "k": 16,
-      "d": 20,
-      "a": 6,
-      "hs": 5,
-      "fb": 3,
-      "fd": 0,
-      "cw": 0,
-      "cl": 2,
-      "m": 21,
-      "mw": 10
-    },
-    {
-      "n": "Grim",
-      "s": "a",
-      "r": 23,
-      "w": 14,
-      "k": 4,
-      "d": 15,
-      "a": 2,
-      "hs": 1,
-      "fb": 0,
-      "fd": 1,
-      "cw": 0,
-      "cl": 0,
-      "m": 17,
-      "mw": 10
     },
     {
       "n": "Melusi",
@@ -319,36 +304,52 @@
       "mw": 9
     },
     {
+      "n": "Grim",
+      "s": "a",
+      "r": 23,
+      "w": 14,
+      "k": 4,
+      "d": 15,
+      "a": 2,
+      "hs": 1,
+      "fb": 0,
+      "fd": 1,
+      "cw": 0,
+      "cl": 0,
+      "m": 17,
+      "mw": 10
+    },
+    {
       "n": "Goyo",
       "s": "d",
-      "r": 21,
-      "w": 9,
+      "r": 22,
+      "w": 10,
       "k": 18,
-      "d": 17,
-      "a": 3,
+      "d": 18,
+      "a": 4,
       "hs": 4,
       "fb": 3,
       "fd": 0,
       "cw": 0,
       "cl": 1,
-      "m": 16,
-      "mw": 6
+      "m": 17,
+      "mw": 7
     },
     {
       "n": "Flores",
       "s": "a",
-      "r": 18,
-      "w": 8,
-      "k": 10,
+      "r": 19,
+      "w": 9,
+      "k": 12,
       "d": 13,
       "a": 0,
-      "hs": 4,
-      "fb": 0,
+      "hs": 6,
+      "fb": 1,
       "fd": 0,
       "cw": 0,
       "cl": 4,
-      "m": 13,
-      "mw": 4
+      "m": 14,
+      "mw": 5
     },
     {
       "n": "Brava",
@@ -415,6 +416,22 @@
       "mw": 5
     },
     {
+      "n": "Kapkan",
+      "s": "d",
+      "r": 13,
+      "w": 5,
+      "k": 13,
+      "d": 11,
+      "a": 3,
+      "hs": 4,
+      "fb": 3,
+      "fd": 1,
+      "cw": 1,
+      "cl": 2,
+      "m": 11,
+      "mw": 6
+    },
+    {
       "n": "Hibana",
       "s": "a",
       "r": 13,
@@ -431,68 +448,52 @@
       "mw": 4
     },
     {
+      "n": "Ace",
+      "s": "a",
+      "r": 13,
+      "w": 6,
+      "k": 11,
+      "d": 7,
+      "a": 2,
+      "hs": 7,
+      "fb": 2,
+      "fd": 0,
+      "cw": 2,
+      "cl": 3,
+      "m": 12,
+      "mw": 2
+    },
+    {
       "n": "Sledge",
       "s": "a",
-      "r": 12,
-      "w": 6,
-      "k": 6,
-      "d": 8,
-      "a": 4,
+      "r": 13,
+      "w": 7,
+      "k": 7,
+      "d": 9,
+      "a": 5,
       "hs": 2,
       "fb": 0,
       "fd": 2,
       "cw": 0,
       "cl": 1,
-      "m": 6,
-      "mw": 3
+      "m": 7,
+      "mw": 4
     },
     {
-      "n": "Kapkan",
+      "n": "Mute",
       "s": "d",
       "r": 12,
-      "w": 5,
-      "k": 13,
-      "d": 10,
-      "a": 3,
-      "hs": 4,
-      "fb": 3,
-      "fd": 1,
-      "cw": 1,
-      "cl": 2,
-      "m": 10,
-      "mw": 6
-    },
-    {
-      "n": "Fuze",
-      "s": "a",
-      "r": 12,
-      "w": 4,
-      "k": 10,
-      "d": 8,
-      "a": 2,
-      "hs": 5,
-      "fb": 0,
-      "fd": 1,
-      "cw": 0,
-      "cl": 5,
-      "m": 10,
-      "mw": 5
-    },
-    {
-      "n": "Ace",
-      "s": "a",
-      "r": 12,
-      "w": 5,
-      "k": 9,
-      "d": 6,
-      "a": 2,
-      "hs": 5,
+      "w": 8,
+      "k": 7,
+      "d": 7,
+      "a": 5,
+      "hs": 2,
       "fb": 1,
-      "fd": 0,
-      "cw": 2,
-      "cl": 3,
+      "fd": 2,
+      "cw": 0,
+      "cl": 0,
       "m": 11,
-      "mw": 1
+      "mw": 6
     },
     {
       "n": "Castle",
@@ -511,20 +512,20 @@
       "mw": 6
     },
     {
-      "n": "Mute",
-      "s": "d",
+      "n": "Fuze",
+      "s": "a",
       "r": 12,
-      "w": 8,
-      "k": 7,
-      "d": 7,
-      "a": 5,
-      "hs": 2,
-      "fb": 1,
-      "fd": 2,
+      "w": 4,
+      "k": 10,
+      "d": 8,
+      "a": 2,
+      "hs": 5,
+      "fb": 0,
+      "fd": 1,
       "cw": 0,
-      "cl": 0,
-      "m": 11,
-      "mw": 6
+      "cl": 5,
+      "m": 10,
+      "mw": 5
     },
     {
       "n": "Iana",
@@ -561,17 +562,17 @@
     {
       "n": "Denari",
       "s": "d",
-      "r": 10,
-      "w": 5,
+      "r": 11,
+      "w": 6,
       "k": 4,
-      "d": 7,
-      "a": 1,
+      "d": 8,
+      "a": 2,
       "hs": 2,
       "fb": 0,
       "fd": 1,
       "cw": 0,
       "cl": 3,
-      "m": 7,
+      "m": 8,
       "mw": 4
     },
     {
@@ -623,18 +624,34 @@
       "mw": 1
     },
     {
-      "n": "Dokkaebi",
+      "n": "Fenrir",
+      "s": "d",
+      "r": 8,
+      "w": 3,
+      "k": 5,
+      "d": 5,
+      "a": 3,
+      "hs": 4,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 7,
+      "mw": 2
+    },
+    {
+      "n": "Maverick",
       "s": "a",
       "r": 7,
       "w": 2,
-      "k": 7,
-      "d": 6,
-      "a": 0,
-      "hs": 5,
-      "fb": 0,
-      "fd": 0,
+      "k": 3,
+      "d": 5,
+      "a": 1,
+      "hs": 1,
+      "fb": 2,
+      "fd": 1,
       "cw": 0,
-      "cl": 2,
+      "cl": 0,
       "m": 7,
       "mw": 2
     },
@@ -655,35 +672,19 @@
       "mw": 3
     },
     {
-      "n": "Fenrir",
-      "s": "d",
+      "n": "Dokkaebi",
+      "s": "a",
       "r": 7,
       "w": 2,
-      "k": 5,
-      "d": 5,
-      "a": 2,
-      "hs": 4,
-      "fb": 1,
+      "k": 7,
+      "d": 6,
+      "a": 0,
+      "hs": 5,
+      "fb": 0,
       "fd": 0,
       "cw": 0,
-      "cl": 1,
-      "m": 6,
-      "mw": 2
-    },
-    {
-      "n": "Doc",
-      "s": "d",
-      "r": 6,
-      "w": 4,
-      "k": 5,
-      "d": 5,
-      "a": 3,
-      "hs": 4,
-      "fb": 1,
-      "fd": 1,
-      "cw": 1,
-      "cl": 0,
-      "m": 6,
+      "cl": 2,
+      "m": 7,
       "mw": 2
     },
     {
@@ -719,36 +720,36 @@
       "mw": 3
     },
     {
-      "n": "Maverick",
-      "s": "a",
-      "r": 5,
-      "w": 1,
-      "k": 1,
-      "d": 4,
-      "a": 1,
-      "hs": 1,
+      "n": "Doc",
+      "s": "d",
+      "r": 6,
+      "w": 4,
+      "k": 5,
+      "d": 5,
+      "a": 3,
+      "hs": 4,
       "fb": 1,
+      "fd": 1,
+      "cw": 1,
+      "cl": 0,
+      "m": 6,
+      "mw": 2
+    },
+    {
+      "n": "Noor",
+      "s": "d",
+      "r": 5,
+      "w": 2,
+      "k": 0,
+      "d": 4,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
       "fd": 0,
       "cw": 0,
       "cl": 0,
-      "m": 5,
-      "mw": 1
-    },
-    {
-      "n": "Capitão",
-      "s": "a",
-      "r": 5,
-      "w": 3,
-      "k": 4,
-      "d": 2,
-      "a": 0,
-      "hs": 3,
-      "fb": 2,
-      "fd": 1,
-      "cw": 0,
-      "cl": 1,
-      "m": 5,
-      "mw": 3
+      "m": 4,
+      "mw": 2
     },
     {
       "n": "Solis",
@@ -767,20 +768,20 @@
       "mw": 3
     },
     {
-      "n": "Smoke",
-      "s": "d",
-      "r": 4,
-      "w": 1,
-      "k": 1,
-      "d": 3,
+      "n": "Capitão",
+      "s": "a",
+      "r": 5,
+      "w": 3,
+      "k": 4,
+      "d": 2,
       "a": 0,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
+      "hs": 3,
+      "fb": 2,
+      "fd": 1,
       "cw": 0,
       "cl": 1,
-      "m": 4,
-      "mw": 2
+      "m": 5,
+      "mw": 3
     },
     {
       "n": "Thatcher",
@@ -791,6 +792,22 @@
       "d": 3,
       "a": 1,
       "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 4,
+      "mw": 2
+    },
+    {
+      "n": "Smoke",
+      "s": "d",
+      "r": 4,
+      "w": 1,
+      "k": 1,
+      "d": 3,
+      "a": 0,
+      "hs": 0,
       "fb": 0,
       "fd": 0,
       "cw": 0,
@@ -815,20 +832,20 @@
       "mw": 2
     },
     {
-      "n": "Noor",
-      "s": "d",
+      "n": "Gridlock",
+      "s": "a",
       "r": 4,
       "w": 2,
       "k": 0,
       "d": 3,
-      "a": 0,
+      "a": 2,
       "hs": 0,
       "fb": 0,
       "fd": 0,
       "cw": 0,
       "cl": 0,
-      "m": 3,
-      "mw": 2
+      "m": 2,
+      "mw": 0
     },
     {
       "n": "Deimos",
@@ -847,31 +864,15 @@
       "mw": 1
     },
     {
-      "n": "Tachanka",
-      "s": "d",
-      "r": 2,
-      "w": 1,
-      "k": 1,
-      "d": 1,
-      "a": 2,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 0,
-      "m": 2,
-      "mw": 1
-    },
-    {
-      "n": "Echo",
+      "n": "Mira",
       "s": "d",
       "r": 2,
       "w": 2,
-      "k": 4,
+      "k": 1,
       "d": 0,
-      "a": 0,
-      "hs": 1,
-      "fb": 1,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
       "fd": 0,
       "cw": 0,
       "cl": 0,
@@ -879,13 +880,13 @@
       "mw": 2
     },
     {
-      "n": "Kali",
-      "s": "a",
+      "n": "Tachanka",
+      "s": "d",
       "r": 2,
       "w": 1,
-      "k": 0,
+      "k": 1,
       "d": 1,
-      "a": 1,
+      "a": 2,
       "hs": 0,
       "fb": 0,
       "fd": 0,
@@ -911,22 +912,6 @@
       "mw": 0
     },
     {
-      "n": "Mira",
-      "s": "d",
-      "r": 2,
-      "w": 2,
-      "k": 1,
-      "d": 0,
-      "a": 1,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 0,
-      "m": 2,
-      "mw": 2
-    },
-    {
       "n": "Jäger",
       "s": "d",
       "r": 2,
@@ -939,6 +924,22 @@
       "fd": 0,
       "cw": 0,
       "cl": 1,
+      "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Kali",
+      "s": "a",
+      "r": 2,
+      "w": 1,
+      "k": 0,
+      "d": 1,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
       "m": 2,
       "mw": 1
     },
@@ -956,6 +957,38 @@
       "cw": 0,
       "cl": 0,
       "m": 2,
+      "mw": 1
+    },
+    {
+      "n": "Echo",
+      "s": "d",
+      "r": 2,
+      "w": 2,
+      "k": 4,
+      "d": 0,
+      "a": 0,
+      "hs": 1,
+      "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 2,
+      "mw": 2
+    },
+    {
+      "n": "Frost",
+      "s": "d",
+      "r": 1,
+      "w": 1,
+      "k": 1,
+      "d": 0,
+      "a": 0,
+      "hs": 1,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
       "mw": 1
     },
     {
@@ -991,70 +1024,6 @@
       "mw": 0
     },
     {
-      "n": "Aruni",
-      "s": "d",
-      "r": 1,
-      "w": 1,
-      "k": 0,
-      "d": 1,
-      "a": 1,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 0,
-      "m": 1,
-      "mw": 1
-    },
-    {
-      "n": "Amaru",
-      "s": "a",
-      "r": 1,
-      "w": 0,
-      "k": 0,
-      "d": 1,
-      "a": 0,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 1,
-      "m": 1,
-      "mw": 1
-    },
-    {
-      "n": "Frost",
-      "s": "d",
-      "r": 1,
-      "w": 1,
-      "k": 1,
-      "d": 0,
-      "a": 0,
-      "hs": 1,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 0,
-      "m": 1,
-      "mw": 1
-    },
-    {
-      "n": "Oryx",
-      "s": "d",
-      "r": 1,
-      "w": 0,
-      "k": 0,
-      "d": 1,
-      "a": 0,
-      "hs": 0,
-      "fb": 0,
-      "fd": 0,
-      "cw": 0,
-      "cl": 1,
-      "m": 1,
-      "mw": 0
-    },
-    {
       "n": "Zero",
       "s": "a",
       "r": 1,
@@ -1064,6 +1033,22 @@
       "a": 0,
       "hs": 0,
       "fb": 1,
+      "fd": 0,
+      "cw": 0,
+      "cl": 0,
+      "m": 1,
+      "mw": 1
+    },
+    {
+      "n": "Aruni",
+      "s": "d",
+      "r": 1,
+      "w": 1,
+      "k": 0,
+      "d": 1,
+      "a": 1,
+      "hs": 0,
+      "fb": 0,
       "fd": 0,
       "cw": 0,
       "cl": 0,
@@ -1085,16 +1070,108 @@
       "cl": 1,
       "m": 1,
       "mw": 0
+    },
+    {
+      "n": "Oryx",
+      "s": "d",
+      "r": 1,
+      "w": 0,
+      "k": 0,
+      "d": 1,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 1,
+      "mw": 0
+    },
+    {
+      "n": "Amaru",
+      "s": "a",
+      "r": 1,
+      "w": 0,
+      "k": 0,
+      "d": 1,
+      "a": 0,
+      "hs": 0,
+      "fb": 0,
+      "fd": 0,
+      "cw": 0,
+      "cl": 1,
+      "m": 1,
+      "mw": 1
     }
   ],
   "maps": [
     {
+      "name": "Consulate",
+      "matches": 8,
+      "seasonWR": 75.0,
+      "kd": 1.72,
+      "atkWR": 61.9,
+      "defWR": 66.7,
+      "def": [
+        {
+          "name": "Valkyrie",
+          "wr": 67,
+          "rounds": 6,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Thorn",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ram",
+          "wr": 62,
+          "rounds": 8,
+          "kd": 1.71
+        },
+        {
+          "name": "Ash",
+          "wr": 60,
+          "rounds": 5,
+          "kd": 3.0,
+          "small": true
+        },
+        {
+          "name": "Striker",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
       "name": "Calypso Casino",
-      "matches": 10,
-      "seasonWR": 70.0,
-      "kd": 0.67,
-      "atkWR": 51.4,
-      "defWR": 51.4,
+      "matches": 11,
+      "seasonWR": 72.7,
+      "kd": 0.78,
+      "atkWR": 51.3,
+      "defWR": 55.0,
       "def": [
         {
           "name": "Wamai",
@@ -1104,10 +1181,9 @@
         },
         {
           "name": "Azami",
-          "wr": 60,
-          "rounds": 5,
-          "kd": 0.5,
-          "small": true
+          "wr": 75,
+          "rounds": 8,
+          "kd": 1.4
         },
         {
           "name": "Valkyrie",
@@ -1141,9 +1217,9 @@
         },
         {
           "name": "Ram",
-          "wr": 33,
-          "rounds": 3,
-          "kd": 1.0,
+          "wr": 25,
+          "rounds": 4,
+          "kd": 1.25,
           "small": true
         },
         {
@@ -1215,55 +1291,54 @@
       ]
     },
     {
-      "name": "Consulate",
+      "name": "Outback",
       "matches": 6,
       "seasonWR": 66.7,
-      "kd": 1.6,
-      "atkWR": 58.8,
-      "defWR": 60.0,
+      "kd": 1.03,
+      "atkWR": 63.2,
+      "defWR": 50.0,
       "def": [
         {
           "name": "Valkyrie",
-          "wr": 50,
-          "rounds": 4,
-          "kd": 2.0,
-          "small": true
+          "wr": 40,
+          "rounds": 15,
+          "kd": 1.0
         },
         {
-          "name": "Wamai",
+          "name": "Azami",
           "wr": 100,
           "rounds": 2,
-          "kd": 0.0,
-          "small": true
-        },
-        {
-          "name": "Thorn",
-          "wr": 50,
-          "rounds": 2,
-          "kd": 0.0,
+          "kd": 2.0,
           "small": true
         }
       ],
       "atk": [
         {
-          "name": "Ram",
+          "name": "Ash",
           "wr": 57,
           "rounds": 7,
-          "kd": 1.5,
+          "kd": 0.67,
           "small": true
         },
         {
-          "name": "Ash",
-          "wr": 60,
-          "rounds": 5,
-          "kd": 3.0,
+          "name": "Ram",
+          "wr": 67,
+          "rounds": 3,
+          "kd": 2.0,
           "small": true
         },
         {
           "name": "Striker",
-          "wr": 100,
-          "rounds": 1,
-          "kd": 1.0,
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Lion",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 2.0,
           "small": true
         }
       ]
@@ -1378,11 +1453,11 @@
     },
     {
       "name": "Kanal",
-      "matches": 10,
-      "seasonWR": 60.0,
-      "kd": 1.07,
-      "atkWR": 46.9,
-      "defWR": 59.4,
+      "matches": 11,
+      "seasonWR": 54.5,
+      "kd": 1.0,
+      "atkWR": 45.5,
+      "defWR": 58.8,
       "def": [
         {
           "name": "Valkyrie",
@@ -1407,8 +1482,8 @@
         {
           "name": "Azami",
           "wr": 0,
-          "rounds": 1,
-          "kd": 1.0,
+          "rounds": 2,
+          "kd": 0.5,
           "small": true
         }
       ],
@@ -1433,122 +1508,6 @@
           "small": true
         }
       ]
-    },
-    {
-      "name": "Outback",
-      "matches": 5,
-      "seasonWR": 60.0,
-      "kd": 0.96,
-      "atkWR": 62.5,
-      "defWR": 46.7,
-      "def": [
-        {
-          "name": "Valkyrie",
-          "wr": 33,
-          "rounds": 12,
-          "kd": 1.0
-        },
-        {
-          "name": "Azami",
-          "wr": 100,
-          "rounds": 2,
-          "kd": 2.0,
-          "small": true
-        }
-      ],
-      "atk": [
-        {
-          "name": "Ash",
-          "wr": 57,
-          "rounds": 7,
-          "kd": 0.67,
-          "small": true
-        },
-        {
-          "name": "Ram",
-          "wr": 67,
-          "rounds": 3,
-          "kd": 2.0,
-          "small": true
-        },
-        {
-          "name": "Striker",
-          "wr": 50,
-          "rounds": 2,
-          "kd": 0.5,
-          "small": true
-        }
-      ],
-      "avoid": "Valkyrie na defesa (33% em 12 rounds)."
-    },
-    {
-      "name": "Lair",
-      "matches": 10,
-      "seasonWR": 50.0,
-      "kd": 0.41,
-      "atkWR": 51.6,
-      "defWR": 45.8,
-      "def": [
-        {
-          "name": "Valkyrie",
-          "wr": 50,
-          "rounds": 4,
-          "kd": 0.25,
-          "small": true
-        },
-        {
-          "name": "Bandit",
-          "wr": 75,
-          "rounds": 4,
-          "kd": 0.67,
-          "small": true
-        },
-        {
-          "name": "Wamai",
-          "wr": 100,
-          "rounds": 1,
-          "kd": 1.0,
-          "small": true
-        },
-        {
-          "name": "Thorn",
-          "wr": 0,
-          "rounds": 1,
-          "kd": 0.0,
-          "small": true
-        }
-      ],
-      "atk": [
-        {
-          "name": "Ash",
-          "wr": 29,
-          "rounds": 7,
-          "kd": 0.14,
-          "small": true
-        },
-        {
-          "name": "Striker",
-          "wr": 57,
-          "rounds": 7,
-          "kd": 0.6,
-          "small": true
-        },
-        {
-          "name": "Thermite",
-          "wr": 33,
-          "rounds": 3,
-          "kd": 0.5,
-          "small": true
-        },
-        {
-          "name": "Ram",
-          "wr": 0,
-          "rounds": 1,
-          "kd": 0.0,
-          "small": true
-        }
-      ],
-      "avoid": "Ash no ataque (29% em 7 rounds)."
     },
     {
       "name": "Theme Park",
@@ -1579,6 +1538,135 @@
           "wr": 0,
           "rounds": 1,
           "kd": 1.0,
+          "small": true
+        }
+      ]
+    },
+    {
+      "name": "Lair",
+      "matches": 11,
+      "seasonWR": 45.5,
+      "kd": 0.38,
+      "atkWR": 50.0,
+      "defWR": 40.7,
+      "def": [
+        {
+          "name": "Valkyrie",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.25,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 75,
+          "rounds": 4,
+          "kd": 0.67,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Azami",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 25,
+          "rounds": 8,
+          "kd": 0.12
+        },
+        {
+          "name": "Striker",
+          "wr": 57,
+          "rounds": 7,
+          "kd": 0.6,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 33,
+          "rounds": 3,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Ram",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 0.0,
+          "small": true
+        }
+      ],
+      "avoid": "Ash no ataque (25% em 8 rounds)."
+    },
+    {
+      "name": "Bank",
+      "matches": 7,
+      "seasonWR": 42.9,
+      "kd": 0.88,
+      "atkWR": 50.0,
+      "defWR": 43.8,
+      "def": [
+        {
+          "name": "Valkyrie",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Bandit",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 2.0,
+          "small": true
+        },
+        {
+          "name": "Azami",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 100,
+          "rounds": 1,
+          "kd": 1.0,
+          "small": true
+        }
+      ],
+      "atk": [
+        {
+          "name": "Ash",
+          "wr": 50,
+          "rounds": 4,
+          "kd": 0.5,
+          "small": true
+        },
+        {
+          "name": "Ram",
+          "wr": 0,
+          "rounds": 2,
+          "kd": 1.0,
+          "small": true
+        },
+        {
+          "name": "Thermite",
+          "wr": 50,
+          "rounds": 2,
+          "kd": 0.5,
           "small": true
         }
       ]
@@ -1650,67 +1738,6 @@
         }
       ],
       "avoid": "Valkyrie na defesa (25% em 8 rounds)."
-    },
-    {
-      "name": "Bank",
-      "matches": 7,
-      "seasonWR": 42.9,
-      "kd": 0.88,
-      "atkWR": 50.0,
-      "defWR": 43.8,
-      "def": [
-        {
-          "name": "Valkyrie",
-          "wr": 50,
-          "rounds": 2,
-          "kd": 0.0,
-          "small": true
-        },
-        {
-          "name": "Bandit",
-          "wr": 50,
-          "rounds": 2,
-          "kd": 2.0,
-          "small": true
-        },
-        {
-          "name": "Azami",
-          "wr": 0,
-          "rounds": 2,
-          "kd": 0.0,
-          "small": true
-        },
-        {
-          "name": "Wamai",
-          "wr": 100,
-          "rounds": 1,
-          "kd": 1.0,
-          "small": true
-        }
-      ],
-      "atk": [
-        {
-          "name": "Ash",
-          "wr": 50,
-          "rounds": 4,
-          "kd": 0.5,
-          "small": true
-        },
-        {
-          "name": "Ram",
-          "wr": 0,
-          "rounds": 2,
-          "kd": 1.0,
-          "small": true
-        },
-        {
-          "name": "Thermite",
-          "wr": 50,
-          "rounds": 2,
-          "kd": 0.5,
-          "small": true
-        }
-      ]
     },
     {
       "name": "Clubhouse",
@@ -1908,17 +1935,17 @@
     },
     {
       "name": "Border",
-      "matches": 7,
-      "seasonWR": 28.6,
-      "kd": 0.83,
-      "atkWR": 42.1,
-      "defWR": 45.8,
+      "matches": 9,
+      "seasonWR": 22.2,
+      "kd": 0.75,
+      "atkWR": 40.0,
+      "defWR": 41.4,
       "def": [
         {
           "name": "Valkyrie",
-          "wr": 50,
-          "rounds": 14,
-          "kd": 0.5
+          "wr": 44,
+          "rounds": 16,
+          "kd": 0.57
         },
         {
           "name": "Azami",
@@ -1929,18 +1956,25 @@
         },
         {
           "name": "Thorn",
-          "wr": 100,
-          "rounds": 1,
+          "wr": 50,
+          "rounds": 2,
           "kd": 0.0,
+          "small": true
+        },
+        {
+          "name": "Wamai",
+          "wr": 0,
+          "rounds": 1,
+          "kd": 1.0,
           "small": true
         }
       ],
       "atk": [
         {
           "name": "Ram",
-          "wr": 62,
-          "rounds": 13,
-          "kd": 1.38
+          "wr": 53,
+          "rounds": 15,
+          "kd": 1.2
         },
         {
           "name": "Striker",
@@ -2102,6 +2136,54 @@
   "recentMatches": [
     {
       "map": "Calypso Casino",
+      "w": true,
+      "kd": 2.67,
+      "rp": 32
+    },
+    {
+      "map": "Kanal",
+      "w": false,
+      "kd": 0.0,
+      "rp": -9
+    },
+    {
+      "map": "Lair",
+      "w": false,
+      "kd": 0.0,
+      "rp": -31
+    },
+    {
+      "map": "Border",
+      "w": false,
+      "kd": 0.4,
+      "rp": -28
+    },
+    {
+      "map": "Outback",
+      "w": true,
+      "kd": 1.5,
+      "rp": 0
+    },
+    {
+      "map": "Consulate",
+      "w": true,
+      "kd": 3.5,
+      "rp": 30
+    },
+    {
+      "map": "Consulate",
+      "w": true,
+      "kd": 1.33,
+      "rp": 30
+    },
+    {
+      "map": "Border",
+      "w": false,
+      "kd": 0.5,
+      "rp": -32
+    },
+    {
+      "map": "Calypso Casino",
       "w": false,
       "kd": 1.2,
       "rp": -32
@@ -2171,70 +2253,22 @@
       "w": false,
       "kd": 1.75,
       "rp": -4
-    },
-    {
-      "map": "Outback",
-      "w": false,
-      "kd": 0.8,
-      "rp": -28
-    },
-    {
-      "map": "Lair",
-      "w": false,
-      "kd": 0.33,
-      "rp": -32
-    },
-    {
-      "map": "Border",
-      "w": false,
-      "kd": 0.5,
-      "rp": -36
-    },
-    {
-      "map": "Chalet",
-      "w": true,
-      "kd": 1.78,
-      "rp": 0
-    },
-    {
-      "map": "Villa",
-      "w": false,
-      "kd": 1.0,
-      "rp": -16
-    },
-    {
-      "map": "Oregon",
-      "w": false,
-      "kd": 1.5,
-      "rp": -27
-    },
-    {
-      "map": "Coastline",
-      "w": true,
-      "kd": 1.4,
-      "rp": 31
-    },
-    {
-      "map": "Villa",
-      "w": false,
-      "kd": 0.0,
-      "rp": -32
     }
   ],
   "style": {
-    "rounds": 924,
-    "roundWR": 47.6,
-    "fb": 67,
-    "fd": 81,
-    "openPct": 16.0,
-    "esr": 45.0,
-    "kpr": 0.58,
+    "rounds": 963,
+    "roundWR": 47.8,
+    "fb": 71,
+    "fd": 82,
+    "openPct": 15.9,
+    "esr": 46.0,
+    "kpr": 0.59,
     "dpr": 0.73,
-    "apr": 0.2,
+    "apr": 0.21,
     "hs": 48.0,
-    "clutchW": 13,
-    "clutchL": 93,
-    "clutchPct": 11.5,
+    "clutchW": 14,
+    "clutchL": 94,
+    "clutchPct": 11.2,
     "clutchBy": [
       [
         6,
@@ -2245,12 +2279,12 @@
         22
       ],
       [
-        2,
-        26
+        3,
+        27
       ],
       [
         0,
-        30
+        31
       ],
       [
         0,
@@ -2258,32 +2292,81 @@
       ]
     ],
     "multi": [
-      98,
-      22,
+      103,
+      24,
       2,
       0
     ],
-    "multiRounds": 122,
-    "multiPct": 13.2,
-    "atkRoundWR": 45.6,
+    "multiRounds": 129,
+    "multiPct": 13.4,
+    "atkRoundWR": 45.7,
     "atkRounds": [
-      214,
-      469
+      222,
+      486
     ],
-    "defRoundWR": 49.7,
+    "defRoundWR": 49.9,
     "defRounds": [
-      226,
-      455
+      238,
+      477
     ]
   },
   "opsMaps": {
     "Valkyrie": [
       [
-        "Calypso Casino",
+        "Coastline",
+        17,
+        6,
+        11,
+        15
+      ],
+      [
+        "Outback",
+        15,
+        6,
+        12,
+        12
+      ],
+      [
+        "Fortress",
+        14,
+        7,
+        9,
+        10
+      ],
+      [
+        "Clubhouse",
+        17,
+        8,
+        7,
+        13
+      ],
+      [
+        "Chalet",
+        13,
+        8,
+        8,
+        9
+      ],
+      [
+        "Villa",
+        20,
+        12,
+        10,
+        15
+      ],
+      [
+        "Consulate",
+        6,
         4,
-        0,
-        0,
+        8,
         4
+      ],
+      [
+        "Nighthaven Labs",
+        13,
+        7,
+        6,
+        9
       ],
       [
         "Kafe Dostoyevsky",
@@ -2300,25 +2383,11 @@
         1
       ],
       [
-        "Clubhouse",
-        17,
-        8,
-        7,
-        13
-      ],
-      [
-        "Villa",
-        20,
-        12,
-        10,
-        15
-      ],
-      [
-        "Coastline",
-        17,
-        6,
-        11,
-        15
+        "Calypso Casino",
+        4,
+        0,
+        0,
+        4
       ],
       [
         "Kanal",
@@ -2328,46 +2397,11 @@
         11
       ],
       [
-        "Nighthaven Labs",
-        13,
-        7,
-        6,
-        9
-      ],
-      [
-        "Outback",
-        12,
-        4,
-        10,
-        10
-      ],
-      [
-        "Chalet",
-        13,
-        8,
-        8,
-        9
-      ],
-      [
-        "Consulate",
-        4,
-        2,
-        6,
-        3
-      ],
-      [
-        "Oregon",
-        8,
-        2,
-        10,
-        6
-      ],
-      [
         "Border",
-        14,
+        16,
         7,
-        6,
-        12
+        8,
+        14
       ],
       [
         "Lair",
@@ -2377,28 +2411,14 @@
         4
       ],
       [
-        "Fortress",
-        14,
-        7,
-        9,
-        10
+        "Oregon",
+        8,
+        2,
+        10,
+        6
       ]
     ],
     "Ash": [
-      [
-        "Kafe Dostoyevsky",
-        4,
-        1,
-        1,
-        3
-      ],
-      [
-        "Consulate",
-        5,
-        3,
-        9,
-        3
-      ],
       [
         "Clubhouse",
         7,
@@ -2412,62 +2432,6 @@
         0,
         0,
         1
-      ],
-      [
-        "Nighthaven Labs",
-        9,
-        4,
-        4,
-        7
-      ],
-      [
-        "Bank",
-        4,
-        2,
-        1,
-        2
-      ],
-      [
-        "Lair",
-        7,
-        2,
-        1,
-        7
-      ],
-      [
-        "Fortress",
-        6,
-        4,
-        0,
-        6
-      ],
-      [
-        "Villa",
-        13,
-        3,
-        9,
-        11
-      ],
-      [
-        "Border",
-        1,
-        0,
-        0,
-        1
-      ],
-      [
-        "Calypso Casino",
-        2,
-        2,
-        2,
-        1
-      ],
-      [
-        "Coastline",
-        9,
-        5,
-        5,
-        6
       ],
       [
         "Oregon",
@@ -2484,6 +2448,48 @@
         0
       ],
       [
+        "Kafe Dostoyevsky",
+        4,
+        1,
+        1,
+        3
+      ],
+      [
+        "Villa",
+        13,
+        3,
+        9,
+        11
+      ],
+      [
+        "Consulate",
+        5,
+        3,
+        9,
+        3
+      ],
+      [
+        "Calypso Casino",
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        "Fortress",
+        6,
+        4,
+        0,
+        6
+      ],
+      [
+        "Nighthaven Labs",
+        9,
+        4,
+        4,
+        7
+      ],
+      [
         "Kanal",
         10,
         7,
@@ -2496,14 +2502,119 @@
         4,
         4,
         6
+      ],
+      [
+        "Border",
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Bank",
+        4,
+        2,
+        1,
+        2
+      ],
+      [
+        "Coastline",
+        9,
+        5,
+        5,
+        6
+      ],
+      [
+        "Lair",
+        8,
+        2,
+        1,
+        8
       ]
     ],
     "Ram": [
+      [
+        "Fortress",
+        4,
+        2,
+        4,
+        2
+      ],
+      [
+        "Skyscraper",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Oregon",
+        4,
+        3,
+        3,
+        2
+      ],
       [
         "Bank",
         2,
         0,
         1,
+        1
+      ],
+      [
+        "Coastline",
+        4,
+        2,
+        1,
+        4
+      ],
+      [
+        "Villa",
+        5,
+        0,
+        8,
+        5
+      ],
+      [
+        "Calypso Casino",
+        4,
+        1,
+        5,
+        4
+      ],
+      [
+        "Outback",
+        3,
+        2,
+        4,
+        2
+      ],
+      [
+        "Consulate",
+        8,
+        5,
+        12,
+        7
+      ],
+      [
+        "Clubhouse",
+        2,
+        1,
+        0,
+        2
+      ],
+      [
+        "Border",
+        15,
+        8,
+        12,
+        10
+      ],
+      [
+        "Lair",
+        1,
+        0,
+        0,
         1
       ],
       [
@@ -2514,73 +2625,10 @@
         4
       ],
       [
-        "Consulate",
-        7,
-        4,
-        9,
-        6
-      ],
-      [
-        "Chalet",
-        10,
-        7,
-        5,
-        7
-      ],
-      [
-        "Border",
-        13,
-        8,
-        11,
-        8
-      ],
-      [
-        "Fortress",
-        4,
-        2,
-        4,
-        2
-      ],
-      [
-        "Calypso Casino",
-        3,
-        1,
-        3,
-        3
-      ],
-      [
-        "Lair",
-        1,
-        0,
-        0,
-        1
-      ],
-      [
-        "Outback",
-        3,
-        2,
-        4,
-        2
-      ],
-      [
         "Kanal",
         9,
         5,
         6,
-        5
-      ],
-      [
-        "Oregon",
-        4,
-        3,
-        3,
-        2
-      ],
-      [
-        "Villa",
-        5,
-        0,
-        8,
         5
       ],
       [
@@ -2591,25 +2639,11 @@
         1
       ],
       [
-        "Skyscraper",
-        1,
-        1,
-        1,
-        1
-      ],
-      [
-        "Clubhouse",
-        2,
-        1,
-        0,
-        2
-      ],
-      [
-        "Coastline",
-        4,
-        2,
-        1,
-        4
+        "Chalet",
+        10,
+        7,
+        5,
+        7
       ]
     ],
     "Wamai": [
@@ -2621,25 +2655,18 @@
         3
       ],
       [
-        "Lair",
-        1,
-        1,
-        1,
-        1
-      ],
-      [
-        "Kanal",
-        2,
-        1,
-        1,
-        2
-      ],
-      [
         "Bank",
         1,
         1,
         1,
         0
+      ],
+      [
+        "Kafe Dostoyevsky",
+        1,
+        0,
+        0,
+        1
       ],
       [
         "Skyscraper",
@@ -2663,13 +2690,6 @@
         2
       ],
       [
-        "Oregon",
-        5,
-        0,
-        0,
-        5
-      ],
-      [
         "Consulate",
         2,
         2,
@@ -2677,104 +2697,32 @@
         1
       ],
       [
-        "Kafe Dostoyevsky",
+        "Border",
         1,
         0,
-        0,
+        1,
         1
-      ]
-    ],
-    "Thermite": [
-      [
-        "Villa",
-        9,
-        5,
-        5,
-        4
       ],
       [
         "Lair",
-        3,
         1,
         1,
-        2
-      ],
-      [
-        "Kafe Dostoyevsky",
-        3,
-        1,
-        1,
-        2
-      ],
-      [
-        "Theme Park",
-        1,
-        0,
         1,
         1
-      ],
-      [
-        "Clubhouse",
-        4,
-        2,
-        4,
-        1
-      ],
-      [
-        "Skyscraper",
-        2,
-        1,
-        3,
-        1
-      ],
-      [
-        "Calypso Casino",
-        1,
-        0,
-        0,
-        1
-      ],
-      [
-        "Coastline",
-        1,
-        0,
-        0,
-        1
-      ],
-      [
-        "Bank",
-        2,
-        1,
-        1,
-        2
       ],
       [
         "Kanal",
-        1,
-        1,
-        0,
-        0
-      ],
-      [
-        "Chalet",
-        4,
-        2,
-        2,
-        2
-      ],
-      [
-        "Nighthaven Labs",
         2,
         1,
-        2,
-        1
-      ],
-      [
-        "Fortress",
-        2,
-        0,
         1,
         2
+      ],
+      [
+        "Oregon",
+        5,
+        0,
+        0,
+        5
       ]
     ],
     "Bandit": [
@@ -2786,17 +2734,31 @@
         1
       ],
       [
-        "Skyscraper",
-        1,
+        "Nighthaven Labs",
+        2,
         0,
         1,
-        1
+        2
       ],
       [
-        "Calypso Casino",
+        "Coastline",
+        2,
+        0,
+        3,
+        2
+      ],
+      [
+        "Kafe Dostoyevsky",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Fortress",
         2,
         1,
-        3,
+        2,
         1
       ],
       [
@@ -2812,6 +2774,20 @@
         2,
         1,
         2
+      ],
+      [
+        "Consulate",
+        3,
+        2,
+        2,
+        1
+      ],
+      [
+        "Skyscraper",
+        1,
+        0,
+        1,
+        1
       ],
       [
         "Clubhouse",
@@ -2835,68 +2811,140 @@
         2
       ],
       [
+        "Calypso Casino",
+        2,
+        1,
+        3,
+        1
+      ]
+    ],
+    "Thermite": [
+      [
         "Nighthaven Labs",
         2,
-        0,
         1,
-        2
+        2,
+        1
       ],
       [
-        "Coastline",
-        2,
-        0,
-        3,
-        2
-      ],
-      [
-        "Kafe Dostoyevsky",
-        2,
+        "Calypso Casino",
+        1,
         0,
         0,
-        2
+        1
       ],
       [
         "Fortress",
         2,
+        0,
         1,
-        2,
-        1
-      ]
-    ],
-    "Striker": [
-      [
-        "Consulate",
-        1,
-        1,
-        1,
-        0
+        2
       ],
       [
         "Villa",
+        9,
+        5,
+        5,
+        4
+      ],
+      [
+        "Lair",
         3,
         1,
         1,
         2
       ],
       [
-        "Calypso Casino",
-        5,
-        2,
-        5,
-        3
+        "Kafe Dostoyevsky",
+        3,
+        1,
+        1,
+        2
       ],
       [
-        "Nighthaven Labs",
+        "Theme Park",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Clubhouse",
+        4,
+        2,
+        4,
+        1
+      ],
+      [
+        "Skyscraper",
+        2,
+        1,
+        3,
+        1
+      ],
+      [
+        "Coastline",
         1,
         0,
         0,
         1
+      ],
+      [
+        "Bank",
+        2,
+        1,
+        1,
+        2
+      ],
+      [
+        "Chalet",
+        4,
+        2,
+        2,
+        2
+      ],
+      [
+        "Kanal",
+        1,
+        1,
+        0,
+        0
+      ]
+    ],
+    "Striker": [
+      [
+        "Oregon",
+        5,
+        3,
+        0,
+        2
       ],
       [
         "Clubhouse",
         2,
         1,
         2,
+        2
+      ],
+      [
+        "Fortress",
+        3,
+        1,
+        2,
+        2
+      ],
+      [
+        "Consulate",
+        2,
+        1,
+        1,
+        1
+      ],
+      [
+        "Outback",
+        2,
+        1,
+        1,
         2
       ],
       [
@@ -2914,11 +2962,25 @@
         5
       ],
       [
-        "Oregon",
-        5,
+        "Villa",
         3,
-        0,
+        1,
+        1,
         2
+      ],
+      [
+        "Calypso Casino",
+        5,
+        2,
+        5,
+        3
+      ],
+      [
+        "Nighthaven Labs",
+        1,
+        0,
+        0,
+        1
       ],
       [
         "Border",
@@ -2926,63 +2988,21 @@
         0,
         1,
         2
-      ],
-      [
-        "Outback",
-        2,
-        1,
-        1,
-        2
-      ],
-      [
-        "Fortress",
-        3,
-        1,
-        2,
-        2
       ]
     ],
     "Azami": [
       [
-        "Clubhouse",
-        5,
-        4,
-        1,
-        3
-      ],
-      [
-        "Calypso Casino",
+        "Coastline",
         5,
         3,
-        2,
+        1,
         4
       ],
       [
-        "Kanal",
+        "Lair",
         1,
         0,
-        1,
-        1
-      ],
-      [
-        "Oregon",
-        2,
-        1,
         0,
-        2
-      ],
-      [
-        "Nighthaven Labs",
-        1,
-        1,
-        1,
-        1
-      ],
-      [
-        "Outback",
-        2,
-        2,
-        2,
         1
       ],
       [
@@ -2993,18 +3013,25 @@
         1
       ],
       [
-        "Chalet",
+        "Calypso Casino",
+        8,
+        6,
+        7,
+        5
+      ],
+      [
+        "Kanal",
+        2,
+        0,
+        1,
+        2
+      ],
+      [
+        "Nighthaven Labs",
         1,
         1,
         1,
         1
-      ],
-      [
-        "Bank",
-        2,
-        0,
-        0,
-        2
       ],
       [
         "Border",
@@ -3014,14 +3041,121 @@
         3
       ],
       [
-        "Coastline",
+        "Clubhouse",
         5,
+        4,
+        1,
+        3
+      ],
+      [
+        "Chalet",
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        "Oregon",
+        2,
+        1,
+        0,
+        2
+      ],
+      [
+        "Bank",
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        "Outback",
+        2,
+        2,
+        2,
+        1
+      ]
+    ],
+    "Lion": [
+      [
+        "Chalet",
+        2,
+        1,
+        1,
+        2
+      ],
+      [
+        "Border",
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        "Nighthaven Labs",
         3,
         1,
-        4
+        2,
+        2
+      ],
+      [
+        "Clubhouse",
+        5,
+        3,
+        4,
+        2
+      ],
+      [
+        "Coastline",
+        4,
+        1,
+        1,
+        3
+      ],
+      [
+        "Calypso Casino",
+        7,
+        4,
+        4,
+        5
+      ],
+      [
+        "Kafe Dostoyevsky",
+        3,
+        3,
+        2,
+        3
+      ],
+      [
+        "Oregon",
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        "Outback",
+        2,
+        1,
+        2,
+        1
+      ],
+      [
+        "Fortress",
+        1,
+        0,
+        1,
+        1
       ]
     ],
     "Thorn": [
+      [
+        "Clubhouse",
+        2,
+        1,
+        2,
+        1
+      ],
       [
         "Lair",
         1,
@@ -3037,6 +3171,13 @@
         3
       ],
       [
+        "Fortress",
+        5,
+        0,
+        3,
+        5
+      ],
+      [
         "Chalet",
         4,
         2,
@@ -3045,10 +3186,24 @@
       ],
       [
         "Border",
+        2,
         1,
+        0,
+        2
+      ],
+      [
+        "Consulate",
+        2,
         1,
         0,
         1
+      ],
+      [
+        "Kafe Dostoyevsky",
+        4,
+        2,
+        1,
+        4
       ],
       [
         "Nighthaven Labs",
@@ -3070,134 +3225,41 @@
         1,
         0,
         1
-      ],
-      [
-        "Clubhouse",
-        2,
-        1,
-        2,
-        1
-      ],
-      [
-        "Fortress",
-        5,
-        0,
-        3,
-        5
-      ],
-      [
-        "Consulate",
-        2,
-        1,
-        0,
-        1
-      ],
-      [
-        "Kafe Dostoyevsky",
-        4,
-        2,
-        1,
-        4
-      ]
-    ],
-    "Lion": [
-      [
-        "Coastline",
-        4,
-        1,
-        1,
-        3
-      ],
-      [
-        "Fortress",
-        1,
-        0,
-        1,
-        1
-      ],
-      [
-        "Kafe Dostoyevsky",
-        3,
-        3,
-        2,
-        3
-      ],
-      [
-        "Border",
-        1,
-        0,
-        1,
-        1
-      ],
-      [
-        "Clubhouse",
-        5,
-        3,
-        4,
-        2
-      ],
-      [
-        "Oregon",
-        1,
-        1,
-        0,
-        1
-      ],
-      [
-        "Calypso Casino",
-        7,
-        4,
-        4,
-        5
-      ],
-      [
-        "Chalet",
-        2,
-        1,
-        1,
-        2
-      ],
-      [
-        "Nighthaven Labs",
-        3,
-        1,
-        2,
-        2
       ]
     ]
   },
   "rpRate": {
-    "win": 29.7,
-    "loss": -25.7,
-    "n": 150
+    "win": 29.8,
+    "loss": -25.6,
+    "n": 157
   },
   "tilt": {
     "afterLoss": [
-      36,
-      87
+      38,
+      91
     ],
     "afterWin": [
-      21,
-      62
+      23,
+      65
     ],
-    "sessions": 32,
-    "matches": 181,
+    "sessions": 33,
+    "matches": 189,
     "byGame": [
       [
         19,
-        32
+        33
+      ],
+      [
+        10,
+        26
       ],
       [
         9,
         25
       ],
       [
-        8,
-        24
-      ],
-      [
-        40,
-        100
+        42,
+        105
       ]
     ],
     "hours": {
@@ -3210,12 +3272,12 @@
         30
       ],
       "noite": [
-        38,
-        109
+        41,
+        113
       ],
       "madrugada": [
-        22,
-        38
+        23,
+        42
       ]
     }
   },
@@ -3228,21 +3290,21 @@
       280
     ],
     "together": [
-      44,
-      115,
-      498,
-      642,
-      -476
+      48,
+      123,
+      527,
+      670,
+      -484
     ],
     "with": {
-      "superallfa": 69,
-      "brunoprufer": 75
+      "brunoprufer": 83,
+      "superallfa": 75
     },
-    "n": 181,
+    "n": 189,
     "perFriend": {
       "brunoprufer": [
-        23,
-        46
+        25,
+        48
       ],
       "superallfa": [
         12,
@@ -3250,51 +3312,51 @@
       ]
     },
     "trio": [
-      9,
-      29
+      11,
+      35
     ]
   },
   "coach": {
-    "matches": 155,
-    "rounds": 933,
+    "matches": 163,
+    "rounds": 974,
     "lastAlive": {
       "atk": [
         64,
-        280
+        290
       ],
       "def": [
-        41,
-        269
+        43,
+        281
       ]
     },
     "lastAliveRef": {
       "atk": [
-        198,
-        753
+        201,
+        776
       ],
       "def": [
-        224,
-        775
+        233,
+        812
       ]
     },
     "firstDeath": {
       "atk": [
-        85,
-        485
+        87,
+        505
       ],
       "def": [
-        88,
-        448
+        91,
+        469
       ]
     },
     "firstDeathRef": {
       "atk": [
-        260,
-        1649
+        272,
+        1717
       ],
       "def": [
-        255,
-        1621
+        271,
+        1698
       ]
     },
     "alone": {
@@ -3304,124 +3366,124 @@
         3.0
       ],
       "def": [
-        9,
-        41,
+        10,
+        43,
         3.0
       ]
     },
     "sideRounds": {
       "atk": [
-        223,
-        485
+        232,
+        505
       ],
       "def": [
-        221,
-        448
+        232,
+        469
       ]
     },
     "hardBreach": {
       "with": [
-        133,
-        268
+        139,
+        278
       ],
       "without": [
-        90,
-        217
+        93,
+        227
       ],
       "self": [
-        28,
-        65
+        30,
+        68
       ]
     },
     "opening": {
       "kill": [
-        295,
-        466
+        310,
+        486
       ],
       "death": [
-        149,
-        467
+        154,
+        488
       ]
     },
     "multi": {
       "twoPlus": [
-        79,
-        121
+        85,
+        128
       ],
       "oneOrLess": [
-        365,
-        812
+        379,
+        846
       ]
     },
     "kills": {
-      "total": 536,
-      "lostRounds": 218,
-      "alone": 61,
+      "total": 565,
+      "lostRounds": 227,
+      "alone": 64,
       "aloneLost": 46
     },
     "trades": {
-      "mateDeaths": 2692,
-      "byMe": 160,
-      "byOthers": 651,
-      "myDeaths": 670,
-      "meTraded": 201
+      "mateDeaths": 2805,
+      "byMe": 169,
+      "byOthers": 677,
+      "myDeaths": 698,
+      "meTraded": 212
     },
     "states": {
       "5v4": [
-        295,
-        466
+        310,
+        486
       ],
       "4v4": [
-        221,
-        491
+        227,
+        511
       ],
       "4v5": [
-        149,
-        467
+        154,
+        488
       ],
       "5v3": [
-        190,
-        230
+        203,
+        244
       ],
       "3v5": [
-        33,
-        212
+        34,
+        219
       ],
       "3v3": [
-        153,
-        333
+        157,
+        347
       ],
       "2v2": [
-        128,
-        266
+        132,
+        275
       ]
     },
     "killTiming": {
       "meEarly": [
-        136,
-        536
+        144,
+        565
       ],
       "meLate": [
-        156,
-        536
+        163,
+        565
       ],
       "refEarly": [
-        967,
-        3692
+        1018,
+        3855
       ],
       "refLate": [
-        1144,
-        3692
+        1196,
+        3855
       ]
     },
     "score": {
       "led20": [
-        31,
-        40
+        35,
+        44
       ],
       "trail02": [
         9,
-        50
+        53
       ],
       "ot": [
         24,
@@ -3434,59 +3496,59 @@
     },
     "pressure": {
       "mine": [
-        68,
-        110
+        72,
+        116
       ],
       "theirs": [
-        82,
-        168
+        84,
+        174
       ]
     },
     "decisive": {
       "part": [
-        272,
-        305
+        283,
+        317
       ],
       "partNormal": [
-        564,
-        628
+        588,
+        657
       ],
       "partRef": [
-        971,
-        1050
+        1009,
+        1094
       ],
       "withFace": [
-        130,
-        272
+        135,
+        283
       ],
       "noFace": [
-        32,
-        33
+        33,
+        34
       ]
     },
     "advantage": {
       "any": [
-        443,
-        673
+        463,
+        703
       ],
       "plus2": [
-        393,
-        449
+        412,
+        472
       ],
       "enemy": [
-        485,
-        681
+        506,
+        709
       ],
-      "lost": 230,
+      "lost": 240,
       "lostMe": {
-        "ghost": 17,
-        "died": 210,
-        "diedDry": 181,
+        "ghost": 19,
+        "died": 218,
+        "diedDry": 187,
         "kill": 3
       },
       "lostTeamDeaths": [
-        850,
-        1004
+        885,
+        1044
       ]
     },
     "postClutch": {
@@ -3496,45 +3558,45 @@
       ],
       "afterWon": [
         4,
-        13
+        14
       ],
       "afterAnyLost": [
-        179,
-        404
+        187,
+        421
       ]
     },
     "noKill": {
       "alive": [
-        89,
-        97
+        93,
+        103
       ],
       "died": [
-        135,
-        447
+        139,
+        462
       ],
       "diedWithKill": [
-        65,
-        226
+        70,
+        239
       ]
     },
     "rival": {
       "with": [
         17,
-        47
+        48
       ],
       "without": [
-        52,
-        108
+        56,
+        115
       ]
     },
     "teams": {
-      "meRP": 3477,
-      "matesRP": 3349,
-      "enemiesRP": 3344,
+      "meRP": 3466,
+      "matesRP": 3343,
+      "enemiesRP": 3341,
       "matesKD": 1.01,
-      "enemiesKD": 1.02,
-      "teamKills": 3290,
-      "enemyKills": 3375
+      "enemiesKD": 1.01,
+      "teamKills": 3435,
+      "enemyKills": 3516
     },
     "clutchBy": [
       [
@@ -3546,12 +3608,12 @@
         21
       ],
       [
-        2,
-        27
+        3,
+        28
       ],
       [
         0,
-        29
+        30
       ],
       [
         0,
@@ -3560,39 +3622,39 @@
     ],
     "clutchByRef": [
       [
-        54,
-        82
+        55,
+        83
       ],
       [
-        48,
-        119
+        49,
+        123
       ],
       [
-        6,
-        109
+        9,
+        113
       ],
       [
         2,
-        72
+        74
       ],
       [
         1,
-        40
+        41
       ]
     ],
     "refLabel": "outros jogadores com K/D 1,2+ nessas mesmas partidas",
     "opsRole": {
       "Valkyrie": [
-        164,
-        81,
-        39,
-        37,
-        27,
-        19,
-        98
+        171,
+        85,
+        41,
+        38,
+        28,
+        20,
+        104
       ],
       "Ash": [
-        89,
+        90,
         42,
         21,
         24,
@@ -3619,25 +3681,25 @@
         13
       ],
       "Flores": [
-        18,
-        8,
-        5,
+        19,
+        9,
+        6,
         4,
-        1,
+        2,
         3,
-        10
+        12
       ],
       "Ram": [
-        74,
-        37,
+        78,
+        38,
         21,
         13,
-        15,
+        16,
         11,
-        56
+        62
       ],
       "Kapkan": [
-        12,
+        13,
         5,
         2,
         3,
@@ -3646,13 +3708,13 @@
         13
       ],
       "Bandit": [
-        33,
-        15,
-        10,
+        36,
+        17,
+        12,
         7,
-        2,
-        7,
-        19
+        3,
+        8,
+        21
       ],
       "Iana": [
         11,
@@ -3664,25 +3726,25 @@
         5
       ],
       "Ace": [
-        12,
-        5,
+        13,
         6,
-        1,
+        6,
         2,
         3,
-        9
+        3,
+        11
       ],
       "Azami": [
-        28,
-        15,
-        5,
-        6,
+        33,
+        18,
+        7,
+        8,
+        4,
         3,
-        2,
-        9
+        14
       ],
       "Thorn": [
-        27,
+        28,
         12,
         4,
         6,
@@ -3691,13 +3753,13 @@
         18
       ],
       "Lion": [
-        27,
-        14,
-        7,
+        29,
+        15,
+        8,
         5,
         7,
-        2,
-        16
+        4,
+        18
       ],
       "Hibana": [
         13,
@@ -3709,16 +3771,16 @@
         14
       ],
       "Sledge": [
-        12,
-        6,
+        13,
+        7,
         4,
         2,
         0,
         1,
-        6
+        7
       ],
       "Striker": [
-        32,
+        33,
         14,
         10,
         4,
@@ -3736,17 +3798,17 @@
         10
       ],
       "Wamai": [
-        36,
+        37,
         19,
         8,
         8,
         4,
         6,
-        13
+        14
       ],
       "Denari": [
-        10,
-        5,
+        11,
+        6,
         3,
         1,
         1,
@@ -3781,8 +3843,8 @@
         4
       ],
       "Goyo": [
-        21,
-        9,
+        22,
+        10,
         4,
         3,
         5,
@@ -3837,80 +3899,80 @@
     },
     "lobby": {
       "randomKD": [
-        2238,
-        2160,
-        1.04
+        2293,
+        2227,
+        1.03
       ],
       "randomFK": [
-        322,
-        323
+        328,
+        334
       ],
       "enemyFK": [
-        467,
-        466
+        488,
+        486
       ],
       "hold": [
-        64,
-        78
+        66,
+        80
       ],
       "fold": [
-        5,
-        77
+        7,
+        83
       ],
       "meTop": [
-        3,
-        17
+        5,
+        19
       ],
       "meNotTop": [
-        66,
-        138
+        68,
+        144
       ],
-      "rpEdge": 128,
-      "rpEdgeWith": 170,
+      "rpEdge": 121,
+      "rpEdgeWith": 156,
       "rpEdgeSolo": 59,
       "friends": {
         "superallfa": {
-          "w": 15,
-          "n": 55,
-          "k": 130,
-          "d": 265,
+          "w": 17,
+          "n": 61,
+          "k": 141,
+          "d": 287,
           "kd": 0.49,
-          "fk": 17,
-          "fd": 25,
+          "fk": 18,
+          "fd": 28,
           "clutch": 2
         },
         "brunoprufer": {
-          "w": 31,
-          "n": 68,
-          "k": 386,
-          "d": 296,
-          "kd": 1.3,
-          "fk": 60,
-          "fd": 38,
-          "clutch": 10
+          "w": 35,
+          "n": 76,
+          "k": 436,
+          "d": 322,
+          "kd": 1.35,
+          "fk": 69,
+          "fd": 44,
+          "clutch": 12
         }
       }
     },
     "trend": {
       "last": {
-        "w": 3,
+        "w": 6,
         "n": 15,
-        "kd": 0.69,
+        "kd": 0.88,
         "esr": [
-          8,
-          16
+          7,
+          13
         ],
-        "rp": -10.6
+        "rp": -0.5
       },
       "rest": {
-        "w": 73,
-        "n": 166,
+        "w": 74,
+        "n": 174,
         "kd": 0.8,
         "esr": [
-          59,
-          132
+          64,
+          140
         ],
-        "rp": -0.2
+        "rp": -1.1
       }
     }
   }

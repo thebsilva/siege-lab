@@ -47,10 +47,10 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 - Mapa sem entrada no playbook cai no `default`.
 - **Pendente/upgrade:** callouts específicos por site exigem uma rodada de pesquisa por mapa antes de entrar.
 
-## Jogadores carregados (coleta de 06/11/2026, os três completos: kill feed + mapas por operador)
-- **superallfa** — Y11S3 (em andamento, Ouro I, 2.448 RP; pico 2.915) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
-- **laprufer** — Y11S3 (em andamento, Esmeralda III, 3.241 RP; pico 3.658) · Y11S2 (fechada) · Y11S1.
-- **brunoprufer** — Y11S3 (em andamento, Diamante V, 3.592 RP; pico novo 3.711) · Y11S2 (fechada) · Y11S1.
+## Jogadores carregados (coleta de 14/11/2026, os três completos: kill feed + mapas por operador)
+- **superallfa** — Y11S3 (em andamento, Prata I, 2.436 RP; pico 2.915 = Ouro I) · Y11S2 (fechada) · Y11S1 · Y10S4. Meta: Platina.
+- **laprufer** — Y11S3 (em andamento, Platina III, 3.232 RP; pico 3.658 = Esmeralda IV) · Y11S2 (fechada) · Y11S1.
+- **brunoprufer** — Y11S3 (em andamento, Esmeralda IV, 3.600 RP; pico 3.711 = Esmeralda III) · Y11S2 (fechada) · Y11S1.
 - Os três têm, na Y11S3, o kill feed das partidas (diagnóstico round a round no Coach) e o mapa de cada um dos
   10 operadores mais jogados (card do mapa com o histórico real do jogador). Season fechada segue só com os números do tracker.
 
@@ -113,7 +113,7 @@ botão com alvo de toque ≥ 40 px; texto de leitura ≥ 11 px (10 px só em ró
           opsRole{op:[r,w,vivoFim,1ªmorteTime,killAbre,killFecha,kills]}, …} }   # só com rounds.jsonl
 ```
 - Tier do mapa = auto (win% ≥55 priorize · <40 banir · resto neutro).
-- Rank = derivado do RP (bandas 500: Prata 2000/Ouro 2500/Platina 3000/Esmeralda 3500/Diamante 4000 + divisão de 100 RP, I alta → V baixa).
+- Rank = derivado do RP. Cada faixa COMEÇA no RP indicado e dura 500: Prata 2000–2499 · Ouro 2500–2999 · Platina 3000–3499 · Esmeralda 3500–3999 · Diamante 4000–4499 · Campeão 4500+; dentro dela, divisões de 100 RP (I = topo, V = base). Ex.: 2.436 = Prata I (faltam 64 pra Ouro V), 3.600 = Esmeralda IV. Conferir sempre pelo `rank_parts()` do `build.py`, nunca de cabeça.
 - "Squad" = partida no mesmo minuto e mapa de outro perfil daqui. Amigo fora do app conta como sozinho.
   `perFriend` = partidas **só com aquele amigo**; `trio` = com 2+ amigos (não se sobrepõem). A aba Squad lista só as linhas com partida.
 - Régua do "último vivo": outros jogadores das mesmas partidas com K/D 1,2+ na partida (`REF_KD` no ingest).
