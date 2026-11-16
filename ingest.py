@@ -685,6 +685,44 @@ def ops_role(path):
     return {op: a for op, a in agg.items() if a[0] >= 10}
 
 
+def map_ops(path, rows, side_of):
+    """Operador × mapa × lado do PRÓPRIO jogador, round a round, direto do kill feed
+    (P[me][10] traz um operador por round; o lado sai do operador). Cobre todos os operadores,
+    não só os 10 que o tracker detalha por mapa. Cada operador: [rounds, vencidos, abates, mortes].
+    O mapa vem da lista de partidas pelo prefixo de 8 caracteres do id (o mesmo join do trend_of).
+    Round sem operador reconhecido (vazio, 'Unknown' ou lista mais curta que o feed) conta em 'skip'."""
+    mapof = {(r.get("id") or "")[:8]: str(r["map"]).strip() for r in rows if r.get("map")}
+    agg, n_ok, n_skip = {}, 0, 0
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            mp = mapof.get(rec["id"])
+            P = rec["P"]
+            me = next(i for i, p in enumerate(P) if p[1] == 1)
+            myteam, mych = P[me][0], str(me)
+            ops = P[me][10].split(".") if P[me][10] else []
+            for j, rnd in enumerate(rec["R"]):
+                op = ops[j] if j < len(ops) else ""
+                sd = side_of.get(op) if op else None
+                if not mp or sd not in ("atk", "def"):
+                    n_skip += 1
+                    continue
+                win, ev = rnd.split(":", 1)
+                pairs = [(ev[i], ev[i + 1]) for i in range(0, len(ev) - 1, 2)]
+                a = agg.setdefault(mp, {"d": {}, "a": {}})["a" if sd == "atk" else "d"].setdefault(op, [0, 0, 0, 0])
+                a[0] += 1
+                a[1] += 1 if int(win) == myteam else 0
+                a[2] += sum(1 for k, _ in pairs if k == mych)
+                a[3] += sum(1 for _, v in pairs if v == mych)
+                n_ok += 1
+    maps = {mp: {sd: dict(sorted(agg[mp][sd].items(), key=lambda kv: (-kv[1][0], kv[0]))) for sd in ("d", "a")}
+            for mp in sorted(agg)}
+    assert n_ok == sum(v[0] for m in maps.values() for s in m.values() for v in s.values())
+    return {"rounds": n_ok, "skip": n_skip, "maps": maps}
+
+
 # ---------------------------------------------------------------- lobby (randoms × squad × adversários)
 def friend_sigs(raws, date, sn):
     """match_id -> {slug: (rp, delta, k, d)} do is_me no arquivo de rounds de cada jogador.
@@ -830,6 +868,7 @@ def main(date):
                 snap["coach"]["lobby"] = lobby_of(rounds, slug, sigs_by_sn[sn])
                 if srows:
                     snap["coach"]["trend"] = trend_of(srows, rounds)
+                    snap["mapOps"] = map_ops(rounds, srows, {**side_all, **op_side})
             out = os.path.join(PLAYERS, slug, f"{date}_{code.lower()}.json")
             with open(out, "w", encoding="utf-8") as fh:
                 json.dump(snap, fh, ensure_ascii=False, indent=2)

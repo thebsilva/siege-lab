@@ -517,6 +517,73 @@ def write_media(dirs):
         f'<p class="vleg">Rounds, vitórias e K/D somam os três; em "quem", os rounds de cada um. '
         f'<span class="disp">disputado</span> = está entre os 3 mais jogados de mais de um — operador é um por time, alguém cede.</p></section>')
 
+    # operadores por mapa — quem pega o quê em cada mapa (snapshot.mapOps: kill feed, um operador por round,
+    # todos os operadores; o "Operadores do squad" acima é o total da season, sem mapa)
+    MOP_TOP, MOP_MIN, MOP_PCT, MAIN_N, MAIN_MIN = 5, 2, 8, 3, 3
+    mo = {sl: (snapc[sl].get("mapOps") or {}).get("maps") or {} for sl in slugs}
+    com_feed = [sl for sl in slugs if mo[sl]]
+    mapops_html = ""
+    if len(com_feed) >= 2:
+        nomes_mapa = sorted({mp for sl in com_feed for mp in mo[sl]}, key=str.lower)
+        mid_of = lambda s: "".join(ch if ch.isalnum() else "-" for ch in s.lower()).strip("-")
+        e_ou = lambda l: " e ".join([", ".join(l[:-1]), l[-1]]) if len(l) > 1 else l[0]
+
+        def lado(mp, sd, titulo, cls):
+            todos = {sl: mo[sl].get(mp, {}).get(sd, {}) for sl in slugs}   # já vem em ordem de rounds
+            mains = {}
+            for sl in com_feed:
+                for o, v in list(todos[sl].items())[:MAIN_N]:
+                    if v[0] >= MAIN_MIN:
+                        mains.setdefault(o, []).append(sl)
+            disp = {o: q for o, q in mains.items() if len(q) >= 2}
+            linhas = ""
+            for sl in slugs:
+                tot = sum(v[0] for v in todos[sl].values())
+                chips = ""
+                for o, v in [(o, v) for o, v in todos[sl].items() if v[0] >= MOP_MIN][:MOP_TOP]:
+                    r, w = v[0], v[1]
+                    if r >= MOP_PCT:
+                        wr = 100 * w / r
+                        info, cl = f"{r} · {pc0(wr)}%", ("wu" if wr >= 55 else ("wd" if wr < 40 else "wn"))
+                    else:
+                        info, cl = f"{r}", "sm"
+                    if sl in disp.get(o, ()):
+                        cl += " dp"
+                    chips += f'<span class="opc {cl}"><b>{esc(o)}</b><i>{info}</i></span>'
+                if not mo[sl]:
+                    chips = '<span class="mon">sem kill feed</span>'
+                elif not chips:
+                    chips = '<span class="mon">nenhum operador com 2+ rounds aqui</span>'
+                linhas += (f'<div class="morow"><span class="mowho"><b class="who3" style="--c:{tcolor[sl]}">{esc(tag3[sl])}</b>'
+                           f'<i>{tot} rounds</i></span><span class="mochips">{chips}</span></div>')
+            if disp:
+                nota = "".join(f'<p class="mcf"><span class="disp">disputado</span><b>{esc(o)}</b> — '
+                               f'{esc(e_ou([tag3[s] for s in q]))}</p>' for o, q in disp.items())
+            else:
+                nota = '<p class="mcf mon">Sem disputa: ninguém repete operador entre os 3 que mais usa aqui.</p>'
+            return f'<div class="ocol"><h3 class="{cls}">{titulo}</h3><div class="scard mocard">{linhas}</div>{nota}</div>'
+
+        # abre no mapa que o grupo mais jogou; o resto fica a um toque
+        padrao = sorted(nomes_mapa, key=lambda mp: (-(magg.get(mp) or {}).get("m", 0), mp.lower()))[0]
+        corpo = ""
+        for mp in nomes_mapa:
+            mid = mid_of(mp)
+            g = magg.get(mp)
+            sub = (f'{g["m"]} partidas do grupo · {pc0(g["w"] / g["m"] * 100)}% de vitórias'
+                   if g and g["m"] else "o tracker não traz partidas do grupo neste mapa")
+            corpo += (f'<input type="radio" name="mapaop" id="mo-{mid}"{" checked" if mp == padrao else ""}>'
+                      f'<label for="mo-{mid}">{esc(mp)}</label>'
+                      f'<div class="mop"><div class="mohead"><b>{esc(mp)}</b><span>{sub}</span></div>'
+                      f'<div class="ops2">{lado(mp, "d", "Defesa", "sdef")}{lado(mp, "a", "Ataque", "satk")}</div></div>')
+        mapops_html = (
+            f'<section><h2>Operadores por mapa<span class="hint">quem pega o quê · toque no mapa · {esc(cur["season"])}</span></h2>'
+            f'<div class="mopick" role="radiogroup" aria-label="Mapa">{corpo}</div>'
+            f'<p class="vleg">Os {MOP_TOP} operadores que cada um mais jogou naquele mapa e lado: o número são os rounds com o operador e o % são '
+            f'os rounds vencidos (só a partir de {MOP_PCT} rounds; abaixo disso é amostra curta e fica sem %). '
+            f'Verde = 55% ou mais, vermelho = abaixo de 40%. Borda dourada = <span class="disp">disputado</span>: está entre os 3 que mais de um '
+            f'usa naquele mapa — operador é um por time, combinem antes quem fica com ele. Vem do kill feed da ranqueada (um operador por round, '
+            f'sozinho ou com o grupo), então cobre todos os operadores, não só os 10 que o tracker detalha.</p></section>')
+
     trs = ""
     for i, r in enumerate(rows):
         rn, rc, _, _ = rank_parts(round(r["rp"]))
@@ -540,7 +607,7 @@ def write_media(dirs):
             f'<a href="index.html">← O squad completo</a>')
     title = f"SIEGE·LAB — Média de nós {n}"
     desc = (f"A média do squad no R6 Siege: {rname} · {mil(cur['rp'])} RP · K/D {dec(cur['kd'])} — "
-            f"juntos e em dupla, mapas e operadores do grupo, e a evolução season a season dos {n}.")
+            f"juntos e em dupla, mapas e operadores do grupo, quem pega o quê em cada mapa e a evolução season a season dos {n}.")
     html = (MEDIA_TEMPLATE
             .replace("__HEAD__", head_meta(title, desc, SITE_URL + "media.html"))
             .replace("__TITLE__", _h.escape(title))
@@ -549,6 +616,7 @@ def write_media(dirs):
             .replace("__SPRITE__", sprite(set()))
             .replace("__HERO__", hero).replace("__VS__", vs)
             .replace("__TOGETHER__", together_html).replace("__MAPS__", maps_html).replace("__OPS__", ops_html)
+            .replace("__MAPOPS__", mapops_html)
             .replace("__SEASONS__", seasons_html).replace("__FOOT__", foot))
     out = os.path.join(OUT_DIR, "media.html")
     with open(out, "w", encoding="utf-8") as fh:
@@ -809,6 +877,39 @@ __HEAD__
         color:var(--gold);border:1px solid rgba(244,194,13,.4);border-radius:var(--r-pill);padding:1px 7px;margin-top:3px}
   .vleg .disp{display:inline-block;margin-top:0;vertical-align:1px}
 
+  /* operadores por mapa: rádio por mapa (sem JS) — os rótulos ficam em cima e o painel do mapa marcado desce pra baixo deles */
+  .mopick{display:flex;flex-wrap:wrap;gap:6px;position:relative}
+  .mopick input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+  .mopick label{order:0;cursor:pointer;user-select:none;font-size:var(--fs-2);font-weight:700;color:var(--txt-2);line-height:1.2;
+        border:1px solid var(--chipline);background:var(--chip);border-radius:var(--r-pill);padding:7px 11px;min-height:32px;
+        display:inline-flex;align-items:center;transition:border-color .15s}
+  .mopick label:hover{border-color:var(--gold)}
+  .mopick input:checked+label{color:var(--gold);border-color:var(--gold);background:rgba(244,194,13,.12)}
+  .mopick input:focus-visible+label{outline:2px solid var(--gold);outline-offset:2px}
+  .mop{display:none;order:1;flex:1 0 100%;margin-top:12px;min-width:0}
+  .mopick input:checked+label+.mop{display:block}
+  .mohead{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:10px;row-gap:2px;margin-bottom:12px}
+  .mohead b{font-size:var(--fs-5);font-weight:800}
+  .mohead span{font-size:var(--fs-2);color:var(--muted);font-variant-numeric:tabular-nums}
+  .mocard{padding:2px 12px}
+  .morow{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:10px;padding:10px 0;border-bottom:1px solid var(--hair);align-items:start}
+  .morow:last-child{border-bottom:0}
+  .mowho b{display:block;font-size:var(--fs-3);font-weight:800;line-height:1.3}
+  .mowho i{display:block;font-style:normal;font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
+  .mochips{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+  .opc{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--chipline);background:var(--inset);
+       border-radius:var(--r-1);padding:4px 8px;font-size:var(--fs-2);line-height:1.25;white-space:nowrap}
+  .opc b{font-weight:800;color:var(--txt)}
+  .opc i{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
+  .opc.wu i{color:var(--play);font-weight:700} .opc.wd i{color:var(--ban-t);font-weight:700}
+  .opc.sm b{color:var(--txt-2);font-weight:700}
+  .opc.dp{border-color:rgba(244,194,13,.65);box-shadow:inset 0 0 0 1px rgba(244,194,13,.22)}
+  .mon{font-size:var(--fs-2);color:var(--muted)}
+  .mcf{font-size:var(--fs-2);color:var(--txt-2);margin-top:8px;line-height:1.5}
+  .mcf.mon{color:var(--muted)}
+  .mcf .disp{display:inline-block;margin:0 7px 0 0;vertical-align:1px}
+  @media(prefers-reduced-motion:reduce){ .mopick label{transition:none} }
+
   /* season a season */
   .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}
   .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -850,6 +951,7 @@ __VS__
 __TOGETHER__
 __MAPS__
 __OPS__
+__MAPOPS__
 __SEASONS__
   <p class="foot">__FOOT__</p>
 </main>
