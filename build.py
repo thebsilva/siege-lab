@@ -623,13 +623,33 @@ def write_media(dirs):
             ritmo.append(f"<b>{esc(S)}</b> anda a uma sala de {esc(E) if E else 'quem entra'} pra trocar na hora e fica vivo pro plant")
         if F:
             ritmo.append(f"<b>{esc(F)}</b> pega no pick o que falta (hard breach, se ninguém levar) e entra como o 2º")
-        ritmo_html = (f'<p class="rlritmo"><span>O ritmo de vocês</span>{"; ".join(ritmo)}.</p>' if len(ritmo) >= 2 else "")
+        # defesa: quem faz roam (≥40 rounds e vence ao menos o que vence ancorando), quem fica no site e quem leva a câmera
+        pc = lambda v: round(100 * v[1] / v[0]) if v and v[0] else 0
+        info_ops = set(((pros.get("funcoes") or {}).get("def") or {}).get("info") or [])
+        defesa = []
+        for p, rl in papel:
+            M, N = (rl.get("mix") or {}).get("def") or {}, rl["me"]["def"].get("n", 0)
+            ro, an, inf = M.get("roam", [0, 0]), M.get("ancora", [0, 0]), M.get("info", [0, 0])
+            cam = next((x for x in (rl.get("pool") or {}).get("def", []) if x[0] in info_ops), None)
+            if ro[0] >= 40 and pc(ro) >= pc(an):
+                defesa.append(f"<b>{esc(p['name'])}</b> faz o roam: vence {pc(ro)}% dos rounds assim, contra {pc(an)}% ancorando")
+            elif cam and N and inf[0] / N >= 0.25:
+                defesa.append(f"<b>{esc(p['name'])}</b> divide entre âncora e câmera ({esc(cam[0])} em {cam[1]} rounds)")
+            elif N:
+                defesa.append(f"<b>{esc(p['name'])}</b> segura o site (âncora em {round(100 * an[0] / N)}% dos rounds)")
+        lin = []
+        if len(ritmo) >= 2:
+            lin.append(f'<p><em class="atk">No ataque</em>{"; ".join(ritmo)}.</p>')
+        if len(defesa) >= 2:
+            lin.append(f'<p><em class="def">Na defesa</em>{"; ".join(defesa)}. Quem fica no site passa a informação, e o roam volta antes do plant.</p>')
+        ritmo_html = (f'<div class="rlritmo"><span>O ritmo de vocês</span>{"".join(lin)}</div>' if lin else "")
         roles_html = (
             f'<section><h2>Papéis do squad<span class="hint">entry · flex · suporte, pelo kill feed · {esc(cur["season"])}</span></h2>'
             f'<ul class="rl">{itens}</ul>{ritmo_html}'
             f'<p class="vleg">O papel sai do jeito que cada um joga o round de ataque, comparado com os outros 9 jogadores das mesmas partidas '
             f'(papel é estilo, não nível): <b>entry</b> entra no 1º duelo mais que o lobby e abre com abate; <b>suporte</b> entra bem menos e é '
-            f'bem menos o 1º do time a cair; <b>flex</b> fica no meio. O FaZe é o {esc(pros.get("titulo", ""))}: cada um ganha o jogador de lá '
+            f'bem menos o 1º do time a cair; <b>flex</b> fica no meio. A divisão da defesa sai da função do operador que cada um pega '
+            f'(âncora, roam ou câmera) e do % de rounds vencidos em cada uma: roam só conta com 40 rounds ou mais. O FaZe é o {esc(pros.get("titulo", ""))}: cada um ganha o jogador de lá '
             f'com o mesmo papel, e os operadores em comum desempatam. Cada um tem o card completo no Coach: como o pro joga e o que fazer no round. '
             f'Papéis: <a href="{esc(pros["fontes"][1][1])}" rel="noopener">strave.gg</a> · operadores: '
             f'<a href="{esc(pros["fontes"][0][1])}" rel="noopener">siege.gg</a> · lido em {esc(pros.get("lido", ""))}.</p></section>')
@@ -979,6 +999,8 @@ __HEAD__
            font-size:var(--fs-3);line-height:1.55;color:var(--txt-2)}
   .rlritmo span{display:block;font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--gold);margin-bottom:4px}
   .rlritmo b{color:var(--txt)}
+  .rlritmo p{margin:0} .rlritmo p+p{margin-top:8px}
+  .rlritmo em{font-style:normal;font-weight:800;margin-right:6px} .rlritmo em.atk{color:var(--atk-t)} .rlritmo em.def{color:var(--def)}
   .vleg a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
   .vleg a:hover{color:var(--gold);border-color:var(--gold)}
   @media(prefers-reduced-motion:reduce){ .rlrow{transition:none} }
@@ -1540,6 +1562,9 @@ __HEAD__
   .rtips li:first-child{border-top:none}
   .rtips li::before{content:"";position:absolute;left:2px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
   .rtips li.atk::before{background:var(--atk)} .rtips li.def::before{background:var(--def)}
+  .rtl{margin-top:10px;font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps)}
+  .rtl.atk{color:var(--atk-t)} .rtl.def{color:var(--def)}
+  .read p{margin:0} .read p+p{margin-top:8px}
 
   /* barras: a barra desenha o %, escrito ao lado; "N de M" é o apoio */
   .bars{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
@@ -2680,14 +2705,38 @@ function roleRead(r){
     t=`Você fica perto da média do lobby em quase tudo: 1º do time a cair em <b>${a.tfd}%</b> dos rounds de ataque (lobby ${a.rtfd}%), vivo no fim em <b>${a.surv}%</b> (lobby ${a.rsurv}%). É o perfil de flex.`;
     if(a.kpr<0.85*a.rkpr) t+=` O que fica abaixo é o abate: <b>${k2(a.kpr)}</b> por round no ataque (lobby ${k2(a.rkpr)}) e abate de abertura em ${a.ok}% (lobby ${a.rok}%). Flex que entra como 2º pega a troca, e é aí que o abate vem.`;
   }
-  ["atk","def"].forEach(sd=>{        // a função que paga mais × a que paga menos, se a diferença for real
+  const gap=sd=>{                    // a função que paga mais × a que paga menos, se a diferença for real
     const L=Object.entries(r.mix[sd]||{}).filter(([fn,v])=>fn!=="?"&&v[0]>=40).map(([fn,v])=>[fn,pf(v[1],v[0]),v[0]]).sort((x,y)=>y[1]-x[1]);
-    if(L.length>=2&&L[0][1]-L[L.length-1][1]>=10){
-      const hi=L[0], lo=L[L.length-1];
-      t+=` ${sd==="atk"?"No ataque":"Na defesa"}, seus rounds de ${FN[hi[0]]||hi[0]} vencem <b>${hi[1]}%</b> (${hi[2]} rounds) e os de ${FN[lo[0]]||lo[0]}, <b>${lo[1]}%</b> (${lo[2]}).`;
-    }
-  });
-  return t;
+    if(L.length<2||L[0][1]-L[L.length-1][1]<10) return null;
+    return {hi:L[0],lo:L[L.length-1],txt:` ${sd==="atk"?"No ataque":"Na defesa"}, seus rounds de ${FN[L[0][0]]||L[0][0]} vencem <b>${L[0][1]}%</b> (${L[0][2]} rounds) e os de ${FN[L[L.length-1][0]]||L[L.length-1][0]}, <b>${L[L.length-1][1]}%</b> (${L[L.length-1][2]}).`};
+  };
+  const ga=gap("atk"); if(ga) t+=ga.txt;
+  return `<p>${t}</p>${roleReadDef(r,F.def,gap("def"))}`;
+}
+function roleReadDef(r,d,g){           // o mesmo papel, do lado da defesa: função, 1ª morte, abate, o que paga mais
+  const FN=PROS.funcaoNome||{}, k2=x=>fx(x,2), N=r.me.def.n;
+  const M=Object.entries(r.mix.def||{}).filter(([fn])=>fn!=="?").sort((x,y)=>y[1][0]-x[1][0]);
+  if(!M.length||!N) return "";
+  const [f1,v1]=M[0], f2=M[1]&&pf(M[1][1][0],N)>=20?M[1]:null;
+  let t=`Na defesa você joga de ${FN[f1]||f1} em <b>${pf(v1[0],N)}%</b> dos rounds (${nf(v1[0])} de ${nf(N)})${f2?` e de ${FN[f2[0]]||f2[0]} em <b>${pf(f2[1][0],N)}%</b>`:""}, `
+    +`é o 1º do time a cair em <b>${d.tfd}%</b> (lobby ${d.rtfd}%) e faz <b>${k2(d.kpr)}</b> abates por round (lobby ${k2(d.rkpr)}).`;
+  if(r.tag==="suporte"){
+    if(d.tfd<=d.rtfd-3&&d.surv<=d.rsurv+1)
+      t+=` Você não cai cedo, mas chega vivo no fim do round como a média (<b>${d.surv}%</b>, lobby ${d.rsurv}%): a morte vem no meio, quando o ataque já entrou no site. É ali que a utilidade da preparação e o ângulo fechado seguram o plant.`;
+    else if(d.tfd<=d.rtfd-3) t+=` É a âncora do jeito do ${esc(r.pro)}: fica no site e não abre o site caindo cedo.`;
+  }else if(r.tag==="entry"){
+    if(d.kpr>=1.15*d.rkpr) t+=` Seu duelo rende na defesa também.`;
+    if(g&&g.hi[0]==="roam") t+=` E rende mais fora do site: seus rounds de roam vencem <b>${g.hi[1]}%</b> (${g.hi[2]} rounds) e os de ${FN[g.lo[0]]||g.lo[0]}, <b>${g.lo[1]}%</b> (${g.lo[2]}). Roam é o seu lugar, com prazo pra voltar antes do plant.`, g=null;
+  }else{
+    const T=((PROS.funcoes||{}).def||{}).info||[], cam=(r.pool.def||[]).find(([op])=>T.includes(op)), ni=((r.mix.def||{}).info||[0])[0];
+    if(cam&&pf(ni,N)>=25) t+=` A câmera do time é sua: ${esc(cam[0])} em ${nf(cam[1])} rounds (${pf(cam[2],cam[1])}% vencidos). Informação falada é o que deixa o roam e o retake jogarem sabendo.`;
+    if(d.kpr<0.85*d.rkpr) t+=` O abate fica abaixo do lobby: o seu valor na defesa é o site fechado e a informação, não o duelo.`;
+  }
+  if(g) t+=g.txt.replace(" Na defesa, seus"," Seus");
+  const B=(r.pool.def||[]).filter(([,n])=>n>=40).map(([op,n,w])=>[op,n,pf(w,n)]).sort((x,y)=>y[2]-x[2]);
+  if(B.length>=2&&B[0][2]-B[B.length-1][2]>=10){const b=B[0], w=B[B.length-1];
+    t+=` Do seu pool: ${esc(b[0])} vence <b>${b[2]}%</b> (${nf(b[1])} rounds) e ${esc(w[0])}, <b>${w[2]}%</b> (${nf(w[1])}).`;}
+  return `<p>${t}</p>`;
 }
 function roleCard(cur){
   const r=cur.coach&&cur.coach.role;
@@ -2709,18 +2758,18 @@ function roleCard(cur){
   const mine=sd=>(r.pool[sd]||[]).filter(([op,n])=>n>=10&&ROLE_FN[r.tag][sd].includes(fnOf(op,sd)))
     .map(([op,n,w])=>`<span class="rop${shared.has(op)?" eq":""}">${esc(op)}<small>${n} rounds · ${pf(w,n)}%</small></span>`).join("");
   const ma=mine("atk"), md=mine("def");
-  const tips=P.atk.map(x=>`<li class="atk">${esc(x)}</li>`).join("")+P.def.map(x=>`<li class="def">${esc(x)}</li>`).join("");
+  const tips=sd=>`<div class="rtl ${sd}">${sd==="atk"?"No ataque":"Na defesa"}</div><ul class="rtips">${P[sd].map(x=>`<li class="${sd}">${esc(x)}</li>`).join("")}</ul>`;
   const head=`<div class="hl txt"><div class="hs"><b>${esc(P.nome)}</b><span>seu papel no squad</span></div><i class="x" aria-hidden="true">=</i><div class="hs"><b>${esc(r.pro)}</b><span>o mesmo papel no FaZe</span></div></div>`;
   const src=(PROS.fontes||[]).map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ");
   return card({k:"role",open:1,title:"Seu papel no time",head,
     cap:`pelo jeito que você joga o round, comparado com os outros 9 jogadores das mesmas partidas`,
     body:`<table class="ctable"><tr><th>No kill feed</th><th>Você</th><th>Lobby</th></tr>${side("atk","Ataque")}${side("def","Defesa")}</table>
       <div class="sub2">Os operadores que você pega, por função</div>${mix("atk")}${mix("def")}
-      <div class="sub2">Como o ${esc(r.pro)} joga</div>
+      <div class="sub2">Como o ${esc(r.pro)} joga, no ataque e na defesa</div>
       <div class="rpro"><div class="rn">${esc(J.nome)}<small>${esc(J.papel)}</small></div>
-        <p>${esc(J.jeito)}</p>${chips(J.atk,"atk")}${chips(J.def,"def")}
+        ${chips(J.atk,"atk")}<p>${esc(J.jeito)}</p>${chips(J.def,"def")}${J.jeitoDef?`<p>${esc(J.jeitoDef)}</p>`:""}
         <p class="rmut">Os mais jogados na carreira, pelo <a href="${esc(J.url)}" target="_blank" rel="noopener">siege.gg</a>.${shared.size?` Em dourado, os que vocês dois jogam: ${[...shared].map(esc).join(", ")}.`:""}${A?` Também tem o seu papel no FaZe: <b>${esc(r.alt)}</b> (${esc(A.papel)}).`:""}</p></div>
-      <div class="sub2">${esc(P.nome)}: como jogar</div><p class="rmut">${esc(P.resumo)}</p><ul class="rtips">${tips}</ul>
+      <div class="sub2">${esc(P.nome)}: como jogar</div><p class="rmut">${esc(P.resumo)}</p>${tips("atk")}${tips("def")}
       ${ma||md?`<div class="sub2">Do seu pool, pra esse papel</div>${ma?`<div class="rops"><span class="rsd atk">Ataque</span>${ma}</div>`:""}${md?`<div class="rops"><span class="rsd def">Defesa</span>${md}</div>`:""}`:""}`,
     read:roleRead(r),
     note:`Papel pelo kill feed: entry entra no 1º duelo mais que o lobby e abre com abate; suporte entra bem menos e é bem menos o 1º do time a cair; flex fica no meio. Lobby = os outros 9 das mesmas partidas (papel é estilo, não nível). O pro tem o mesmo papel, e os operadores em comum desempatam. Referência: ${esc(PROS.time)}, ${esc(PROS.titulo)}. Fontes, lidas em ${esc(PROS.lido)}: ${src}.`});

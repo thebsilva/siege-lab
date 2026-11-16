@@ -59,8 +59,9 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 Início (KPIs + rank + deltas, falta pro próximo rank, forma recente, "o que mudou desde {season}", plano de jogo) ·
 **Coach**, na ordem do que se decide *durante* a partida pro que é contexto: plano pra próxima sessão →
 meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) → **seu papel no time** (entry /
-flex / suporte pelo kill feed × o pro do FaZe com o mesmo papel: como ele joga, como jogar o papel, o seu pool pra ele;
-entra também como 1ª regra do plano) → **o que os rounds mostram**
+flex / suporte pelo kill feed × o pro do FaZe com o mesmo papel: como ele joga no ataque e na defesa, como jogar o papel
+nos dois lados, o seu pool pra ele, e uma leitura de ataque e outra de defesa com os seus números; entra também como 1ª
+regra do plano) → **o que os rounds mostram**
 (placar de vivos · sob pressão · último vivo no ataque · hard breach · trocas · quando suas kills acontecem ·
 round depois do clutch · round sem abate · clutch por 1vX · duelo repetido *(experimental)* · placar da
 partida · nível dos times) → tendência (últimas 15 × o resto da season) → fila → estilo em números → tilt ·
@@ -69,7 +70,7 @@ Operadores (mains def/atk + corte, card de hard breach "plano B", tabela complet
 Evolução (sparklines season a season) · seletor de season no topo · botão ? (legenda) · card de compartilhar.
 
 **Média do grupo** (`media.html`, estática, sem JS): a média hoje · cada um contra a média · **papéis do squad** (papel e
-pro de cada um + "o ritmo de vocês") · juntos e em dupla · a fila
+pro de cada um + "o ritmo de vocês" no ataque e na defesa: quem faz roam, quem leva a câmera, quem segura o site) · juntos e em dupla · a fila
 do grupo · mapas do squad · operadores do squad · **operadores por mapa** (toque no mapa → os 5 operadores que cada um
 mais joga naquele mapa, por lado, com rounds e % de vitória; borda dourada = disputado entre o grupo; vem do `mapOps`) ·
 season a season.
