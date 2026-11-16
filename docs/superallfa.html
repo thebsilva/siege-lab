@@ -539,9 +539,28 @@
   .rtips li:first-child{border-top:none}
   .rtips li::before{content:"";position:absolute;left:2px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
   .rtips li.atk::before{background:var(--atk)} .rtips li.def::before{background:var(--def)}
-  .rtl{margin-top:10px;font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps)}
-  .rtl.atk{color:var(--atk-t)} .rtl.def{color:var(--def)}
   .read p{margin:0} .read p+p{margin-top:8px}
+  .rtop{margin-top:10px} .rtop p b{color:var(--txt)}
+  /* celular: um lado por vez, com o seletor preso logo abaixo do topo enquanto a coluna rola */
+  .rseg{position:sticky;top:56px;z-index:5;display:flex;gap:7px;margin:10px -16px 0;padding:8px 16px;background:var(--panel)}
+  @media(min-width:520px){ .rseg{top:60px} }      /* o topo cresce 4 px a partir de 520 (.hbar) */
+  .rseg .fchip{flex:1 1 0;font-weight:700}
+  .rseg .fchip.on[data-sd=atk]{border-color:var(--atk);color:var(--atk-t);background:rgba(59,130,246,.10)}
+  .rseg .fchip.on[data-sd=def]{border-color:var(--def);color:var(--def);background:rgba(249,115,22,.10)}
+  .rcols[data-sd=atk] .rcol.def,.rcols[data-sd=def] .rcol.atk{display:none}
+  .rsh{display:flex;align-items:baseline;gap:8px;margin-top:6px;padding-bottom:6px;border-bottom:2px solid currentColor;
+       font-size:var(--fs-2);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps)}
+  .rsh.atk{color:var(--atk-t)} .rsh.def{color:var(--def)}
+  .rsh small{font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
+  /* desktop: o card ocupa a linha inteira e os dois lados ficam lado a lado, parte com parte (subgrid) */
+  @media(min-width:900px){
+    #c-role{grid-column:1/-1}
+    #c-role .hl{max-width:520px}
+    .rseg{display:none}
+    .rcols{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(7,auto);column-gap:28px;margin-top:6px}
+    .rcols[data-sd] .rcol.atk,.rcols[data-sd] .rcol.def{display:grid;grid-row:span 7;grid-template-rows:subgrid;align-content:start}
+    .rcol.def{border-left:1px solid var(--hair);padding-left:28px}
+  }
 
   /* barras: a barra desenha o %, escrito ao lado; "N de M" é o apoio */
   .bars{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
@@ -1687,8 +1706,8 @@ function roleRead(r){
     if(L.length<2||L[0][1]-L[L.length-1][1]<10) return null;
     return {hi:L[0],lo:L[L.length-1],txt:` ${sd==="atk"?"No ataque":"Na defesa"}, seus rounds de ${FN[L[0][0]]||L[0][0]} vencem <b>${L[0][1]}%</b> (${L[0][2]} rounds) e os de ${FN[L[L.length-1][0]]||L[L.length-1][0]}, <b>${L[L.length-1][1]}%</b> (${L[L.length-1][2]}).`};
   };
-  const ga=gap("atk"); if(ga) t+=ga.txt;
-  return `<p>${t}</p>${roleReadDef(r,F.def,gap("def"))}`;
+  const ga=gap("atk"); if(ga) t+=ga.txt.replace(" No ataque, seus"," Seus");
+  return {atk:t, def:roleReadDef(r,F.def,gap("def"))};
 }
 function roleReadDef(r,d,g){           // o mesmo papel, do lado da defesa: função, 1ª morte, abate, o que paga mais
   const FN=PROS.funcaoNome||{}, k2=x=>fx(x,2), N=r.me.def.n;
@@ -1713,42 +1732,57 @@ function roleReadDef(r,d,g){           // o mesmo papel, do lado da defesa: fun�
   const B=(r.pool.def||[]).filter(([,n])=>n>=40).map(([op,n,w])=>[op,n,pf(w,n)]).sort((x,y)=>y[2]-x[2]);
   if(B.length>=2&&B[0][2]-B[B.length-1][2]>=10){const b=B[0], w=B[B.length-1];
     t+=` Do seu pool: ${esc(b[0])} vence <b>${b[2]}%</b> (${nf(b[1])} rounds) e ${esc(w[0])}, <b>${w[2]}%</b> (${nf(w[1])}).`;}
-  return `<p>${t}</p>`;
+  return t;
+}
+let ROLE_SD="atk";                     // no celular o card mostra um lado por vez; no desktop, os dois lado a lado
+function roleSide(btn,sd){
+  ROLE_SD=sd;
+  const cb=btn.closest(".cb"), cols=cb.querySelector(".rcols"), seg=btn.parentElement;
+  cols.dataset.sd=sd;
+  seg.querySelectorAll(".fchip").forEach(b=>{const on=b.dataset.sd===sd; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on);});
+  const hdr=document.querySelector("header"), off=(hdr?hdr.offsetHeight:0)+seg.offsetHeight+8;
+  const y=cols.getBoundingClientRect().top;      // trocou de lado no meio da coluna? volta pro começo dela, logo abaixo do seletor
+  if(y<off) scrollBy(0,y-off);
 }
 function roleCard(cur){
   const r=cur.coach&&cur.coach.role;
   if(!r||!r.tag||!PROS.papeis||!PROS.jogadores) return "";
   const P=PROS.papeis[r.tag], J=PROS.jogadores[r.pro], A=PROS.jogadores[r.alt], FN=PROS.funcaoNome||{};
   if(!P||!J) return "";
-  const F=roleFacts(r), k2=x=>fx(x,2);
+  const F=roleFacts(r), RR=roleRead(r), k2=x=>fx(x,2), SD={atk:"Ataque",def:"Defesa"};
   const row=(l,a,b)=>`<tr><td>${l}</td><td><b>${a}</b></td><td>${b}</td></tr>`;
-  const side=(sd,lbl)=>{const x=F[sd]; return `<tr><td colspan="3" class="csub">${lbl} · ${nf(r.me[sd].n)} rounds</td></tr>`
+  const table=sd=>{const x=F[sd]; return `<table class="ctable"><tr><th>No kill feed</th><th>Você</th><th>Lobby</th></tr>`
     +row("Entra no 1º duelo do round",x.inv+"%",x.rinv+"%")+row("Abate de abertura",x.ok+"%",x.rok+"%")
     +row("1º do seu time a morrer",x.tfd+"%",x.rtfd+"%")+row("Vivo no fim do round",x.surv+"%",x.rsurv+"%")
-    +row("Abates por round",k2(x.kpr),k2(x.rkpr))+row("Morte trocada pelo time",x.tr+"%",x.rtr+"%");};
+    +row("Abates por round",k2(x.kpr),k2(x.rkpr))+row("Morte trocada pelo time",x.tr+"%",x.rtr+"%")+`</table>`;};
   const mix=sd=>{const M=r.mix[sd]||{}, n=r.me[sd].n;
-    return bars(Object.entries(M).filter(([fn])=>fn!=="?").map(([fn,v])=>[FN[fn]||fn,pf(v[0],n),`${nf(v[0])} rounds · ${pf(v[1],v[0])}% vencidos`]),
-      sd==="atk"?"Ataque · % dos seus rounds":"Defesa · % dos seus rounds");};
+    return bars(Object.entries(M).filter(([fn])=>fn!=="?").map(([fn,v])=>[FN[fn]||fn,pf(v[0],n),`${nf(v[0])} rounds · ${pf(v[1],v[0])}% vencidos`]),"% dos seus rounds");};
   const shared=new Set((r.overlap||{})[r.pro]||[]);
-  const chips=(ops,sd)=>`<div class="rops"><span class="rsd ${sd}">${sd==="atk"?"Ataque":"Defesa"}</span>${ops.map(o=>`<span class="rop${shared.has(o)?" eq":""}">${esc(o)}</span>`).join("")}</div>`;
+  const chips=ops=>`<div class="rops">${ops.map(o=>`<span class="rop${shared.has(o)?" eq":""}">${esc(o)}</span>`).join("")}</div>`;
   const fnOf=(op,sd)=>{const T=(PROS.funcoes||{})[sd]||{}; return Object.keys(T).find(k=>T[k].includes(op));};
   const mine=sd=>(r.pool[sd]||[]).filter(([op,n])=>n>=10&&ROLE_FN[r.tag][sd].includes(fnOf(op,sd)))
     .map(([op,n,w])=>`<span class="rop${shared.has(op)?" eq":""}">${esc(op)}<small>${n} rounds · ${pf(w,n)}%</small></span>`).join("");
-  const ma=mine("atk"), md=mine("def");
-  const tips=sd=>`<div class="rtl ${sd}">${sd==="atk"?"No ataque":"Na defesa"}</div><ul class="rtips">${P[sd].map(x=>`<li class="${sd}">${esc(x)}</li>`).join("")}</ul>`;
+  // cada lado é uma coluna com as MESMAS 7 partes, na mesma ordem: no desktop elas alinham lado a lado (subgrid)
+  const col=sd=>{const pool=mine(sd), jeito=sd==="atk"?J.jeito:J.jeitoDef;
+    return `<div class="rcol ${sd}">
+      <div class="rsh ${sd}">${SD[sd]}<small>${nf(r.me[sd].n)} rounds</small></div>
+      <div>${table(sd)}</div>
+      <div><div class="sub2">Os operadores que você pega, por função</div>${mix(sd)}</div>
+      <div><div class="sub2">Como o ${esc(r.pro)} joga</div><div class="rpro">${chips(J[sd]||[])}${jeito?`<p>${esc(jeito)}</p>`:""}</div></div>
+      <div><div class="sub2">Como jogar de ${esc(P.nome.toLowerCase())}</div><ul class="rtips">${(P[sd]||[]).map(x=>`<li class="${sd}">${esc(x)}</li>`).join("")}</ul></div>
+      <div>${pool?`<div class="sub2">Do seu pool, pra esse papel</div><div class="rops">${pool}</div>`:""}</div>
+      <div class="read">${RR[sd]?`<p>${RR[sd]}</p>`:""}</div>
+    </div>`;};
+  const seg=`<div class="rseg" role="group" aria-label="Lado do round">${["atk","def"].map(sd=>
+    `<button type="button" class="fchip${ROLE_SD===sd?" on":""}" data-sd="${sd}" aria-pressed="${ROLE_SD===sd}" onclick="roleSide(this,'${sd}')">${SD[sd]}</button>`).join("")}</div>`;
   const head=`<div class="hl txt"><div class="hs"><b>${esc(P.nome)}</b><span>seu papel no squad</span></div><i class="x" aria-hidden="true">=</i><div class="hs"><b>${esc(r.pro)}</b><span>o mesmo papel no FaZe</span></div></div>`;
   const src=(PROS.fontes||[]).map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ");
   return card({k:"role",open:1,title:"Seu papel no time",head,
     cap:`pelo jeito que você joga o round, comparado com os outros 9 jogadores das mesmas partidas`,
-    body:`<table class="ctable"><tr><th>No kill feed</th><th>Você</th><th>Lobby</th></tr>${side("atk","Ataque")}${side("def","Defesa")}</table>
-      <div class="sub2">Os operadores que você pega, por função</div>${mix("atk")}${mix("def")}
-      <div class="sub2">Como o ${esc(r.pro)} joga, no ataque e na defesa</div>
-      <div class="rpro"><div class="rn">${esc(J.nome)}<small>${esc(J.papel)}</small></div>
-        ${chips(J.atk,"atk")}<p>${esc(J.jeito)}</p>${chips(J.def,"def")}${J.jeitoDef?`<p>${esc(J.jeitoDef)}</p>`:""}
-        <p class="rmut">Os mais jogados na carreira, pelo <a href="${esc(J.url)}" target="_blank" rel="noopener">siege.gg</a>.${shared.size?` Em dourado, os que vocês dois jogam: ${[...shared].map(esc).join(", ")}.`:""}${A?` Também tem o seu papel no FaZe: <b>${esc(r.alt)}</b> (${esc(A.papel)}).`:""}</p></div>
-      <div class="sub2">${esc(P.nome)}: como jogar</div><p class="rmut">${esc(P.resumo)}</p>${tips("atk")}${tips("def")}
-      ${ma||md?`<div class="sub2">Do seu pool, pra esse papel</div>${ma?`<div class="rops"><span class="rsd atk">Ataque</span>${ma}</div>`:""}${md?`<div class="rops"><span class="rsd def">Defesa</span>${md}</div>`:""}`:""}`,
-    read:roleRead(r),
+    body:`<div class="rpro rtop"><div class="rn">${esc(J.nome)}<small>${esc(J.papel)}</small></div>
+        <p><b>${esc(P.nome)}.</b> ${esc(P.resumo)}</p>
+        <p class="rmut">Os operadores dele são os mais jogados na carreira, pelo <a href="${esc(J.url)}" target="_blank" rel="noopener">siege.gg</a>.${shared.size?` Em dourado, os que vocês dois jogam: ${[...shared].map(esc).join(", ")}.`:""}${A?` Também tem o seu papel no FaZe: <b>${esc(r.alt)}</b> (${esc(A.papel)}).`:""}</p></div>
+      ${seg}<div class="rcols" data-sd="${ROLE_SD}">${col("atk")}${col("def")}</div>`,
     note:`Papel pelo kill feed: entry entra no 1º duelo mais que o lobby e abre com abate; suporte entra bem menos e é bem menos o 1º do time a cair; flex fica no meio. Lobby = os outros 9 das mesmas partidas (papel é estilo, não nível). O pro tem o mesmo papel, e os operadores em comum desempatam. Referência: ${esc(PROS.time)}, ${esc(PROS.titulo)}. Fontes, lidas em ${esc(PROS.lido)}: ${src}.`});
 }
 function renderCoach(){
