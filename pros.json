@@ -1,0 +1,112 @@
+{
+  "_nota": "Referência pro do card 'Seu papel no time' (Coach) e da seção de papéis da Média do grupo. Lido em 16/11/2026. Papéis por jogador: strave.gg (fonte única; VITAKING como IGL confirmado também no siege.gg). Operadores mais jogados: siege.gg, carreira inteira, top por rounds. 'funcoes' = função de cada operador, tirada do 'why' do playbook.json. Rever a cada troca de elenco.",
+  "lido": "16/11/2026",
+  "time": "FaZe Clan",
+  "titulo": "campeão do Major de Osaka em 15/11/2026 (3-0 na DarkZero na final)",
+  "fontes": [
+    ["siege.gg · elenco do FaZe", "https://siege.gg/teams/50-faze-clan"],
+    ["strave.gg · papel de cada jogador", "https://strave.gg/esports/teams/faze-clan"],
+    ["keengamer · final do Major de Osaka", "https://www.keengamer.com/articles/features/reportages/faze-clan-sweep-darkzero-to-win-the-r6-osaka-major-2026/"]
+  ],
+  "funcoes": {
+    "atk": {
+      "entrada": ["Ash", "Zofia", "Sledge", "Buck", "Ram", "Striker", "Ying", "Blackbeard", "Blitz", "Amaru", "Osa", "Nøkk", "Glaz", "Solid Snake", "Rauora"],
+      "breach": ["Thermite", "Hibana", "Ace", "Maverick"],
+      "suporte": ["Thatcher", "Kali", "Twitch", "Brava", "Flores", "Fuze", "Gridlock", "Nomad", "Montagne", "Capitão", "Finka"],
+      "info": ["Dokkaebi", "Lion", "Jackal", "IQ", "Grim", "Zero", "Iana", "Deimos"]
+    },
+    "def": {
+      "ancora": ["Smoke", "Mute", "Bandit", "Kaid", "Jäger", "Wamai", "Castle", "Sentry", "Rook", "Doc", "Thunderbird", "Goyo", "Maestro", "Tachanka", "Mira", "Azami", "Echo", "Warden", "Clash", "Melusi", "Fenrir", "Aruni", "Tubarão", "Noor", "Denari"],
+      "roam": ["Vigil", "Caveira", "Oryx", "Alibi", "Ela", "Lesion", "Frost", "Kapkan", "Thorn"],
+      "info": ["Valkyrie", "Pulse", "Mozzie", "Solis", "Skopós"]
+    }
+  },
+  "funcaoNome": {"entrada": "entrada", "breach": "hard breach", "suporte": "utilidade", "info": "informação", "ancora": "âncora", "roam": "roam"},
+  "papeis": {
+    "entry": {
+      "nome": "Entry",
+      "pros": ["KDS", "Cyber"],
+      "resumo": "Abre o round: é o primeiro a entrar no site e o primeiro a duelar. Ganhar o duelo abre espaço; perder com troca do time ainda vale.",
+      "atk": [
+        "Entre sabendo: drone, réplica ou flash do time antes do corpo. Entry que entra às cegas perde o 1º duelo.",
+        "Avise \"vou entrar\" e espere o 2º grudar. Morrer entrando com troca não é erro; morrer sem ninguém atrás é.",
+        "Ganhou o 1º abate? Segure o espaço tomado e espere o time. Perseguir sozinho devolve a vantagem."
+      ],
+      "def": [
+        "Seu duelo é a arma: segure o ângulo agressivo da entrada ou lidere o retake, sempre com alguém pra trocar.",
+        "Saiu pra caçar? Volte antes do plant. Abate fora do site que custa o site não vale."
+      ]
+    },
+    "suporte": {
+      "nome": "Suporte",
+      "pros": ["VITAKING", "soulz1"],
+      "resumo": "Faz o time funcionar: utilidade, informação e troca. Não abre o duelo, fecha o que o entry abriu, e fica vivo pra ler o round.",
+      "atk": [
+        "Drone primeiro, corpo depois: mostre o site pro entry antes de ele entrar.",
+        "Ande a uma sala do entry. Quando ele cair, a troca é sua: é aí que o suporte mata.",
+        "Leve a utilidade que destrava o round: hard breach ou o anti-gadget que abre caminho pra ele.",
+        "Fique vivo pro pós-plant. Quem sobra no fim planta e segura o plant."
+      ],
+      "def": [
+        "Âncora: segure o site com utilidade e não saia pra caçar. Cada minuto segurando vale mais que um abate fora.",
+        "Fale o tempo todo. Quem fica vivo vê o round inteiro: chame onde o ataque está e quando rotacionar."
+      ]
+    },
+    "flex": {
+      "nome": "Flex",
+      "pros": ["Handyy", "soulz1"],
+      "resumo": "Pega o que falta no time naquele round. O valor está em ter pool largo e jogar bem qualquer função.",
+      "atk": [
+        "No pick, olhe o time antes: sem hard breach, você leva; sem entry, você entra; sem anti-gadget, você leva o anti-gadget.",
+        "No round, seja o 2º entry ou o 2º suporte. Siga quem tem o plano, no ritmo dele.",
+        "Não abra duelo cru. O flex entra como segundo, com troca garantida."
+      ],
+      "def": [
+        "Feche o buraco do time: se ninguém ancora, ancore; se ninguém atrasa fora, atrase fora e volte pro retake.",
+        "Pool de verdade: 4 ou 5 operadores por lado que você joga bem, não 1 que você força."
+      ]
+    }
+  },
+  "jogadores": {
+    "VITAKING": {
+      "nome": "Victor \"VITAKING\" Augusto dos Santos",
+      "papel": "IGL e suporte",
+      "atk": ["Ace", "Hibana", "Montagne"],
+      "def": ["Smoke", "Mute", "Warden"],
+      "url": "https://siege.gg/players/2323-vitaking",
+      "jeito": "O capitão que chama o round. Faz 0,65 abate por round na carreira e é campeão do mundo assim: o trabalho dele é utilidade, plant e ficar vivo pra ler o round."
+    },
+    "soulz1": {
+      "nome": "Lucas \"soulz1\" Romero Schinke",
+      "papel": "suporte e flex",
+      "atk": ["Thermite", "Ace", "Hibana"],
+      "def": ["Smoke", "Azami", "Goyo", "Kaid"],
+      "url": "https://siege.gg/players/1386-soulz1",
+      "jeito": "O hard breacher que abre a parede e ainda fecha o round: 249 plants e 122 clutches na carreira."
+    },
+    "Handyy": {
+      "nome": "Thiago \"Handyy\" Sá Ferreira",
+      "papel": "flex",
+      "atk": ["Ace", "Twitch", "Hibana", "Thermite", "Dokkaebi"],
+      "def": ["Mute", "Azami", "Smoke", "Warden", "Fenrir"],
+      "url": "https://siege.gg/players/2822-handy",
+      "jeito": "Joga o que o time precisa: cinco operadores de cada lado com volume parecido, de hard breach a anti-gadget."
+    },
+    "KDS": {
+      "nome": "Eduardo \"KDS\" Santos",
+      "papel": "entry",
+      "atk": ["Iana", "Ash", "Striker", "Zofia", "Finka"],
+      "def": ["Jäger", "Wamai", "Melusi", "Lesion", "Mira"],
+      "url": "https://siege.gg/players/1109-kds",
+      "jeito": "Entry que entra sabendo: a réplica da Iana vai antes, e Ash e Zofia tomam o espaço."
+    },
+    "Cyber": {
+      "nome": "Jaime \"Cyber\" Ramos",
+      "papel": "entry",
+      "atk": ["Buck", "Ash", "Sledge"],
+      "def": ["Jäger", "Valkyrie", "Mute"],
+      "url": "https://siege.gg/players/104-cyb3r",
+      "jeito": "Entry de pressão vertical: Buck e Sledge abrem chão e teto pra tomar o site por cima."
+    }
+  }
+}

@@ -45,6 +45,8 @@ MIN_ROUNDS = 8      # operador abaixo disso não entra nas listas (é o "°" do 
 SOLID_ROUNDS = 15  # abaixo disso o operador não abre a lista nem ganha estrela
 RECENT = 20         # partidas na "forma recente"
 SESSION_GAP_MIN = 75
+ROLE_MIN = 100      # rounds de ataque no kill feed pra dar papel (entry / suporte / flex)
+PROS = json.load(open(os.path.join(HERE, "pros.json"), encoding="utf-8"))  # FaZe: papéis, pools, funções
 
 
 def load(path):
@@ -61,15 +63,20 @@ def pct(a, b, dec=1):
 
 
 def side_table(players_dir):
-    """Lado de cada operador: playbook + tudo que apareceu nas coletas (todas trazem a/d)."""
-    side = {}
+    """Lado de cada operador: o que a coleta traz (a/d, vem do jogo) manda; o playbook cobre quem nunca foi
+    jogado. Divergência é erro do playbook e sai avisada (a Denari estava como atacante até 16/11/2026)."""
+    side, pbs = {}, {}
     pb = os.path.join(HERE, "playbook.json")
     if os.path.exists(pb):
-        side.update({k: v.get("side") for k, v in load(pb).get("operators", {}).items()})
+        pbs = {k: v.get("side") for k, v in load(pb).get("operators", {}).items()}
     for f in glob.glob(os.path.join(players_dir, "*", "raw", "*_operators.json")):
         for r in load(f)["rows"]:
             if r[1]:
                 side.setdefault(r[0].strip(), "atk" if r[1] == "a" else "def")
+    for op, sd in pbs.items():
+        if op in side and side[op] != sd:
+            print(f"  aviso: playbook diz {op} = {sd}, a coleta diz {side[op]} (vale a coleta)")
+        side.setdefault(op, sd)
     return side
 
 
@@ -685,6 +692,89 @@ def ops_role(path):
     return {op: a for op, a in agg.items() if a[0] >= 10}
 
 
+def _role_round(E, i, tm):
+    """Um jogador num round: E = [(quem matou|None, quem morreu)], tm = o time dele (inclui ele)."""
+    s = collections.Counter(n=1)
+    if E:
+        k0, v0 = E[0]
+        s["ok"] += k0 == i                       # abate de abertura do round
+        s["od"] += v0 == i                       # morte de abertura do round
+        s["tfd"] += next((v for _, v in E if v in tm), None) == i   # 1º do próprio time a morrer
+        s["close"] += any(k == i for k, _ in E[-2:])                # abate entre os 2 últimos
+    died = next((j for j, (_, v) in enumerate(E) if v == i), None)
+    s["surv"] += died is None
+    s["kills"] += sum(1 for k, _ in E if k == i)
+    if died is not None:
+        s["deaths"] += 1
+        kk = E[died][0]                          # trocado = o time mata quem te matou nos 2 abates seguintes
+        s["traded"] += kk is not None and any(k in tm and v == kk for k, v in E[died + 1:died + 3])
+    return s
+
+
+def role_of(path, side_of):
+    """Papel no time (entry / suporte / flex) pelo comportamento no kill feed, por lado, contra a média
+    dos outros 9 das mesmas partidas (o lobby — papel é estilo, não nível). Junta a função dos operadores
+    (pros.json) e o jogador do FaZe mais parecido: papel primeiro, operadores em comum desempatam."""
+    fn = {sd: {op: f for f, ops in PROS["funcoes"][sd].items() for op in ops} for sd in ("atk", "def")}
+    me = {sd: collections.Counter() for sd in ("atk", "def")}
+    ref = {sd: collections.Counter() for sd in ("atk", "def")}
+    mix = {"atk": {}, "def": {}}               # função do operador → [rounds, vencidos]
+    pool = {"atk": {}, "def": {}}
+    for line in open(path, encoding="utf-8"):
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        P = rec["P"]
+        mi = next(i for i, p in enumerate(P) if p[1])
+        T = P[mi][0]
+        ops = P[mi][10].split(".") if P[mi][10] else []
+        teams = {t: {i for i in range(10) if P[i][0] == t} for t in (0, 1)}
+        for j, rnd in enumerate(rec["R"]):
+            op = ops[j] if j < len(ops) else ""
+            sd = side_of.get(op)
+            if sd not in ("atk", "def"):
+                continue
+            w, ev = rnd.split(":", 1)
+            E = [(None if ev[x] == "x" else int(ev[x]), int(ev[x + 1]))
+                 for x in range(0, len(ev) - 1, 2) if ev[x + 1] != "x"]
+            for i in range(10):
+                s2 = sd if P[i][0] == T else ("def" if sd == "atk" else "atk")
+                (me if i == mi else ref)[s2].update(_role_round(E, i, teams[P[i][0]]))
+            mx = mix[sd].setdefault(fn[sd].get(op, "?"), [0, 0])
+            mx[0] += 1
+            mx[1] += int(w) == T
+            pl = pool[sd].setdefault(op, [0, 0, 0])
+            pl[0] += 1
+            pl[1] += int(w) == T
+            pl[2] += sum(1 for k, _ in E if k == mi)
+    a, ra = me["atk"], ref["atk"]
+    pc = lambda c, k: c[k] / c["n"] if c["n"] else 0.0
+    tag = None
+    if a["n"] >= ROLE_MIN:
+        inv, rinv = pc(a, "ok") + pc(a, "od"), pc(ra, "ok") + pc(ra, "od")   # entra no 1º duelo do round
+        if inv >= 1.1 * rinv and pc(a, "ok") > pc(ra, "ok"):
+            tag = "entry"
+        elif inv <= 0.7 * rinv and pc(a, "tfd") <= 0.75 * pc(ra, "tfd"):
+            tag = "suporte"
+        else:
+            tag = "flex"
+    top = {sd: [op for op, v in sorted(pool[sd].items(), key=lambda kv: (-kv[1][0], kv[0]))[:6] if v[0] >= 20]
+           for sd in pool}                       # pool pra comparar com o pro: até 6 por lado, 20+ rounds cada
+    out = {"tag": tag, "min": ROLE_MIN,
+           "me": {sd: dict(me[sd]) for sd in me}, "ref": {sd: dict(ref[sd]) for sd in ref},
+           "mix": {sd: dict(sorted(mix[sd].items(), key=lambda kv: -kv[1][0])) for sd in mix},
+           "pool": {sd: [[op] + v for op, v in sorted(pool[sd].items(), key=lambda kv: (-kv[1][0], kv[0]))[:8]]
+                    for sd in pool}}
+    if tag:
+        J = PROS["jogadores"]
+        cands = PROS["papeis"][tag]["pros"]
+        ov = {p: sorted((set(top["atk"]) & set(J[p]["atk"])) | (set(top["def"]) & set(J[p]["def"]))) for p in cands}
+        pro = cands[1] if len(ov[cands[1]]) > len(ov[cands[0]]) else cands[0]
+        out.update(pro=pro, alt=next(p for p in cands if p != pro), overlap=ov)
+    assert sum(v[0] for v in mix["atk"].values()) == a["n"] and sum(v[0] for v in mix["def"].values()) == me["def"]["n"]
+    return out
+
+
 def map_ops(path, rows, side_of):
     """Operador × mapa × lado do PRÓPRIO jogador, round a round, direto do kill feed
     (P[me][10] traz um operador por round; o lado sai do operador). Cobre todos os operadores,
@@ -866,6 +956,7 @@ def main(date):
                 snap["coach"] = coach_of(rounds, side_all)
                 snap["coach"]["opsRole"] = ops_role(rounds)
                 snap["coach"]["lobby"] = lobby_of(rounds, slug, sigs_by_sn[sn])
+                snap["coach"]["role"] = role_of(rounds, {**side_all, **op_side})
                 if srows:
                     snap["coach"]["trend"] = trend_of(srows, rounds)
                     snap["mapOps"] = map_ops(rounds, srows, {**side_all, **op_side})

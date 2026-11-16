@@ -116,6 +116,15 @@ def rank_py(rp):
     return (name, color)
 
 
+def load_pros():
+    """Referência pro (FaZe) do card de papel: pros.json na raiz; sem ele, o card some."""
+    p = os.path.join(HERE, "pros.json")
+    if not os.path.exists(p):
+        return {}
+    with open(p, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def load_names(dirs):
     """slug -> nome de todos os perfis (a aba Coach mostra com quem foi a fila)."""
     names = {}
@@ -166,6 +175,7 @@ def build_player(pdir, names=None):
             .replace("__DATA__", json.dumps(snaps, ensure_ascii=False))
             .replace("__PLAYER__", json.dumps(profile, ensure_ascii=False))
             .replace("__PLAYBOOK__", json.dumps(playbook, ensure_ascii=False))
+            .replace("__PROS__", json.dumps(load_pros(), ensure_ascii=False))
             .replace("__NAMES__", json.dumps(names or {}, ensure_ascii=False)))
     os.makedirs(OUT_DIR, exist_ok=True)
     out = os.path.join(OUT_DIR, slug + ".html")
@@ -584,6 +594,46 @@ def write_media(dirs):
             f'usa naquele mapa — operador é um por time, combinem antes quem fica com ele. Vem do kill feed da ranqueada (um operador por round, '
             f'sozinho ou com o grupo), então cobre todos os operadores, não só os 10 que o tracker detalha.</p></section>')
 
+    # ---------- papéis: entry / suporte / flex de cada um e o jogador do FaZe mais parecido ----------
+    roles_html = ""
+    pros = load_pros()
+    papel = [(p, ((snapc[p["slug"]].get("coach") or {}).get("role") or {})) for p in players]
+    papel = [(p, rl) for p, rl in papel if rl.get("tag") and pros.get("papeis")]
+    if papel:
+        ordem = {"entry": 0, "flex": 1, "suporte": 2}
+        papel.sort(key=lambda x: ordem.get(x[1]["tag"], 9))
+        pp = lambda c, k: round(100 * c.get(k, 0) / c["n"]) if c.get("n") else 0
+        inv = lambda c: round(100 * (c.get("ok", 0) + c.get("od", 0)) / c["n"]) if c.get("n") else 0
+        itens = ""
+        for p, rl in papel:
+            P, J = pros["papeis"][rl["tag"]], pros["jogadores"][rl["pro"]]
+            a, f = rl["me"]["atk"], rl["ref"]["atk"]
+            kpr = lambda c: dec(c.get("kills", 0) / c["n"]) if c.get("n") else "—"
+            itens += (f'<li><a class="rlrow" href="{esc(p["slug"])}.html">'
+                      f'<span class="rltag r-{esc(rl["tag"])}">{esc(P["nome"])}</span>'
+                      f'<span class="rlnm"><b>{esc(p["name"])}</b><i>joga como o <b>{esc(rl["pro"])}</b> do FaZe</i></span>'
+                      f'<span class="rlwhy">1º duelo <b>{inv(a)}%</b> <small>lobby {inv(f)}%</small> · vivo no fim <b>{pp(a, "surv")}%</b> '
+                      f'<small>{pp(f, "surv")}%</small> · abates/round <b>{kpr(a)}</b> <small>{kpr(f)}</small></span></a></li>')
+        quem = lambda t: " e ".join(str(p["name"]) for p, rl in papel if rl["tag"] == t)
+        E, S, F = quem("entry"), quem("suporte"), quem("flex")
+        ritmo = []
+        if E:
+            ritmo.append(f"<b>{esc(E)}</b> entra primeiro e toma o espaço, com drone ou utilidade do time antes")
+        if S:
+            ritmo.append(f"<b>{esc(S)}</b> anda a uma sala de {esc(E) if E else 'quem entra'} pra trocar na hora e fica vivo pro plant")
+        if F:
+            ritmo.append(f"<b>{esc(F)}</b> pega no pick o que falta (hard breach, se ninguém levar) e entra como o 2º")
+        ritmo_html = (f'<p class="rlritmo"><span>O ritmo de vocês</span>{"; ".join(ritmo)}.</p>' if len(ritmo) >= 2 else "")
+        roles_html = (
+            f'<section><h2>Papéis do squad<span class="hint">entry · flex · suporte, pelo kill feed · {esc(cur["season"])}</span></h2>'
+            f'<ul class="rl">{itens}</ul>{ritmo_html}'
+            f'<p class="vleg">O papel sai do jeito que cada um joga o round de ataque, comparado com os outros 9 jogadores das mesmas partidas '
+            f'(papel é estilo, não nível): <b>entry</b> entra no 1º duelo mais que o lobby e abre com abate; <b>suporte</b> entra bem menos e é '
+            f'bem menos o 1º do time a cair; <b>flex</b> fica no meio. O FaZe é o {esc(pros.get("titulo", ""))}: cada um ganha o jogador de lá '
+            f'com o mesmo papel, e os operadores em comum desempatam. Cada um tem o card completo no Coach: como o pro joga e o que fazer no round. '
+            f'Papéis: <a href="{esc(pros["fontes"][1][1])}" rel="noopener">strave.gg</a> · operadores: '
+            f'<a href="{esc(pros["fontes"][0][1])}" rel="noopener">siege.gg</a> · lido em {esc(pros.get("lido", ""))}.</p></section>')
+
     trs = ""
     for i, r in enumerate(rows):
         rn, rc, _, _ = rank_parts(round(r["rp"]))
@@ -614,7 +664,7 @@ def write_media(dirs):
             .replace("__TAG__", f"A média de nós {n} · ranqueada R6")
             .replace("__TOKENS__", TOKENS_CSS)
             .replace("__SPRITE__", sprite(set()))
-            .replace("__HERO__", hero).replace("__VS__", vs)
+            .replace("__HERO__", hero).replace("__VS__", vs).replace("__ROLES__", roles_html)
             .replace("__TOGETHER__", together_html).replace("__MAPS__", maps_html).replace("__OPS__", ops_html)
             .replace("__MAPOPS__", mapops_html)
             .replace("__SEASONS__", seasons_html).replace("__FOOT__", foot))
@@ -910,6 +960,29 @@ __HEAD__
   .mcf .disp{display:inline-block;margin:0 7px 0 0;vertical-align:1px}
   @media(prefers-reduced-motion:reduce){ .mopick label{transition:none} }
 
+  /* papéis do squad */
+  .rl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .rlrow{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:6px;align-items:center;padding:12px 14px;
+         border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);color:inherit;text-decoration:none;transition:border-color .15s}
+  .rlrow:hover{border-color:var(--gold)}
+  .rlrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .rltag{font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps);padding:4px 9px;border-radius:var(--r-pill);
+         background:rgba(244,194,13,.12);color:var(--gold);text-align:center;min-width:72px}
+  .rltag.r-entry{background:rgba(59,130,246,.14);color:var(--atk-t)}
+  .rltag.r-suporte{background:rgba(52,211,153,.13);color:var(--play)}
+  .rlnm b{display:block;font-size:var(--fs-4);font-weight:800;line-height:1.25}
+  .rlnm i{display:block;font-style:normal;font-size:var(--fs-2);color:var(--muted)}
+  .rlnm i b{display:inline;font-size:inherit;color:var(--txt)}
+  .rlwhy{grid-column:1/-1;font-size:var(--fs-2);color:var(--txt-2);font-variant-numeric:tabular-nums;line-height:1.5}
+  .rlwhy b{color:var(--txt)} .rlwhy small{color:var(--muted);font-size:var(--fs-1)}
+  .rlritmo{margin:12px 0 0;padding:12px 14px;border-left:3px solid var(--gold);background:var(--inset);border-radius:0 var(--r-2) var(--r-2) 0;
+           font-size:var(--fs-3);line-height:1.55;color:var(--txt-2)}
+  .rlritmo span{display:block;font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps);color:var(--gold);margin-bottom:4px}
+  .rlritmo b{color:var(--txt)}
+  .vleg a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
+  .vleg a:hover{color:var(--gold);border-color:var(--gold)}
+  @media(prefers-reduced-motion:reduce){ .rlrow{transition:none} }
+
   /* season a season */
   .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}
   .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -948,6 +1021,7 @@ __SPRITE__
   </header>
 __HERO__
 __VS__
+__ROLES__
 __TOGETHER__
 __MAPS__
 __OPS__
@@ -1444,6 +1518,28 @@ __HEAD__
   .read,.fread{margin-top:10px;font-size:var(--fs-3);line-height:1.55;color:var(--txt-2)}
   .read b,.fread b{color:var(--txt)}
   .note,.fsrc{margin-top:8px;font-size:var(--fs-2);color:var(--muted);line-height:1.4}
+  .note a,.rpro a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
+  .note a:hover,.rpro a:hover{color:var(--gold);border-color:var(--gold)}
+
+  /* papel no time (Coach) */
+  .rpro{margin-top:8px;padding:12px 14px;border-radius:var(--r-2);background:var(--inset);border:1px solid var(--hair)}
+  .rpro .rn{font-size:var(--fs-4);font-weight:800;color:var(--txt);line-height:1.3}
+  .rpro .rn small{display:block;font-size:var(--fs-2);font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:var(--ls-caps);margin-top:2px}
+  .rpro p{margin:8px 0 0;font-size:var(--fs-3);line-height:1.5;color:var(--txt-2)}
+  .rpro p.rmut,.rmut{font-size:var(--fs-2);color:var(--muted);line-height:1.45}
+  p.rmut{margin:6px 0 0}
+  .rops{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+  .rsd{font-size:var(--fs-1);font-weight:800;text-transform:uppercase;letter-spacing:var(--ls-caps);min-width:58px}
+  .rsd.atk{color:var(--atk-t)} .rsd.def{color:var(--def)}
+  .rop{display:inline-flex;align-items:baseline;gap:5px;padding:4px 9px;border-radius:var(--r-pill);background:var(--chip);border:1px solid var(--chipline);
+       font-size:var(--fs-2);font-weight:700;color:var(--txt-2);white-space:nowrap}
+  .rop small{font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+  .rop.eq{border-color:rgba(244,194,13,.65);color:var(--txt);box-shadow:inset 0 0 0 1px rgba(244,194,13,.22)}
+  .rtips{margin:6px 0 0;padding:0;list-style:none}
+  .rtips li{position:relative;padding:8px 0 8px 18px;border-top:1px solid var(--hair);font-size:var(--fs-3);line-height:1.5;color:var(--txt-2)}
+  .rtips li:first-child{border-top:none}
+  .rtips li::before{content:"";position:absolute;left:2px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .rtips li.atk::before{background:var(--atk)} .rtips li.def::before{background:var(--def)}
 
   /* barras: a barra desenha o %, escrito ao lado; "N de M" é o apoio */
   .bars{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
@@ -1519,6 +1615,7 @@ __SPRITE__
 const SNAPSHOTS = __DATA__;
 const PLAYER = __PLAYER__;
 const PLAYBOOK = __PLAYBOOK__;
+const PROS = __PROS__;                 // FaZe: papel, operadores e jeito de cada pro (pros.json)
 const NAMES = __NAMES__;              // slug -> nome de quem é do squad
 const BRAND = __BRAND__;              // geometria do logo e do emblema (brand.py): card de compartilhar e rankEmblem
 
@@ -2476,6 +2573,14 @@ function tiltCard(cur){
 function coachRuleItems(cur,base){     // as regras do plano; k = card do Coach que mostra o dado por trás ("" = nenhum)
   const c=cur.coach, s=cur.style, R=[];
   const rule=(k,ico,cls,b,t)=>R.push({k,ico,cls,b,t});
+  const RL=c&&c.role;
+  if(RL&&RL.tag&&PROS.papeis&&PROS.papeis[RL.tag]){
+    const P=PROS.papeis[RL.tag], F=roleFacts(RL).atk;
+    const why=RL.tag==="suporte"?`No ataque você entra no 1º duelo em ${F.inv}% dos rounds (lobby ${F.rinv}%) e termina vivo ${F.surv}% (lobby ${F.rsurv}%).`
+      :RL.tag==="entry"?`Você abre o round com abate em ${F.ok}% dos rounds de ataque (lobby ${F.rok}%) e faz ${fx(F.kpr,2)} abates por round (lobby ${fx(F.rkpr,2)}).`
+      :`Você fica na média do lobby em quase tudo no ataque: 1º do time a cair em ${F.tfd}% (lobby ${F.rtfd}%).`;
+    rule("role","squad","play",`Você é ${P.nome.toLowerCase()}: jogue como o ${esc(RL.pro)}.`,`${esc(P.atk[ROLE_TIP[RL.tag]]||P.atk[0])} ${why}`);
+  }
   if(c&&c.lastAlive){
     const la=c.lastAlive.atk, lr=c.lastAliveRef.atk, me=pf(la[0],la[1]), ref=pf(lr[0],lr[1]), al=c.alone.atk;
     if(me-ref>=10) rule("lastAlive","sword","atk","No ataque, seja o 2º a entrar, não o 5º.",
@@ -2550,6 +2655,76 @@ function coachRules(cur,base){
   return R.length?`<div class="plan coach">${R.map(row).join("")}</div>`
     :bnr("info","Nenhuma regra passou no corte dos seus números ainda. Mapas e operadores estão no Plano de jogo do Início.","flat");
 }
+/* ---------- PAPEL NO TIME: entry / suporte / flex pelo kill feed × o jogador do FaZe com o mesmo papel ---------- */
+const ROLE_FN={entry:{atk:["entrada","info"],def:["roam","ancora"]},suporte:{atk:["breach","suporte","info"],def:["ancora","info"]},
+  flex:{atk:["entrada","breach","suporte","info"],def:["ancora","roam","info"]}};
+const ROLE_TIP={entry:1,suporte:1,flex:0};     // a dica do papel que vira regra no plano
+function roleFacts(r){                 // os números do card, já em % — um lugar só pro card e pra regra
+  const m=r.me, f=r.ref, p=(c,k)=>pf(c[k]||0,c.n);
+  const o=sd=>({inv:pf((m[sd].ok||0)+(m[sd].od||0),m[sd].n), rinv:pf((f[sd].ok||0)+(f[sd].od||0),f[sd].n),
+    ok:p(m[sd],"ok"), rok:p(f[sd],"ok"), tfd:p(m[sd],"tfd"), rtfd:p(f[sd],"tfd"), surv:p(m[sd],"surv"), rsurv:p(f[sd],"surv"),
+    kpr:(m[sd].kills||0)/m[sd].n, rkpr:(f[sd].kills||0)/f[sd].n, tr:pf(m[sd].traded||0,m[sd].deaths||0), rtr:pf(f[sd].traded||0,f[sd].deaths||0),
+    close:p(m[sd],"close"), rclose:p(f[sd],"close")});
+  return {atk:o("atk"),def:o("def")};
+}
+function roleRead(r){
+  const F=roleFacts(r), a=F.atk, d=F.def, FN=PROS.funcaoNome||{}, k2=x=>fx(x,2);
+  let t;
+  if(r.tag==="suporte"){
+    t=`No ataque você entra no 1º duelo do round em só <b>${a.inv}%</b> dos rounds (lobby ${a.rinv}%), é o 1º do time a cair em <b>${a.tfd}%</b> (lobby ${a.rtfd}%) e termina vivo <b>${a.surv}%</b> (lobby ${a.rsurv}%). É o desenho do suporte: fica atrás e fica vivo.`;
+    if(a.tr<a.rtr-2) t+=` O ajuste é a distância: quando você cai, o time devolve só <b>${a.tr}%</b> (lobby ${a.rtr}%). Suporte que morre longe não é trocado; ande a uma sala de quem entra.`;
+  }else if(r.tag==="entry"){
+    t=`No ataque você abre o round com abate em <b>${a.ok}%</b> dos rounds (lobby ${a.rok}%) e faz <b>${k2(a.kpr)}</b> abates por round (lobby ${k2(a.rkpr)}). É entry que ganha o duelo, não só entra nele.`;
+    if(a.tr<a.rtr-2) t+=` O que falta é o 2º homem: quando você cai, o time devolve só <b>${a.tr}%</b> (lobby ${a.rtr}%). Entry sem troca é abate jogado fora: avise antes de entrar.`;
+  }else{
+    t=`Você fica perto da média do lobby em quase tudo: 1º do time a cair em <b>${a.tfd}%</b> dos rounds de ataque (lobby ${a.rtfd}%), vivo no fim em <b>${a.surv}%</b> (lobby ${a.rsurv}%). É o perfil de flex.`;
+    if(a.kpr<0.85*a.rkpr) t+=` O que fica abaixo é o abate: <b>${k2(a.kpr)}</b> por round no ataque (lobby ${k2(a.rkpr)}) e abate de abertura em ${a.ok}% (lobby ${a.rok}%). Flex que entra como 2º pega a troca, e é aí que o abate vem.`;
+  }
+  ["atk","def"].forEach(sd=>{        // a função que paga mais × a que paga menos, se a diferença for real
+    const L=Object.entries(r.mix[sd]||{}).filter(([fn,v])=>fn!=="?"&&v[0]>=40).map(([fn,v])=>[fn,pf(v[1],v[0]),v[0]]).sort((x,y)=>y[1]-x[1]);
+    if(L.length>=2&&L[0][1]-L[L.length-1][1]>=10){
+      const hi=L[0], lo=L[L.length-1];
+      t+=` ${sd==="atk"?"No ataque":"Na defesa"}, seus rounds de ${FN[hi[0]]||hi[0]} vencem <b>${hi[1]}%</b> (${hi[2]} rounds) e os de ${FN[lo[0]]||lo[0]}, <b>${lo[1]}%</b> (${lo[2]}).`;
+    }
+  });
+  return t;
+}
+function roleCard(cur){
+  const r=cur.coach&&cur.coach.role;
+  if(!r||!r.tag||!PROS.papeis||!PROS.jogadores) return "";
+  const P=PROS.papeis[r.tag], J=PROS.jogadores[r.pro], A=PROS.jogadores[r.alt], FN=PROS.funcaoNome||{};
+  if(!P||!J) return "";
+  const F=roleFacts(r), k2=x=>fx(x,2);
+  const row=(l,a,b)=>`<tr><td>${l}</td><td><b>${a}</b></td><td>${b}</td></tr>`;
+  const side=(sd,lbl)=>{const x=F[sd]; return `<tr><td colspan="3" class="csub">${lbl} · ${nf(r.me[sd].n)} rounds</td></tr>`
+    +row("Entra no 1º duelo do round",x.inv+"%",x.rinv+"%")+row("Abate de abertura",x.ok+"%",x.rok+"%")
+    +row("1º do seu time a morrer",x.tfd+"%",x.rtfd+"%")+row("Vivo no fim do round",x.surv+"%",x.rsurv+"%")
+    +row("Abates por round",k2(x.kpr),k2(x.rkpr))+row("Morte trocada pelo time",x.tr+"%",x.rtr+"%");};
+  const mix=sd=>{const M=r.mix[sd]||{}, n=r.me[sd].n;
+    return bars(Object.entries(M).filter(([fn])=>fn!=="?").map(([fn,v])=>[FN[fn]||fn,pf(v[0],n),`${nf(v[0])} rounds · ${pf(v[1],v[0])}% vencidos`]),
+      sd==="atk"?"Ataque · % dos seus rounds":"Defesa · % dos seus rounds");};
+  const shared=new Set((r.overlap||{})[r.pro]||[]);
+  const chips=(ops,sd)=>`<div class="rops"><span class="rsd ${sd}">${sd==="atk"?"Ataque":"Defesa"}</span>${ops.map(o=>`<span class="rop${shared.has(o)?" eq":""}">${esc(o)}</span>`).join("")}</div>`;
+  const fnOf=(op,sd)=>{const T=(PROS.funcoes||{})[sd]||{}; return Object.keys(T).find(k=>T[k].includes(op));};
+  const mine=sd=>(r.pool[sd]||[]).filter(([op,n])=>n>=10&&ROLE_FN[r.tag][sd].includes(fnOf(op,sd)))
+    .map(([op,n,w])=>`<span class="rop${shared.has(op)?" eq":""}">${esc(op)}<small>${n} rounds · ${pf(w,n)}%</small></span>`).join("");
+  const ma=mine("atk"), md=mine("def");
+  const tips=P.atk.map(x=>`<li class="atk">${esc(x)}</li>`).join("")+P.def.map(x=>`<li class="def">${esc(x)}</li>`).join("");
+  const head=`<div class="hl txt"><div class="hs"><b>${esc(P.nome)}</b><span>seu papel no squad</span></div><i class="x" aria-hidden="true">=</i><div class="hs"><b>${esc(r.pro)}</b><span>o mesmo papel no FaZe</span></div></div>`;
+  const src=(PROS.fontes||[]).map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ");
+  return card({k:"role",open:1,title:"Seu papel no time",head,
+    cap:`pelo jeito que você joga o round, comparado com os outros 9 jogadores das mesmas partidas`,
+    body:`<table class="ctable"><tr><th>No kill feed</th><th>Você</th><th>Lobby</th></tr>${side("atk","Ataque")}${side("def","Defesa")}</table>
+      <div class="sub2">Os operadores que você pega, por função</div>${mix("atk")}${mix("def")}
+      <div class="sub2">Como o ${esc(r.pro)} joga</div>
+      <div class="rpro"><div class="rn">${esc(J.nome)}<small>${esc(J.papel)}</small></div>
+        <p>${esc(J.jeito)}</p>${chips(J.atk,"atk")}${chips(J.def,"def")}
+        <p class="rmut">Os mais jogados na carreira, pelo <a href="${esc(J.url)}" target="_blank" rel="noopener">siege.gg</a>.${shared.size?` Em dourado, os que vocês dois jogam: ${[...shared].map(esc).join(", ")}.`:""}${A?` Também tem o seu papel no FaZe: <b>${esc(r.alt)}</b> (${esc(A.papel)}).`:""}</p></div>
+      <div class="sub2">${esc(P.nome)}: como jogar</div><p class="rmut">${esc(P.resumo)}</p><ul class="rtips">${tips}</ul>
+      ${ma||md?`<div class="sub2">Do seu pool, pra esse papel</div>${ma?`<div class="rops"><span class="rsd atk">Ataque</span>${ma}</div>`:""}${md?`<div class="rops"><span class="rsd def">Defesa</span>${md}</div>`:""}`:""}`,
+    read:roleRead(r),
+    note:`Papel pelo kill feed: entry entra no 1º duelo mais que o lobby e abre com abate; suporte entra bem menos e é bem menos o 1º do time a cair; flex fica no meio. Lobby = os outros 9 das mesmas partidas (papel é estilo, não nível). O pro tem o mesmo papel, e os operadores em comum desempatam. Referência: ${esc(PROS.time)}, ${esc(PROS.titulo)}. Fontes, lidas em ${esc(PROS.lido)}: ${src}.`});
+}
 function renderCoach(){
   const cur=active, base=baselineOf(cur), latest=cur===SEASONS[0];
   const el=document.getElementById("scr-coach");
@@ -2559,13 +2734,14 @@ function renderCoach(){
   }
   PLAN={}; PLAN_OPEN="";
   if(latest) coachRuleItems(cur,base).forEach(r=>{ if(r.k){ PLAN[r.k]=1; if(!PLAN_OPEN) PLAN_OPEN=r.k; } });
-  const K=coachCards(cur);
+  const K=coachCards(cur), RC=roleCard(cur);
   K.trend=trendBlock(cur); K.squad=cur.squad?squadCard(cur,base):""; K.style=styleTable(cur,base); K.tilt=cur.tilt?tiltCard(cur):"";
   const grupos=COACH_GRUPOS.map(([t,sub,ks])=>{const h=ks.map(k=>K[k]||"").join(""); return h?`<h3 class="grp">${t}<small>${sub}</small></h3><div class="fcards">${h}</div>`:"";}).join("");
   el.innerHTML=`
     ${latest?`<h2 class="sec first">Plano pra próxima sessão<span class="hint">como jogar, tirado dos seus números</span></h2>${coachRules(cur,base)}
       <h2 class="sec">Meta</h2>${goalCard()}`
       :bnr("calendar",`Você está vendo a <b>${esc(cur.season)}</b>, já fechada. Meta e plano valem só pra season atual.`,"tight")}
+    ${RC?`<h2 class="sec">Seu papel no time<span class="hint">estilo de jogo × FaZe</span></h2><div class="fcards">${RC}</div>`:""}
     <h2 class="sec">O que os rounds mostram<span class="hint">${esc(cur.season)}</span></h2>
     ${cur.coach?"":bnr("search",`O diagnóstico round a round (quem fica por último, hard breach, nível dos times) ainda não foi coletado ${latest?"pra este perfil":"pra esta season"}.`,"gap")}
     ${grupos}`;

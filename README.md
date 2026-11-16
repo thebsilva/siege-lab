@@ -16,6 +16,7 @@ players/
     AAAA-MM-DD_<season>.json   # 1 snapshot por season (com seasonOrder) — é o que o app lê
     raw/AAAA-MM-DD_*.json(l)   # coleta crua do tracker (o build não lê; o ingest sim)
 playbook.json                  # COMPARTILHADO: motivo por operador + picks por mapa
+pros.json                      # COMPARTILHADO: FaZe (papel, pool, jeito de cada pro, fontes) + função de cada operador
 ingest.py                      # raw/ → snapshots (KPIs, mapas, ops, estilo, fila, tilt, coach)
 build.py                       # snapshots → docs/<slug>.html + docs/index.html
 docs/                          # o que o GitHub Pages serve
@@ -57,7 +58,9 @@ score = (adjWR - baseWR) + (adjKD - baseKD) * 12
 ## Telas / features
 Início (KPIs + rank + deltas, falta pro próximo rank, forma recente, "o que mudou desde {season}", plano de jogo) ·
 **Coach**, na ordem do que se decide *durante* a partida pro que é contexto: plano pra próxima sessão →
-meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) → **o que os rounds mostram**
+meta (cenário de RP + quantas derrotas cabem numa janela de 5 e de 4 partidas) → **seu papel no time** (entry /
+flex / suporte pelo kill feed × o pro do FaZe com o mesmo papel: como ele joga, como jogar o papel, o seu pool pra ele;
+entra também como 1ª regra do plano) → **o que os rounds mostram**
 (placar de vivos · sob pressão · último vivo no ataque · hard breach · trocas · quando suas kills acontecem ·
 round depois do clutch · round sem abate · clutch por 1vX · duelo repetido *(experimental)* · placar da
 partida · nível dos times) → tendência (últimas 15 × o resto da season) → fila → estilo em números → tilt ·
@@ -65,7 +68,8 @@ Mapas (busca pelo nome + ordem A–Z / Vitórias / Partidas, tier auto + card po
 Operadores (mains def/atk + corte, card de hard breach "plano B", tabela completa ordenável com HS% e 1º duelo, e ficha por operador: stats, season a season, por mapa, kill feed e função do playbook) · **Squad** (vitórias sozinho × com cada amigo, uma tabela por season) ·
 Evolução (sparklines season a season) · seletor de season no topo · botão ? (legenda) · card de compartilhar.
 
-**Média do grupo** (`media.html`, estática, sem JS): a média hoje · cada um contra a média · juntos e em dupla · a fila
+**Média do grupo** (`media.html`, estática, sem JS): a média hoje · cada um contra a média · **papéis do squad** (papel e
+pro de cada um + "o ritmo de vocês") · juntos e em dupla · a fila
 do grupo · mapas do squad · operadores do squad · **operadores por mapa** (toque no mapa → os 5 operadores que cada um
 mais joga naquele mapa, por lado, com rounds e % de vitória; borda dourada = disputado entre o grupo; vem do `mapOps`) ·
 season a season.
@@ -116,8 +120,19 @@ botão com alvo de toque ≥ 40 px; texto de leitura ≥ 11 px (10 px só em ró
   coach?:{lastAlive,lastAliveRef,firstDeath,alone,hardBreach,opening,teams,trades,kills,
           pressure{mine,theirs}, postClutch{afterLost,afterWon,afterAnyLost}, noKill{alive,died,diedWithKill},
           rival{with,without}, trend{last,rest},
-          opsRole{op:[r,w,vivoFim,1ªmorteTime,killAbre,killFecha,kills]}, …} }   # só com rounds.jsonl
+          opsRole{op:[r,w,vivoFim,1ªmorteTime,killAbre,killFecha,kills]},
+          role{tag,pro,alt,overlap,me{atk,def},ref{atk,def},mix{atk,def:{função:[r,w]}},pool{atk,def:[[op,r,w,k]]}}, …} }   # só com rounds.jsonl
 ```
+- **Papel (`coach.role`, `role_of()` no ingest):** cada round de cada um dos 10 jogadores, pelo kill feed, comparado com a
+  média dos outros 9 das mesmas partidas (papel é estilo, não nível). `me`/`ref` por lado: `n`, `ok`/`od` = abate/morte de
+  abertura do round, `tfd` = 1º do time a morrer, `surv` = vivo no fim, `close` = abate entre os 2 últimos, `kills`,
+  `deaths`, `traded` = morte trocada nos 2 abates seguintes. Com 100+ rounds de ataque: **entry** = entra no 1º duelo
+  ≥ 1,1× o lobby e abre com abate mais que ele; **suporte** = entra ≤ 0,7× e é o 1º do time a cair ≤ 0,75×; **flex** = o
+  resto. O pro sai de `pros.json` (`papeis[tag].pros`, na ordem); o 2º só ganha se tiver mais operadores em comum (até 6
+  por lado, 20+ rounds cada). Função do operador (entrada · hard breach · utilidade · informação | âncora · roam ·
+  informação) = `pros.json → funcoes`, tirada do `why` do playbook; cobre os 77 operadores.
+- **Lado do operador:** a coleta (a/d, vem do jogo) manda; o playbook só cobre quem nunca foi jogado e o ingest avisa
+  quando os dois divergem (a Denari estava como atacante no playbook até 16/11/2026; é defensora).
 - Tier do mapa = auto (win% ≥55 priorize · <40 banir · resto neutro).
 - Rank = derivado do RP. Cada faixa COMEÇA no RP indicado e dura 500: Prata 2000–2499 · Ouro 2500–2999 · Platina 3000–3499 · Esmeralda 3500–3999 · Diamante 4000–4499 · Campeão 4500+; dentro dela, divisões de 100 RP (I = topo, V = base). Ex.: 2.436 = Prata I (faltam 64 pra Ouro V), 3.600 = Esmeralda IV. Conferir sempre pelo `rank_parts()` do `build.py`, nunca de cabeça.
 - "Squad" = partida no mesmo minuto e mapa de outro perfil daqui. Amigo fora do app conta como sozinho.
