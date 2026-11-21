@@ -524,12 +524,14 @@ def write_media(dirs):
         "season": cur["season"], "prev": prev_season, "k": MIN_MAP,
         "players": [{"slug": sl, "tag": tag3[sl], "c": tcolor[sl],
                      "name": next(str(p["name"]) for p in players if p["slug"] == sl)} for sl in slugs],
-        "maps": [{"n": nm, "cur": ban_cur.get(nm, {}), "prev": ban_prev.get(nm, {})}
-                 for nm in sorted(pb_maps | set(ban_cur), key=str.lower)]}
+        "maps": sorted(({"n": MAPA_PT.get(nm, nm), "en": nm, "cur": ban_cur.get(nm, {}), "prev": ban_prev.get(nm, {})}
+                        for nm in pb_maps | set(ban_cur)), key=lambda mp: _sem_acento(mp["n"]))}
+    for nm in sorted((pb_maps | set(ban_cur)) - set(MAPA_PT)):
+        print(f"  ⚠️ ban: mapa sem nome em português, fica em inglês: {nm} (pôr em MAPA_PT)")
     for mp in ban_data["maps"]:                  # o ban usa exatamente os números da tabela "Mapas do squad"
-        if mp["n"] in magg:
-            assert sum(x[0] for x in mp["cur"].values()) == magg[mp["n"]]["m"], f"ban: partidas de {mp['n']} não batem com a tabela"
-            assert sum(x[1] for x in mp["cur"].values()) == magg[mp["n"]]["w"], f"ban: vitórias de {mp['n']} não batem com a tabela"
+        if mp["en"] in magg:
+            assert sum(x[0] for x in mp["cur"].values()) == magg[mp["en"]]["m"], f"ban: partidas de {mp['en']} não batem com a tabela"
+            assert sum(x[1] for x in mp["cur"].values()) == magg[mp["en"]]["w"], f"ban: vitórias de {mp['en']} não batem com a tabela"
     btitle = "SIEGE·LAB — Ban de mapa"
     bdesc = (f"Na tela de ban da ranqueada: toque nos mapas que apareceram e o pior pro squad ({nomes}) fica marcado, "
              f"com as vitórias do grupo em cada um na {cur['season']}.")
@@ -911,6 +913,23 @@ __SPRITE__
 """
 
 
+# Nome do mapa no jogo em português (o tracker manda em inglês). Fonte: título da página oficial de cada mapa em
+# ubisoft.com/pt-br/game/rainbow-six/siege/game-info/maps/<mapa>, lido em 21/11/2026. Border, Oregon, Outback e Villa
+# ficam com o nome original lá também.
+MAPA_PT = {
+    "Bank": "Banco", "Border": "Border", "Calypso Casino": "Cassino Calypso", "Chalet": "Chalé", "Clubhouse": "Casa de Campo",
+    "Coastline": "Litoral", "Consulate": "Consulado", "Emerald Plains": "Planície Esmeralda", "Fortress": "Fortaleza",
+    "Kafe Dostoyevsky": "Café Dostoyevsky", "Kanal": "Canal", "Lair": "Covil", "Nighthaven Labs": "Laboratórios Nighthaven",
+    "Oregon": "Oregon", "Outback": "Outback", "Skyscraper": "Arranha-céu", "Theme Park": "Parque Temático", "Villa": "Villa",
+}
+
+
+def _sem_acento(t):
+    """Chave de ordem alfabética do jeito que se lê: 'Chalé' entre 'Cassino' e 'Consulado', não no fim."""
+    import unicodedata
+    return unicodedata.normalize("NFD", t).encode("ascii", "ignore").decode().lower()
+
+
 BAN_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -944,7 +963,7 @@ __HEAD__
   .tile{display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-height:64px;padding:9px 10px;border-radius:var(--r-2);
         border:1px solid var(--line);background:var(--panel);color:var(--txt);font:inherit;text-align:left;cursor:pointer;
         touch-action:manipulation;transition:border-color .12s,background .12s,opacity .12s}
-  .tile b{font-size:var(--fs-3);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+  .tile b{font-size:var(--fs-3);font-weight:800;line-height:1.15;overflow-wrap:break-word}
   .tile .ft{display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:17px}
   .tile .wr{font-size:var(--fs-3);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
   .tile .wr small{font-size:var(--fs-1);font-weight:600;color:var(--muted);margin-left:4px}
@@ -990,6 +1009,7 @@ __HEAD__
   .clear{flex:none;min-height:48px;padding:0 18px;border-radius:var(--r-2);border:1px solid var(--chipline);background:var(--chip);
          color:var(--txt);font:inherit;font-size:var(--fs-3);font-weight:700;cursor:pointer;touch-action:manipulation}
   .clear:disabled{opacity:.4;cursor:default}
+  @media(max-width:359px){ .grid{gap:6px} .tile{padding:8px 7px} .tile b{font-size:var(--fs-2)} }   /* celular bem estreito: "Laboratórios" cabe inteiro */
   @media(min-width:560px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
   @media(min-width:800px){ .grid{grid-template-columns:repeat(6,minmax(0,1fr))} body{padding-top:24px} }
   @media(prefers-reduced-motion:reduce){ .tile{transition:none} }

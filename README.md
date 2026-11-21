@@ -76,7 +76,8 @@ mais joga naquele mapa, por lado, com rounds e % de vitória; borda dourada = di
 season a season.
 
 **Ban de mapa** (`ban.html`, um toque por mapa, feito pros 15–20 s do pick): toca nos mapas que apareceram e a barra de
-baixo diz qual banir. Conta só a season atual, com partidas e vitórias de quem está jogando somadas (os mesmos números de
+baixo diz qual banir. Mapas com o nome do jogo em português e em ordem alfabética (`MAPA_PT` no build.py, tirado das
+páginas oficiais da Ubisoft BR; mapa novo sem tradução aparece em inglês e o build avisa). Conta só a season atual, com partidas e vitórias de quem está jogando somadas (os mesmos números de
 "Mapas do squad"); antes de comparar, cada mapa ganha `MIN_MAP` (6) partidas na média do grupo, pra mapa com 1 ou 2 jogos
 não virar ban sozinho. Os chips "Jogando agora" tiram quem não está na party (fica lembrado em `localStorage`
 `siegelab.ban.who`); a seleção de mapas não fica salva. Lista abaixo: do pior pro melhor, por jogador, e a season anterior
