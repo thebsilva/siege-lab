@@ -266,13 +266,19 @@ def write_index(cards, avg=None):
             f'<span class="prn" style="--c:{text_on_panel(avg["color"])}">{esc(avg["rank"])} · o squad como um jogador só</span></span>'
             f'<span class="prp"><b>{mil(avg["rp"])}</b><i>RP</i></span>'
             f'<span class="pgo" aria-hidden="true">{ico("chev")}</span></a>')
+    avg_html += (                                    # a ferramenta da tela de ban (ban.html), logo abaixo da média
+        f'<a class="avglink" href="ban.html">'
+        f'<span class="bico" aria-hidden="true">{ico("ban")}</span>'
+        f'<span class="pwho"><span class="pnm">Ban de mapa</span>'
+        f'<span class="prn" style="--c:var(--ban-t)">na hora do pick: toque nos mapas e veja o pior pro squad</span></span>'
+        f'<span class="pgo" aria-hidden="true">{ico("chev")}</span></a>')
     out = os.path.join(OUT_DIR, "index.html")
     desc = "O squad no R6 Siege: ranking por RP, destaques do grupo e a análise completa de cada jogador (coach, mapas, operadores)."
     with open(out, "w", encoding="utf-8") as fh:
         fh.write(INDEX_TEMPLATE
                  .replace("__HEAD__", head_meta("SIEGE·LAB — Squad", desc, SITE_URL))
                  .replace("__TOKENS__", TOKENS_CSS)
-                 .replace("__SPRITE__", sprite({"target", "shield", "flame", "snow", "chev"}))
+                 .replace("__SPRITE__", sprite({"target", "shield", "flame", "snow", "chev", "ban"}))
                  .replace("__CHIPS__", chips).replace("__ROWS__", rows).replace("__AVG__", avg_html))
     print(f"OK -> docs/index.html  (squad com {len(cards)} jogador(es))")
 
@@ -492,7 +498,50 @@ def write_media(dirs):
             f'<div class="scard"><table class="stable mtable">'
             f'<thead><tr><th>Mapa</th><th>Grupo</th>{mth}</tr></thead><tbody>{mtr}</tbody></table></div>'
             f'<p class="vleg">Em cada célula, a taxa de vitórias e, abaixo, as partidas. ° = menos de {MIN_MAP} partidas do grupo: número frágil. '
-            f'O grupo soma partidas e vitórias dos três — não é média das taxas.</p></section>')
+            f'O grupo soma partidas e vitórias dos três — não é média das taxas.</p>'
+            f'<a class="banlink" href="ban.html"><b>Ban de mapa</b><span>na hora do pick: toque nos mapas que apareceram e o pior pra vocês fica marcado</span></a></section>')
+
+    # ---------- ban.html: na tela de ban, toca nos mapas que apareceram e o pior pro squad fica marcado ----------
+    # mesmos números da tabela acima (season atual, partidas e vitórias somadas), mas por jogador, pra página
+    # recalcular quando só dois estão jogando; a season anterior vai junto só como contexto
+    prev_season = rows[-2]["season"] if len(rows) >= 2 else None
+    def _per_map(season):
+        out = {}
+        for p in players:
+            sn = p["bySeason"].get(season) if season else None
+            for m in (sn or {}).get("maps") or []:
+                mm = m.get("matches") or 0
+                if mm:
+                    out.setdefault(str(m["name"]).strip(), {})[p["slug"]] = [mm, round(mm * (m.get("seasonWR") or 0) / 100)]
+        return out
+    ban_cur, ban_prev = _per_map(cur["season"]), _per_map(prev_season)
+    pb_file = os.path.join(HERE, "playbook.json")      # o pool inteiro: aparece mapa que ninguém jogou na season
+    pb_maps = set()
+    if os.path.exists(pb_file):
+        with open(pb_file, encoding="utf-8") as fh:
+            pb_maps = set((json.load(fh).get("maps") or {}).keys())
+    ban_data = {
+        "season": cur["season"], "prev": prev_season, "k": MIN_MAP,
+        "players": [{"slug": sl, "tag": tag3[sl], "c": tcolor[sl],
+                     "name": next(str(p["name"]) for p in players if p["slug"] == sl)} for sl in slugs],
+        "maps": [{"n": nm, "cur": ban_cur.get(nm, {}), "prev": ban_prev.get(nm, {})}
+                 for nm in sorted(pb_maps | set(ban_cur), key=str.lower)]}
+    for mp in ban_data["maps"]:                  # o ban usa exatamente os números da tabela "Mapas do squad"
+        if mp["n"] in magg:
+            assert sum(x[0] for x in mp["cur"].values()) == magg[mp["n"]]["m"], f"ban: partidas de {mp['n']} não batem com a tabela"
+            assert sum(x[1] for x in mp["cur"].values()) == magg[mp["n"]]["w"], f"ban: vitórias de {mp['n']} não batem com a tabela"
+    btitle = "SIEGE·LAB — Ban de mapa"
+    bdesc = (f"Na tela de ban da ranqueada: toque nos mapas que apareceram e o pior pro squad ({nomes}) fica marcado, "
+             f"com as vitórias do grupo em cada um na {cur['season']}.")
+    with open(os.path.join(OUT_DIR, "ban.html"), "w", encoding="utf-8") as fh:
+        fh.write(BAN_TEMPLATE
+                 .replace("__HEAD__", head_meta(btitle, bdesc, SITE_URL + "ban.html"))
+                 .replace("__TITLE__", _h.escape(btitle))
+                 .replace("__TOKENS__", TOKENS_CSS)
+                 .replace("__SPRITE__", sprite(set()))
+                 .replace("__SEASON__", esc(cur["season"]))
+                 .replace("__DATA__", json.dumps(ban_data, ensure_ascii=False).replace("</", "<\\/")))
+    print(f"OK -> docs/ban.html  ({len(ban_data['maps'])} mapas · {cur['season']} · contexto {prev_season or '—'})")
 
     # operadores do squad — brutos do opsAll somados; "disputado" = main (top 3 do lado) de mais de um
     oagg, mains = {}, {}
@@ -833,6 +882,8 @@ __HEAD__
   .avglink:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .avglink .pwho{flex:1 1 auto}
   .avglink:hover .pgo{color:var(--gold)}
+  .bico{width:40px;height:40px;flex:none;border-radius:var(--r-2);display:grid;place-items:center;background:rgba(240,81,63,.14);color:var(--ban-t)}
+  .bico .ic{width:22px;height:22px}
   .foot{color:var(--muted);font-size:var(--fs-2);text-align:center;margin-top:30px;line-height:1.6}
   @media(prefers-reduced-motion:reduce){ .prow2{transition:none} .avglink{transition:none} }
 </style>
@@ -855,6 +906,194 @@ __SPRITE__
   </section>
   <p class="foot">Cada jogador abre o app completo: início, coach, mapas, operadores, squad e evolução.<br>Dados de r6.tracker.network.</p>
 </main>
+</body>
+</html>
+"""
+
+
+BAN_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b0e">
+<title>__TITLE__</title>
+__HEAD__
+<style>
+  __TOKENS__
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.4;
+       min-height:100vh;padding:14px 16px calc(112px + env(safe-area-inset-bottom))}
+  .wrap{max-width:820px;margin:0 auto}
+  .top{display:flex;align-items:center;gap:10px}
+  .top a{display:flex;flex:none;border-radius:var(--r-1)}
+  .logo{width:34px;height:34px;filter:drop-shadow(0 0 9px rgba(244,194,13,.28))}
+  h1{font-size:var(--fs-5);font-weight:800;line-height:1.1}
+  .tag{font-size:var(--fs-2);color:var(--muted);margin-top:2px}
+  /* quem está jogando: o ban recalcula só com eles */
+  .who{display:flex;align-items:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+  .who>span{font-size:var(--fs-1);font-weight:800;letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted);margin-right:4px}
+  .pchip{min-height:36px;min-width:52px;padding:0 13px;border-radius:var(--r-pill);border:1px solid var(--chipline);background:var(--chip);
+         color:var(--muted);font:inherit;font-size:var(--fs-3);font-weight:700;cursor:pointer;touch-action:manipulation}
+  .pchip[aria-pressed="true"]{color:var(--c);border-color:var(--c);background:rgba(255,255,255,.05)}
+  .top a:focus-visible,.pchip:focus-visible,.tile:focus-visible,.clear:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .hint{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:14px;font-size:var(--fs-2);color:var(--muted)}
+  .hint b{color:var(--txt-2);font-size:var(--fs-3);font-weight:700}
+  /* os mapas: A–Z, alvo grande, nada muda de lugar quando toca */
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+  .tile{display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-height:64px;padding:9px 10px;border-radius:var(--r-2);
+        border:1px solid var(--line);background:var(--panel);color:var(--txt);font:inherit;text-align:left;cursor:pointer;
+        touch-action:manipulation;transition:border-color .12s,background .12s,opacity .12s}
+  .tile b{font-size:var(--fs-3);font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+  .tile .ft{display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:17px}
+  .tile .wr{font-size:var(--fs-3);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tile .wr small{font-size:var(--fs-1);font-weight:600;color:var(--muted);margin-left:4px}
+  .g{color:var(--play)} .y{color:var(--neu)} .r{color:var(--ban-t)} .n{color:var(--muted)}
+  .tile{position:relative}
+  /* o selo fica sobre a borda de cima: não disputa espaço com o número nem mexe no tamanho do card */
+  .tile .mk{position:absolute;top:-8px;right:8px;font-size:9px;font-weight:800;letter-spacing:var(--ls-caps);text-transform:uppercase;
+            padding:2px 7px;border-radius:var(--r-pill);white-space:nowrap;line-height:1.4}
+  .tile .mk:empty{display:none}
+  .tile.on{border-color:var(--gold);background:#1c1a10}
+  .tile.on .mk{background:#123526;color:var(--play);border:1px solid rgba(52,211,153,.45)}
+  .tile.ban{border-color:var(--ban);background:#2a1512}
+  .tile.ban .mk{background:var(--ban);color:#fff}
+  .tile.off{opacity:.5}
+  /* o que apareceu, do pior pro melhor */
+  h2{font-size:var(--fs-2);letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted);margin:22px 0 8px;display:flex;align-items:center;gap:8px}
+  h2::before{content:"";width:4px;height:12px;background:var(--gold);border-radius:var(--r-1);flex:none}
+  .list{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:10px 12px;border-radius:var(--r-2);
+       border:1px solid var(--line);background:var(--panel)}
+  .row.ban{border-color:var(--ban)}
+  .row .nm{font-size:var(--fs-4);font-weight:800}
+  .row .nm i{font-style:normal;font-size:var(--fs-1);letter-spacing:var(--ls-caps);text-transform:uppercase;margin-left:8px;color:var(--ban-t)}
+  .row .nm i.ok{color:var(--play)}
+  .row .gr{text-align:right;font-size:var(--fs-5);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+  .row .gr small{display:block;font-size:var(--fs-2);font-weight:500;color:var(--muted)}
+  .row .by{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--fs-2);color:var(--muted);font-variant-numeric:tabular-nums}
+  .row .by span{white-space:nowrap}
+  .row .by b{color:var(--c);font-weight:800;margin-right:4px} .row .by em{font-style:normal;color:var(--txt-2);font-weight:700}
+  .leg{margin-top:18px;font-size:var(--fs-2);color:var(--muted);line-height:1.55}
+  .leg a{color:var(--txt-2);font-weight:700;text-decoration:none;border-bottom:1px solid var(--chipline)}
+  /* o veredito fica preso embaixo: o polegar alcança e nada empurra a grade */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(13,14,18,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+       border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+  .bar .in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:62px}
+  .verdict{flex:1 1 auto;min-width:0}
+  .verdict .l{font-size:var(--fs-1);font-weight:800;letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted);
+              white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .verdict .v{font-size:var(--fs-6);font-weight:800;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .verdict .s{font-size:var(--fs-2);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .verdict.ban .l{color:var(--ban-t)}
+  .verdict.idle .v{font-size:var(--fs-5);color:var(--txt-2)}
+  .clear{flex:none;min-height:48px;padding:0 18px;border-radius:var(--r-2);border:1px solid var(--chipline);background:var(--chip);
+         color:var(--txt);font:inherit;font-size:var(--fs-3);font-weight:700;cursor:pointer;touch-action:manipulation}
+  .clear:disabled{opacity:.4;cursor:default}
+  @media(min-width:560px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+  @media(min-width:800px){ .grid{grid-template-columns:repeat(6,minmax(0,1fr))} body{padding-top:24px} }
+  @media(prefers-reduced-motion:reduce){ .tile{transition:none} }
+</style>
+</head>
+<body>
+__SPRITE__
+<main class="wrap">
+  <header class="top">
+    <a href="index.html" title="Voltar pro squad"><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="SIEGE·LAB"><use href="#sl-logo"/></svg></a>
+    <div><h1>Ban de mapa</h1><p class="tag">o squad na ranqueada · __SEASON__</p></div>
+  </header>
+  <div class="who" id="who" role="group" aria-label="Quem está jogando"></div>
+  <p class="hint"><b>Toque nos mapas que apareceram</b><span>vitórias · partidas</span></p>
+  <div class="grid" id="grid"></div>
+  <section id="sel" hidden><h2>Os que apareceram, do pior pro melhor</h2><ol class="list" id="list"></ol></section>
+  <p class="leg" id="leg"></p>
+</main>
+<div class="bar"><div class="in">
+  <div class="verdict idle" id="verdict" role="status" aria-live="polite"></div>
+  <button type="button" class="clear" id="clear" disabled>Limpar</button>
+</div></div>
+<script>
+const D = __DATA__;                  // por mapa e por jogador: [partidas, vitórias] na season atual (cur) e na anterior (prev)
+const K = D.k;                       // partidas "emprestadas" da média do grupo: mapa com pouco jogo não decide sozinho
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pc = (w, m) => Math.round(100 * w / m);
+const cl = (m, w) => !m ? "n" : (w / m >= .55 ? "g" : (w / m >= .40 ? "y" : "r"));
+const pl = n => n === 1 ? "partida" : "partidas";
+let who = (() => {                   // quem está jogando fica lembrado: é o que menos muda de um pick pro outro
+  try { const v = JSON.parse(localStorage.getItem("siegelab.ban.who") || "null");
+    if (Array.isArray(v)) { const ok = v.filter(s => D.players.some(p => p.slug === s)); if (ok.length) return new Set(ok); } } catch (e) {}
+  return new Set(D.players.map(p => p.slug));
+})();
+let sel = [];                        // os mapas tocados; não fica salvo: cada pick começa limpo
+const sum = (mp, key) => { let m = 0, w = 0; for (const sl of who) { const x = (mp[key] || {})[sl]; if (x) { m += x[0]; w += x[1]; } } return {m, w}; };
+const base = () => { let m = 0, w = 0; D.maps.forEach(mp => { const s = sum(mp, "cur"); m += s.m; w += s.w; }); return m ? w / m : .5; };
+
+function drawWho(){
+  $("who").innerHTML = `<span>Jogando agora</span>` + D.players.map(p =>
+    `<button type="button" class="pchip" style="--c:${p.c}" data-s="${esc(p.slug)}" aria-pressed="${who.has(p.slug)}" title="${esc(p.name)}">${esc(p.tag)}</button>`).join("");
+}
+function drawGrid(){
+  $("grid").innerHTML = D.maps.map((mp, i) =>
+    `<button type="button" class="tile" data-i="${i}" aria-pressed="false"><b>${esc(mp.n)}</b><span class="ft"><span class="wr"></span><span class="mk"></span></span></button>`).join("");
+}
+function render(){
+  const p0 = base();
+  const S = sel.map(i => { const mp = D.maps[i], s = sum(mp, "cur"); return {i, mp, m: s.m, w: s.w, sc: (s.w + K * p0) / (s.m + K)}; })
+               .sort((a, b) => a.sc - b.sc || b.m - a.m);
+  const ban = S.length >= 2 ? S[0] : null, best = S.length >= 2 ? S[S.length - 1] : null;
+  document.querySelectorAll(".tile").forEach(t => {
+    const i = +t.dataset.i, s = sum(D.maps[i], "cur"), on = sel.includes(i), isBan = !!ban && ban.i === i, isBest = !!best && best.i === i;
+    const wr = t.querySelector(".wr");
+    wr.className = "wr " + cl(s.m, s.w);
+    wr.innerHTML = s.m ? `${pc(s.w, s.m)}%<small>${s.m}</small>` : `—<small>0</small>`;
+    t.classList.toggle("on", on); t.classList.toggle("ban", isBan); t.classList.toggle("off", sel.length >= 2 && !on);
+    t.setAttribute("aria-pressed", on);
+    t.querySelector(".mk").textContent = isBan ? "banir" : (isBest ? "melhor" : "");
+  });
+  const V = $("verdict"), fmt = x => x.m ? `${pc(x.w, x.m)}% em ${x.m} ${pl(x.m)}` : "nenhuma partida na season";
+  if (!S.length){
+    V.className = "verdict idle"; V.innerHTML = `<div class="l">Ban de mapa</div><div class="v">Toque nos mapas</div><div class="s">os que apareceram na tela de ban</div>`;
+  } else if (S.length === 1){
+    V.className = "verdict idle"; V.innerHTML = `<div class="l">${esc(S[0].mp.n)} · ${fmt(S[0])}</div><div class="v">Toque nos outros</div><div class="s">o pior pra vocês fica marcado</div>`;
+  } else {
+    const nx = S[1], close = nx.sc - ban.sc < .03;
+    let s = fmt(ban);
+    if (close) s += ` · por pouco: ${esc(nx.mp.n)} (${nx.m ? pc(nx.w, nx.m) + "%" : "—"})`;
+    else if (ban.m < K) s += " · poucas partidas";
+    V.className = "verdict ban"; V.innerHTML = `<div class="l">Banir</div><div class="v">${esc(ban.mp.n)}</div><div class="s">${s}</div>`;
+  }
+  $("clear").disabled = !sel.length;
+  $("sel").hidden = !S.length;
+  $("list").innerHTML = S.map(x => {
+    const isBan = !!ban && x.i === ban.i, isBest = !!best && x.i === best.i;
+    const by = D.players.filter(p => who.has(p.slug)).map(p => { const v = (x.mp.cur || {})[p.slug];
+      return `<span style="--c:${p.c}"><b>${esc(p.tag)}</b>${v ? `<em>${pc(v[1], v[0])}%</em> em ${v[0]}` : "—"}</span>`; }).join("");
+    const pv = D.prev ? sum(x.mp, "prev") : {m: 0};
+    return `<li class="row${isBan ? " ban" : ""}"><span class="nm">${esc(x.mp.n)}${isBan ? "<i>banir</i>" : (isBest ? '<i class="ok">melhor</i>' : "")}</span>`
+      + `<span class="gr ${cl(x.m, x.w)}">${x.m ? pc(x.w, x.m) + "%" : "—"}<small>${x.m} ${pl(x.m)}</small></span>`
+      + `<span class="by">${by}${pv.m ? `<span>${esc(D.prev)}: <em>${pc(pv.w, pv.m)}%</em> em ${pv.m}</span>` : ""}</span></li>`;
+  }).join("");
+}
+$("grid").addEventListener("click", e => {
+  const t = e.target.closest(".tile"); if (!t) return;
+  const i = +t.dataset.i, k = sel.indexOf(i);
+  if (k >= 0) sel.splice(k, 1); else sel.push(i);
+  render();
+});
+$("who").addEventListener("click", e => {
+  const b = e.target.closest(".pchip"); if (!b) return;
+  const s = b.dataset.s;
+  if (who.has(s)) { if (who.size > 1) who.delete(s); } else who.add(s);
+  try { localStorage.setItem("siegelab.ban.who", JSON.stringify([...who])); } catch (e) {}
+  drawWho(); render();
+});
+$("clear").addEventListener("click", () => { sel = []; render(); });
+$("leg").innerHTML = `Conta a ${esc(D.season)}: partidas e vitórias de quem está jogando, somadas (os mesmos números de “Mapas do squad” na `
+  + `<a href="media.html">Média</a>). Antes de comparar, cada mapa ganha ${K} partidas na média do grupo: assim um mapa com 1 ou 2 jogos não `
+  + `vira ban sozinho. Verde = 55% ou mais, amarelo = 40 a 54%, vermelho = abaixo de 40%.${D.prev ? ` A ${esc(D.prev)} aparece só como contexto.` : ""}`;
+drawWho(); drawGrid(); render();
+</script>
 </body>
 </html>
 """
@@ -1012,6 +1251,15 @@ __HEAD__
     .rlritmo p+p{margin-top:0;padding-left:24px;border-left:1px solid var(--hair)}
   }
   @media(prefers-reduced-motion:reduce){ .rlrow{transition:none} }
+  /* atalho pro ban.html, embaixo da tabela de mapas */
+  .banlink{display:flex;align-items:center;gap:12px;margin-top:12px;text-decoration:none;color:inherit;
+           border:1px dashed var(--chipline);border-radius:var(--r-3);background:var(--inset);padding:12px 14px;transition:border-color .15s}
+  .banlink b{flex:none;font-size:var(--fs-4);font-weight:800;color:var(--ban-t)}
+  .banlink span{flex:1 1 auto;min-width:0;font-size:var(--fs-2);color:var(--muted);line-height:1.45}
+  .banlink::after{content:"›";flex:none;font-size:22px;line-height:1;color:var(--muted)}
+  .banlink:hover{border-color:var(--gold)} .banlink:hover::after{color:var(--gold)}
+  .banlink:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){ .banlink{transition:none} }
 
   /* season a season */
   .scard{border:1px solid var(--line);border-radius:var(--r-3);background:var(--panel);padding:4px 14px;overflow-x:auto}

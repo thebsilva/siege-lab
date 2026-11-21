@@ -18,7 +18,7 @@ players/
 playbook.json                  # COMPARTILHADO: motivo por operador + picks por mapa
 pros.json                      # COMPARTILHADO: FaZe (papel, pool, jeito de cada pro, fontes) + função de cada operador
 ingest.py                      # raw/ → snapshots (KPIs, mapas, ops, estilo, fila, tilt, coach)
-build.py                       # snapshots → docs/<slug>.html + docs/index.html
+build.py                       # snapshots → docs/<slug>.html + index.html + media.html + ban.html
 docs/                          # o que o GitHub Pages serve
 ```
 `profile.json` aceita `"goal": {"rp": 3000, "label": "Platina", "set": "AAAA-MM-DD"}`: a aba Coach
@@ -74,6 +74,13 @@ pro de cada um + "o ritmo de vocês" no ataque e na defesa: quem faz roam, quem 
 do grupo · mapas do squad · operadores do squad · **operadores por mapa** (toque no mapa → os 5 operadores que cada um
 mais joga naquele mapa, por lado, com rounds e % de vitória; borda dourada = disputado entre o grupo; vem do `mapOps`) ·
 season a season.
+
+**Ban de mapa** (`ban.html`, um toque por mapa, feito pros 15–20 s do pick): toca nos mapas que apareceram e a barra de
+baixo diz qual banir. Conta só a season atual, com partidas e vitórias de quem está jogando somadas (os mesmos números de
+"Mapas do squad"); antes de comparar, cada mapa ganha `MIN_MAP` (6) partidas na média do grupo, pra mapa com 1 ou 2 jogos
+não virar ban sozinho. Os chips "Jogando agora" tiram quem não está na party (fica lembrado em `localStorage`
+`siegelab.ban.who`); a seleção de mapas não fica salva. Lista abaixo: do pior pro melhor, por jogador, e a season anterior
+só como contexto. Atalhos na home (abaixo da média) e na Média (embaixo da tabela de mapas).
 
 Na aba Coach as setas têm cor por direção: verde melhorou, vermelho piorou, **cinza = estilo** (nem bom nem ruim).
 Meta e plano só aparecem na season mais nova; season antiga mostra só o diagnóstico daquela época.
